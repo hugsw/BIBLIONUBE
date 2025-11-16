@@ -1,0 +1,85 @@
+<header class="header">
+    <!--
+-->
+    <a href="/">
+        <img class="header__logo" src="/static/img/BOOK.png" alt="Logotipo">
+    </a>
+    <h2 class="header__global">BIBLIONUVE</h2>
+    <div class="navegacion-login">
+        <a class="navegacion__home" href="/" aria-label="Página de inicio">
+            <i class="fas fa-home"></i></a>
+        <a class="navegacion__home" href="/guardado" id="boton-guardados" aria-label="ver libros guardados">
+            <i class="fa-solid fa-bookmark"></i>
+        </a>
+        <button class="btn-identificate" id="abrirModal">IDENTIFICATE</button>
+        <div class="user-menu-wrapper" id="user-menu-wrapper">
+            <button class="user-menu-trigger" id="user-menu-trigger">
+                <i class="fa-solid fa-bars user-menu-hamburger"></i>
+                <span class="user-initials-circle" id="user-initials">?</span>
+            </button>
+            <div class="user-dropdown" id="user-dropdown">
+                <div class="dropdown-header">
+                    <span id="user-dropdown-email">cargando...</span>
+                </div>
+                <a href="/mi_cuenta" class="dropdown-item">
+                    <i class="fa-solid fa-user-circle"></i> Mi cuenta
+                </a>
+                <button class="dropdown-item dropdown-logout" id="logout-button">
+                    <i class="fa-solid fa-sign-out-alt"></i> Cerrar sesión
+                </button>
+            </div>
+        </div>
+        <form class="contenedor_busqueda" role="search">
+            <input type="text" class="search-input" placeholder="Buscar..." id="search-input" name="search"
+                autocomplete="off">
+            <button type="submit" class="navegacion__busqueda" aria-label="Buscar">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div> <!-- Fin de .navegacion-login -->
+</header>
+<div id="modalLogin" class="modal">
+    <div class="modal-content">
+        <div class="modal-panel left-panel">
+            <div class="illustration-area">
+                <div class="image-placeholder">
+
+                </div>
+            </div>
+            <h1>Iniciar sesión</h1>
+            <p>Por favor, inicia sesión para continuar.</p>
+        </div>
+        <div class="modal-panel right-panel">
+            <span class="close-button" id="cerrarModal">&times;</span>
+            <div class="help-icon">
+                <a href="#"><span class="question-mark">?</span></a>
+            </div>
+
+            <form id="login-form" method="POST" class="login-form">
+                <label for="email-login">CORREO ELECTRÓNICO</label>
+                <input type="email" id="email-login" name="email" autocomplete="email" required>
+
+                <label for="password-login">CONTRASEÑA</label>
+                <div class="password-group">
+                    <input type="password" id="password-login" name="password-login" autocomplete="current-password"
+                        required>
+                    <span class="toggle-password"><i class="fas fa-eye"></i></span>
+                </div>
+
+                <p class="error-mensaje" id="login-error" style="display: none; text-align: center;">
+                </p>
+
+                <button type="submit" class="btn-entrar">ENTRAR</button>
+            </form>
+            <div class="separator-text">
+                o
+            </div>
+            <p class="forgot-password"><a href="#">¿Olvidaste tu contraseña?</a></p>
+            <p class="register-link">¿No tienes una cuenta?
+                <!-- Este enlace a /registro ya está correcto -->
+                <a href="/registro"><strong>Regístrate</strong></a>
+            </p>
+        </div>
+    </div>
+
+</div>

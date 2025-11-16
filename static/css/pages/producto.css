@@ -1,0 +1,299 @@
+/* =======================================================
+   RESET GLOBAL (¡ESTA ES LA CORRECCIÓN!)
+   ======================================================= */
+
+/* * Esto elimina los márgenes y paddings por defecto 
+ * del navegador (las "franjas blancas").
+*/
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* Asegura que el cuerpo ocupe todo el ancho */
+}
+
+/* * Un "reseteo" muy recomendado para que el padding 
+ * y los bordes no afecten el ancho de tus cajas.
+*/
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+/* =======================================================
+   CORRECCIÓN DE LAYOUT (FOOTER) - ¡NUEVO BLOQUE!
+   ======================================================= */
+
+/* * Esto fuerza al 'main' (contenido principal) 
+ * a ser un bloque y ocupar todo el ancho.
+*/
+.contenido-principal,
+main {
+    display: block;
+    width: 100%;
+    clear: both; /* Limpia cualquier 'float' anterior */
+}
+
+/* * Esto fuerza al 'footer' a ser un bloque, 
+ * ocupar todo el ancho y limpiar floats.
+*/
+
+
+
+/* =======================================================
+   TUS ESTILOS DE PRODUCTO (SIN CAMBIOS)
+   ======================================================= */
+
+/* Estilos para la página de detalle del producto */
+
+/* Header específico de la página de producto para el botón  */
+.header-producto {
+    background-color: transparent;
+    /* Fondo transparente */
+    display: flex;
+    /* Para alinear elementos */
+    align-items: center;
+    /* Centrado vertical */
+    min-height: 6rem;
+    /* Altura mínima */
+    padding-left: 6rem;
+    padding-top: 6rem;
+    /* Línea eliminada: border-bottom: 1px solid #eee; */
+
+    margin-bottom: 2rem;
+    /* Espacio debajo del header */
+}
+
+.btn-volver {
+    color: var(--color-acento, #ff8c00);
+    /* Color anaranjado */
+    font-size: 1.8rem;
+    /* Tamaño de fuente más grande */
+    text-decoration: none;
+    /* Sin subrayado */
+    font-weight: 700;
+    /* Negrita */
+    display: flex;
+    /* Para el icono y el texto */
+    align-items: center;
+    gap: 0.8rem;
+    /* Espacio entre el icono y el texto */
+
+    /* Transición con color y fondo */
+    transition: color .3s ease, background-color .3s ease;
+
+    background-color: transparent;
+    /* Fondo transparente por defecto */
+    border-radius: 0.5rem;
+    /* Bordes redondeados sutiles */
+    padding: 1rem 1.5rem;
+    /* Padding aplicado siempre */
+}
+
+.btn-volver:hover {
+    color: var(--color-acento-hover, #e67e22);
+    /* Naranja más oscuro para el texto al hover */
+    background-color: #fff3e0;
+    /* Un naranja muy claro para el fondo al hover */
+}
+
+.btn-volver i {
+    font-size: 2rem;
+    /* Tamaño del icono */
+    margin-right: 0.5rem;
+    /* Espacio a la derecha del icono */
+}
+
+/* Contenedor principal de los detalles del producto */
+.contenedor-producto {
+    max-width: 120rem;
+    /* Ancho máximo */
+    margin: 0 auto;
+    /* Centrar el contenedor */
+    padding: 2rem;
+    /* Espaciado interno */
+    display: grid;
+    /* Usamos Grid para la imagen y los detalles */
+    grid-template-columns: 1fr 2fr;
+    /* Una columna para imagen, dos para detalles */
+    gap: 4rem;
+    /* Espacio entre las columnas */
+    align-items: start;
+    /* Alinear el contenido al inicio */
+}
+
+
+/* Imagen del producto */
+.producto-imagen {
+    max-width: 100%;
+    /* Asegura que la imagen no se desborde */
+    height: auto;
+    /* Mantiene la proporción */
+    border-radius: 0.5rem;
+    /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Sombra sutil */
+}
+
+/* Detalles del producto (título, descripción, botones) */
+.producto-detalles {
+    display: flex;
+    flex-direction: column;
+    /* Elementos en columna */
+    justify-content: flex-start;
+    /* Alinea los elementos arriba */
+    padding-top: 2rem;
+    /* Un poco de espacio arriba para que el texto no esté pegado a la imagen */
+}
+
+.producto-detalles h1 {
+    font-size: 4rem;
+    /* Tamaño del título */
+    color: #333;
+    /* Color del texto */
+    margin-bottom: 1.5rem;
+    /* Espacio debajo del título */
+}
+
+/* --- ¡ESTILOS AÑADIDOS PARA AUTOR Y AÑO! ---
+*/
+.producto-meta {
+    display: flex;
+    gap: 1.5rem;
+    /* Espacio entre autor y año */
+    font-size: 1.8rem;
+    color: #555;
+    /* Un color gris, menos fuerte que el título */
+    font-family: var(--fuentePrincipal);
+    font-weight: 600;
+    /* Semi-negrita */
+    margin-bottom: 2.5rem;
+    /* Espacio antes de la descripción */
+    margin-top: -1rem;
+    /* Acercarlo un poco al título */
+    flex-wrap: wrap;
+    /* Para que no se rompa en móviles */
+}
+
+.producto-meta span {
+    display: block;
+}
+/* --- FIN DE ESTILOS AÑADIDOS --- */
+
+
+.producto-detalles p {
+    font-size: 1.8rem;
+    /* Tamaño de la descripción */
+    line-height: 1.8;
+    /* Altura de línea para mejor legibilidad */
+    color: #666;
+    /* Color del texto */
+    margin-bottom: 3rem;
+    /* Espacio debajo de la descripción */
+}
+
+/* Contenedor de acciones (Guardar, Descargar) */
+.producto-acciones {
+    display: flex;
+    /* Para alinear los botones en fila */
+    gap: 2rem;
+    /* Espacio entre los botones */
+    margin-top: 2rem;
+    /* Espacio encima de los botones */
+}
+
+/* Estilos para los botones de acción */
+.btn-accion {
+    display: inline-flex;
+    /* Para el icono y el texto */
+    align-items: center;
+    gap: 1rem;
+    /* Espacio entre icono y texto */
+    padding: 1.5rem 3rem;
+    /* Espaciado interno */
+    font-size: 1.8rem;
+    /* Tamaño de fuente */
+    font-weight: 700;
+    /* Negrita */
+    border: none;
+    /* Sin borde */
+    border-radius: 0.8rem;
+    /* Bordes redondeados */
+    cursor: pointer;
+    /* Cursor de puntero */
+    transition: background-color .3s ease, color .3s ease, transform .2s ease;
+    /* Transiciones suaves */
+    text-decoration: none;
+    /* Para el botón de descargar que es un <a> */
+    color: #fff;
+    /* Color de texto predeterminado para botones */
+}
+
+/* Estilo específico para el botón Guardar */
+.btn-guardar {
+    background-color: #6c757d;
+    /* Gris */
+}
+
+.btn-guardar:hover {
+    background-color: #9ea2a5;
+    /* Gris más oscuro al pasar el ratón */
+    transform: translateY(-2px);
+    /* Pequeño efecto de elevación */
+}
+
+/* Estilo específico para el botón Descargar */
+.btn-descargar {
+    background-color: var(--colortitulos);
+    /* Azul */
+}
+
+.btn-descargar:hover {
+    background-color: #3147a5;
+    /* Azul más oscuro al pasar el ratón */
+    transform: translateY(-2px);
+}
+
+/* Estilos responsivos (para pantallas pequeñas) */
+@media (max-width: 768px) {
+    .contenedor-producto {
+        grid-template-columns: 1fr;
+        /* Una sola columna en pantallas pequeñas */
+        text-align: center;
+        /* Centrar el texto */
+    }
+
+    .producto-imagen {
+        margin: 0 auto 2rem auto;
+        /* Centrar imagen y añadir espacio abajo */
+    }
+
+    .producto-detalles {
+        align-items: center;
+        /* Centrar el contenido en una sola columna */
+    }
+
+    /* --- ¡ESTILO AÑADIDO PARA MÓVIL! --- */
+    .producto-meta {
+        justify-content: center;
+        /* Centra el autor/año en móvil */
+    }
+    /* --- FIN DE ESTILO AÑADIDO --- */
+
+    .producto-acciones {
+        flex-direction: column;
+        /* Botones en columna en pantallas pequeñas */
+        width: 100%;
+        /* Ocupar todo el ancho disponible */
+    }
+
+    .btn-accion {
+        width: 100%;
+        /* Que los botones ocupen todo el ancho */
+        justify-content: center;
+        /* Centrar el texto y el icono en el botón */
+    }
+}

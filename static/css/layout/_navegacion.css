@@ -1,0 +1,241 @@
+/*--------------------------------------------------------*/
+/*-------------------- _navegacion.css--------------------*/
+/*--------------------------------------------------------*/
+.navegacion {
+    background-color: var(--primarioOscuro);
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.navegacion__home {
+    background-color: var(--color-acento);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.navegacion__home i {
+    color: white;
+    font-size: 20px;
+}
+
+.navegacion__home:hover {
+    background-color: var(--color-acento-hover);
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+/* --- El Botón de Búsqueda (Navegación) --- */
+.navegacion__busqueda {
+    background-color: var(--color-acento);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.navegacion__busqueda i {
+    color: white;
+    font-size: 20px;
+}
+
+.navegacion__busqueda:hover {
+    background-color: var(--color-acento-hover);
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+/* --- El Contenedor --- */
+.contenedor_busqueda {
+    display: flex;
+    align-items: center;
+    position: relative;
+    /* ¡ESTA ES LA CORRECCIÓN QUE FALTABA! */
+    margin-left: 15px; 
+}
+
+/* --- El Campo de Búsqueda (Input) --- */
+.search-input {
+    width: 0;
+    opacity: 0;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    margin-right: -40px;
+    transition: all 0.4s ease;
+}
+
+/* --- EL ESTADO ACTIVO --- */
+.contenedor_busqueda.active .search-input {
+    width: 200px;
+    opacity: 1;
+    margin-right: 10px;
+}
+
+.navegacion__enlace--activo,
+.navegacion__enlace:hover {
+    color: var(--secundario);
+}
+
+
+/* ================================================================= */
+/* --- ¡NUEVOS ESTILOS DE SESIÓN! (Estilo Píldora) --- */
+/* ================================================================= */
+
+/* 1. Ajusta el contenedor para alinear los botones y el menú */
+.navegacion-login {
+    display: flex;
+    align-items: center; /* Alinea verticalmente el texto y los botones */
+    gap: 15px; /* Espacio entre los elementos */
+    gap: 1.5rem;
+}
+
+/* 2. Contenedor del menú de usuario */
+.user-menu-wrapper {
+    position: relative; /* Clave para posicionar el dropdown */
+    display: none; /* Oculto por defecto. JS lo muestra. */
+}
+
+/* 3. Botón "Píldora" (reemplaza el círculo anterior) */
+.user-menu-trigger {
+    background-color: var(--color-acento, #ff8c00); /* Color de fondo de la píldora */
+    border: none;
+    border-radius: 999px; /* Forma de píldora */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre el icono y el círculo */
+    padding: 4px 10px 4px 12px; /* Espaciado interno (Arriba, Derecha, Abajo, Izquierda) */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    font-family: var(--fuentePrincipal);
+}
+
+/* 3.1. Icono de hamburguesa (las 3 líneas) */
+.user-menu-hamburger {
+    color: white;
+    font-size: 1.6rem;
+}
+
+/* 3.2. Círculo interno para las iniciales */
+.user-initials-circle {
+    background-color: #ffffff; /* Círculo blanco */
+    color: var(--color-acento, #ff8c00); /* Iniciales en color acento */
+    width: 32px; /* Tamaño del círculo interno */
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+/* El hover se aplica a toda la píldora */
+.user-menu-trigger:hover {
+    transform: scale(1.05);
+}
+
+
+/* 4. El menú desplegable (la caja) - Sin cambios */
+.user-dropdown {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    top: calc(100% + 10px); /* Abajo del círculo + 10px de espacio */
+    right: 0;
+    width: 260px; /* Ancho del menú */
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border: 1px solid #eee;
+    z-index: 100;
+    overflow: hidden; /* Para que los bordes redondeados se apliquen a los hijos */
+}
+
+/* 5. Estado activo (cuando JS muestra el menú) - Sin cambios */
+.user-menu-wrapper.dropdown-active .user-dropdown {
+    display: block;
+}
+
+/* 6. Contenido del menú - CON EL CAMBIO DE CENTRADO */
+.dropdown-header {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eee;
+    text-align: center; /* ¡AQUÍ ESTÁ TU CAMBIO ANTERIOR! */
+    display: flex;
+    align-items: center; /* Centra verticalmente */
+    justify-content: center;
+}
+
+#user-dropdown-email {
+    font-size: 1.4rem;
+    color: #333;
+    font-weight: 500;
+    word-break: break-all; 
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1.5rem;
+    color: #555;
+    text-decoration: none;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+}
+
+/* Iconos dentro del menú - Sin cambios */
+.dropdown-item i {
+    margin-right: 12px;
+    color: #888;
+    width: 16px;
+    text-align: center;
+}
+
+/* Botón de cerrar sesión - Sin cambios */
+.dropdown-logout {
+    border-top: 1px solid #eee;
+    color: #e74c3c; 
+}
+
+.dropdown-logout i {
+    color: #e74c3c;
+}
+
+/* ================================================================= */
+/* --- ESTILOS DINÁMICOS (Manejan qué se ve y qué se oculta) --- */
+/* ================================================================= */
+
+/* MUESTRA el menú de usuario CUANDO la sesión está iniciada */
+body.sesion-iniciada #user-menu-wrapper {
+    display: flex; /* o 'block' */
+}
+
+/* OCULTA el botón de "IDENTIFICATE" CUANDO la sesión está iniciada */
+body.sesion-iniciada #abrirModal {
+    display: none;
+}

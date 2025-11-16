@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/main_.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+
+<body>
+    <!-- Header principal (sin cambios) -->
+    {% include 'header.html' %}
+
+    <!-- 
+      ¡CORRECCIÓN AQUÍ! 
+      Este header ahora se cierra correctamente
+      antes de que empiece el <main>.
+    -->
+    <header class="header-producto">
+        <a href="/" class="btn-volver">
+            <i class="fa-solid fa-chevron-left"></i> Volver
+        </a>
+    </header> <!-- <-- SE CIERRA EL HEADER -->
+
+    <!-- MAIN AHORA EMPIEZA AQUÍ, FUERA DEL HEADER -->
+    <main class="contenido-principal">
+        
+        <div class="contenedor-producto">
+            <img id="libro-imagen" src="https://placehold.co/400x600/6c757d/white?text=Libro" alt="Cargando portada..." class="producto-imagen">
+            <div class="producto-detalles">
+                <h1 id="libro-titulo">Cargando...</h1>
+                
+                <div class="producto-meta">
+                    <span id="libro-autor">Cargando autor...</span>
+                    <span>|</span> <!-- Un separador visual -->
+                    <span id="libro-anio">Cargando año...</span>
+                </div>
+
+                <p id="libro-descripcion">Cargando descripción...</p>
+                <div class="producto-acciones">
+                    
+                    <!-- 
+                        Botón Guardar (Este ya estaba correcto)
+                        El ID es "btn-guardar" para que coincida con 'books.js'.
+                        Los data-attributes están vacíos, el JS los llenará.
+                    -->
+                    <button id="btn-guardar" class="btn-accion btn-guardar" 
+                            data-id="" 
+                            data-titulo="" 
+                            data-imagen="">
+                        <i class="fa-solid fa-bookmark"></i> Guardar
+                    </button>
+                    
+                    <a id="boton-descargar-libro" href="#" class="btn-accion btn-descargar" target="_blank">
+                        <i class="fa-solid fa-download"></i> Descargar
+                    </a>
+                </div>
+            </div>
+        </div> <!-- Fin de .contenedor-producto -->
+
+    </main> <!-- Fin de .contenido-principal -->
+
+    {% include 'footer.html' %}
+    
+    <script type="module" src="/static/js/main.js"></script>
+    
+</body>
+
+</html>

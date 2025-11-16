@@ -1,0 +1,39 @@
+/* --- ARQUITECTURA CSS MODULAR --- */
+
+/* 1. Base (Siempre primero) */
+@import url("base/_variables.css");
+@import url("base/_global.css");
+
+/* 2. Layout (Estructura principal del sitio) */
+@import url("layout/_header.css");
+@import url("layout/_navegacion.css");
+@import url("layout/_grid.css");
+@import url("layout/_footer.css");
+
+
+/* 3. Componentes (Bloques reutilizables) */
+@import url("components/_buttons.css");
+@import url("components/_forms.css");
+@import url("components/_modal.css");
+@import url("components/_estilos_productos.css");
+
+/* 4. Páginas (Estilos específicos, al final) */
+@import url("pages/_registro.css");
+@import url("pages/producto.css");
+@import url("components/_guardados.css");
+@import url("layout/_alerta.css");
+@import url("pages/mi_cuenta.css");
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 2. Le decimos al contenido principal (el elemento ENTRE
+      el header y el footer) que "crezca" (flex-grow: 1)
+      para ocupar todo el espacio vacío que sobre. */
+main {
+    flex-grow: 1;
+}

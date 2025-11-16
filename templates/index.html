@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIBLIONUVE</title>
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display-swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main_.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    </head>
+
+<body>
+    
+    {% include 'header.html' %}
+
+    <main>
+        <div class="layout-tienda">
+            <div class="contenido-principal">
+
+                <section class="seccion-libros">
+                    <div class="seccion-libros__header">
+                        <h2 class="seccion-libros__titulo">INFANTIL</h2>
+                        <a href="/infantil" class="btn-ver-todo">VER MÁS</a>
+                    </div>
+                    <div class="slider-contenedor">
+                        <button class="slider-btn slider-btn--prev" aria-label="Ver libros anteriores">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="grid-productos slider-track" id="slider-infantil">
+                            <p>Cargando libros...</p>
+                        </div>
+                        <button class="slider-btn slider-btn--next" aria-label="Ver libros siguientes">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="seccion-libros">
+                    <div class="seccion-libros__header">
+                        <h2 class="seccion-libros__titulo">JUVENIL</h2>
+                        <a href="/juvenil" class="btn-ver-todo">VER MÁS</a>
+                    </div>
+                    <div class="slider-contenedor">
+                        <button class="slider-btn slider-btn--prev" aria-label="Ver libros anteriores">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="grid-productos slider-track" id="slider-juvenil">
+                            <p>Cargando libros...</p>
+                        </div>
+                        <button class="slider-btn slider-btn--next" aria-label="Ver libros siguientes">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="seccion-libros">
+                    <div class="seccion-libros__header">
+                        <h2 class="seccion-libros__titulo">ADULTO</h2> <a href="/adulto" class="btn-ver-todo">VER
+                            MÁS</a>
+                    </div>
+                    <div class="slider-contenedor">
+                        <button class="slider-btn slider-btn--prev" aria-label="Ver libros anteriores">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="grid-productos slider-track" id="slider-adulto">
+                            <p>Cargando libros...</p>
+                        </div>
+                        <button class="slider-btn slider-btn--next" aria-label="Ver libros siguientes">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </section>
+                
+            </div>
+        </div>
+    </main>
+    
+    {% include 'footer.html' %}
+
+    <script type="module" src="/static/js/main.js"></script>
+</body>
+
+</html>

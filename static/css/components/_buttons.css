@@ -1,0 +1,56 @@
+/*-----------------------------------------------------*/
+/*-------------------- _buttons.css--------------------*/
+/*-----------------------------------------------------*/
+.btn-identificate {
+    background-color: var(--color-acento);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    font-family: var(--fuentePrincipal);
+    text-transform: none;
+}
+
+.btn-identificate:hover {
+    background-color: var(--color-acento-hover);
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+.btn-entrar {
+    background-color: var(--color-acento-claro);
+    /* !! REVISAR ACCESIBILIDAD !! */
+    color: rgb(255, 255, 255);
+    padding: 15px 20px;
+    margin-left: 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 35px;   
+    border-radius: 4px;
+    font-size: 1em;
+    font-weight: normal;
+    font-family: var(--fuentePrincipal);
+}
+
+.register-button {
+    background-color: var(--color-acento);
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+    font-family: var(--fuentePrincipal);
+}
+
+.register-button:hover {
+    background-color: var(--color-acento-hover);
+}

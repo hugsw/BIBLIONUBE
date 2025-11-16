@@ -1,0 +1,46 @@
+/* 1. EL CONTENEDOR PRINCIPAL */
+.header {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-fondo-header);
+    padding: 0 2rem;
+    height: 10rem;
+}
+
+/* 2. EL LOGO */
+.header__logo {
+    height: 10rem;
+    width: auto;
+    order: 1;
+}
+
+/* 3. EL TÍTULO */
+.header__global {
+    font-size: 3rem;
+    order: 2;
+    flex-grow: 1;
+    text-align: center;
+    color: var(--colortitulos);
+}
+
+/* 4. LOGIN Y BOTONES HEADER */
+.navegacion-login {
+    display: flex;
+    align-items: center;
+    order: 3;
+    column-gap: 12px;
+    margin: 14px;
+    font-family: var(--fuentePrincipal);
+    color: var(--blanco);
+    font-size: 30px;
+    text-transform: none;
+    gap: 1.5rem;
+}
+
+/* 5. EL CONTENEDOR DE BÚSQUEDA */
+.contenedor_busqueda {
+    display: flex;
+    align-items: center;
+    order: 4;
+    
+}

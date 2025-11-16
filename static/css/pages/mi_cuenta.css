@@ -1,0 +1,140 @@
+/* ==============================================
+   ESTILOS PARA PÁGINA "MI CUENTA" (CORREGIDO)
+   ============================================== */
+
+/* Contenedor principal para el layout de 2 columnas */
+.contenedor-principal-mi-cuenta {
+    display: flex;
+    gap: 0; 
+    max-width: 1200px; 
+    margin: 2rem auto; 
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    min-height: 600px; 
+}
+
+/* Estilos del menú lateral */
+.menu-lateral-mi-cuenta {
+    width: 80px; 
+    background-color: #f8f8f8; 
+    padding-top: 2rem;
+    border-right: 1px solid #e0e0e0; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.menu-lateral-mi-cuenta nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; 
+}
+
+.menu-lateral-mi-cuenta nav ul li {
+    position: relative;
+    display: flex; 
+    align-items: center;
+    justify-content: flex-start; /* <-- MODIFICADO: Alinea a la izquierda */
+    padding: 1.5rem 0; 
+    padding-left: 22px;          /* <-- AÑADIDO: Empuja el ícono 22px desde la izq. */
+    cursor: pointer;
+    box-sizing: border-box; 
+}
+
+/* El ícono (color naranja por defecto) */
+.icon-mi-cuenta {
+    font-size: 1.8rem; 
+    color: #FFA500; /* ### CORREGIDO: NARANJA (como en tu imagen) ### */
+    flex-shrink: 0;
+}
+
+/* Estilo para el ítem activo (como en tu imagen) */
+.menu-item-activo {
+    background-color: transparent; /* ### CORREGIDO: Sin fondo ### */
+    border-left: 5px solid #FFA500; /* ### CORREGIDO: Barra NARANJA a la izquierda ### */
+}
+
+.menu-item-activo .icon-mi-cuenta {
+    color: #FFA500; /* Mantiene el color NARANJA */
+}
+
+/* --- Estilos del Contenido (Derecha) --- */
+/* (Estos se quedan igual) */
+
+.contenido-mi-cuenta {
+    flex-grow: 1; 
+    padding: 2rem 3rem;
+}
+
+.contenido-mi-cuenta h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.profile-summary {
+    display: flex;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-initials-circle {
+    width: 70px; 
+    height: 70px;
+    border-radius: 50%;
+    background-color: var(--color-acento); /* Círculo azul de iniciales */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem; 
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.profile-info {
+    margin-left: 1.5rem;
+}
+
+.profile-info h2 {
+    font-size: 1.5rem; 
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+.profile-info p {
+    font-size: 1.5rem; 
+    color: #777;
+    margin: 0.25rem 0 0 0;
+}
+
+.detalles-completos-usuario {
+    padding-top: 1rem;
+}
+
+.detalles-usuario {
+    display: grid;
+    grid-template-columns: 180px 1fr; 
+    gap: 1.2rem 1rem; 
+    font-size: 1.5rem;
+    font-family: var(--fuentePrincipal);
+}
+
+.detalles-usuario dt {
+    font-weight: 600;
+    color: #555;
+}
+
+.detalles-usuario dd {
+    margin: 0;
+    color: #333;
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIBLIONUVE</title>
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main_.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body class="pagina-registro">
+    
+    <div class="register-container">
+        <h1>Regístrate</h1>
+        
+        <form id="register-form" method="POST">
+            
+            <div class="form-group">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" id="nombre_completo" name="nombre_completo" placeholder="Ingrese su Nombre Completo" required>
+            </div>
+            <div class="form-group">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" id="email" name="email" placeholder="Ingrese Correo Electrónico" required>
+            </div>
+
+            <div class="form-group select-wrapper">
+                <i class="fa-solid fa-flag"></i> 
+                <select id="documentType" name="documentType" required>
+                    <option value="">Seleccione Tipo de Documento</option>
+                    <option value="dni">DNI</option>
+                    <option value="passport">Pasaporte</option>
+                    <option value="ce">Carné de Extranjería</option>
+                </select>
+            </div>
+            <div class="form-group" id="document-number-group" style="display: none;">
+                <i class="fa-solid fa-id-card"></i> 
+                <input type="text" id="documentNumber" name="documentNumber" placeholder="Ingrese Número de Documento" inputmode="numeric">
+            </div>
+
+            <div class="form-group">
+                <label for="dob">Ingrese Fecha de Nacimiento:</label>
+                <input type="date" id="dob" name="dob"
+                       min="1925-01-01" 
+                       max="2024-12-31" 
+                       required>
+            </div>
+            <div class="form-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="password" name="password" placeholder="Ingrese Contraseña" required>
+                <i class="fa-solid fa-eye" id="toggleAllPasswords"></i>
+            </div>
+
+            <div class="form-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Verifique su Contraseña" required>
+            </div>
+            <p id="passwordError" class="error-mensaje"></p>
+            <button type="submit" class="register-button">Regístrese</button>
+        </form>
+    </div>
+    <script type="module" src="/static/js/main.js"></script>
+</body>
+</html>

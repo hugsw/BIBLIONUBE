@@ -1,0 +1,30 @@
+/*------------------------------------------------------*/
+/*-------------------- _variables.css--------------------*/
+/*------------------------------------------------------*/
+:root {
+    --primario: #ffffff;
+    --primarioOscuro: #D7D0D0;
+    --blanco: #FFF;
+    --negro: #000;
+    --secundario: #FFA500;
+    --colortitulos: #3c6a99;
+    /* Ejemplo: Naranja */
+    --secundarioOscuro: #E69500;
+    /* Ejemplo: Naranja oscuro */
+
+    /* --- Paleta de Colores Centralizada --- */
+    --color-acento: #f5990c;
+    --color-acento-hover: #f7a92c;
+    --color-acento-claro: #f0b773;
+    --color-acento-modal: #ff9900;
+
+    --color-fondo-header: #ede9e1;
+    --color-fondo-oscuro: #2c3e50;
+    /* de pagina-registro */
+
+    --color-rojo-boton: #a93226;
+    /*--color-rojo-boton-hover: #c0392b;*/
+
+    /* --- Fuente Centralizada --- */
+    --fuentePrincipal: Arial, Helvetica, sans-serif;
+}

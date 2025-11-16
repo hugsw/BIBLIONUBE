@@ -1,0 +1,327 @@
+/*---------------------------------------------------*/
+/*-------------------- _modal.css--------------------*/
+/*---------------------------------------------------*/
+
+/* ============================================= */
+/* PARTE 1: ESTILOS PARA EL MODAL DE LOGIN/REGISTRO */
+/* (Clase: .modal)                             */
+/* ============================================= */
+
+/* 1. ESTADO POR DEFECTO (OCULTO, PERO LISTO PARA TRANSICIÓN) */
+.modal {
+    display: flex; /* DEBE ser 'flex' para centrar, no 'none' */
+    visibility: hidden; /* Así es como lo ocultamos */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente */
+    align-items: center; 
+    justify-content: center; 
+    opacity: 0; /* Empieza transparente */
+    transition: opacity 0.3s ease; /* Transición de opacidad de 0.3 segundos */
+}
+
+/* 2. ESTADO VISIBLE (CENTRADO y CON TRANSICIÓN) */
+.modal.visible {
+    visibility: visible; /* Lo hacemos visible */
+    opacity: 1; /* Comienza la transición de opacidad */
+}
+
+/* 3. ESTILOS DEL CONTENIDO (REGLAS FUSIONADAS) */
+.modal-content {
+    background-color: white;
+    margin: auto;
+    padding: 0; 
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 1230px;
+    max-height: 630px;
+    display: flex;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    overflow: hidden;
+    transform: scale(0.95); 
+    transition: transform 0.3s ease; 
+}
+
+/* 4. Cuando el modal es visible, el contenido vuelve a su tamaño normal */
+.modal.visible .modal-content {
+    transform: scale(1); /* Vuelve a su tamaño normal */
+}
+
+/* Paneles Izquierdo y Derecho */
+.modal-panel {
+    flex: 1;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+.left-panel {
+    background-color: var(--color-acento-modal);
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-left: 60px;
+    padding-right: 60px;
+}
+
+.left-panel h1 {
+    font-size: 2em;
+    margin-bottom: 0px;
+    color: var(--blanco);
+}
+
+.left-panel p {
+    color: var(--blanco);
+    margin-bottom: 50px;
+    margin-top: 1px;
+}
+
+.image-placeholder {
+    width: 400px;
+    height: 400px;
+    background-color: transparent;
+    border-radius: 0px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/static/img/FONDO_LOGIN.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+
+.right-panel {
+    background-color: white;
+    position: relative;
+    box-sizing: border-box;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+/* Botón de Cerrar y Ayuda */
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.help-icon {
+    position: absolute;
+    top: 45px;
+    right: 50px;
+    font-size: 20px;
+}
+
+.help-icon a {
+    color: #aaa;
+    text-decoration: none;
+}
+
+/* Estilos del Formulario de Login */
+.login-form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 30px;
+    font-size: 0.8em;
+    color: #555;
+    font-family: var(--fuentePrincipal);
+    margin-left: 0;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"],
+.login-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #00000070;
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-family: var(--fuentePrincipal);
+    margin-left: 0;
+    margin-right: 0;
+    padding-inline: 20px;
+}
+
+.password-group {
+    position: relative;
+}
+
+.password-group .toggle-password {
+    position: absolute;
+    right: 20px;
+    top: 40%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}
+
+/* --- SEPARADOR 'o' (MÉTODO FLEXBOX) --- */
+.separator-text {
+    text-align: center;
+    margin: 45px 0;
+    color: #686767;
+    width: 100%;
+    margin-left: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.separator-text::before,
+.separator-text::after {
+    content: '';
+    flex-grow: 1;
+    height: 1px;
+    background-color: #bbbbbb;
+}
+
+
+/* Enlaces inferiores */
+.forgot-password,
+.register-link {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 0.9em;
+}
+
+.forgot-password a {
+    color: #e57373;
+    text-decoration: none;
+}
+
+.register-link a {
+    color: #e57373;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Media Query para pantallas pequeñas (opcional) */
+@media (max-width: 768px) {
+    .modal-content {
+        flex-direction: column;
+        width: 95%;
+    }
+
+    .left-panel {
+        display: none;
+    }
+}
+
+
+/* ============================================= */
+/* PARTE 2: ESTILOS PARA EL MODAL DE ALERTA/CONFIRMACIÓN */
+/* (Clase: .custom-modal-overlay)              */
+/* ============================================= */
+
+/* 1. El fondo oscuro (overlay) */
+.custom-modal-overlay {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); 
+    
+    /* ¡CORRECCIÓN CLAVE! */
+    opacity: 0; /* Debe empezar en 0 para la transición */
+    visibility: hidden;
+    
+    transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* 1001 para estar encima del modal de login si es necesario */
+}
+
+/* 2. La clase 'visible' que añade el JS */
+.custom-modal-overlay.visible {
+    /* --- ¡¡AQUÍ ESTABA EL ERROR!! --- */
+    /* Ahora SÍ se vuelve opaco */
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 3. La caja (el modal en sí) */
+.custom-modal-overlay .custom-modal {
+    background-color: #ffffff; 
+    color: #333; 
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%; 
+    max-width: 450px; 
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.2s ease-out;
+}
+
+/* 4. La animación de entrada de la caja */
+.custom-modal-overlay.visible .custom-modal {
+    transform: scale(1);
+}
+
+/* 5. El texto del mensaje 
+ * (Ahora es específico para que NO afecte al modal de login) */
+.custom-modal-overlay .custom-modal p {
+    font-size: 2rem; 
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 2rem; 
+    line-height: 1.5;
+}
+
+/* 6. El contenedor de los botones */
+.custom-modal-overlay .custom-modal-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center; 
+    gap: 1rem; 
+}
+
+/* 7. Estilo de los botones */
+.custom-modal-overlay .custom-modal-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 2rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
+    font-family: var(--fuentePrincipal);
+}
+
+.custom-modal-overlay .custom-modal-btn:hover {
+    transform: scale(1.05); 
+}
+
+/* Botón de Confirmar (Aceptar) */
+.custom-modal-overlay .custom-modal-btn.btn-confirm {
+    background-color: var(--color-acento, #007bff); 
+    color: white;
+}
+.custom-modal-overlay .custom-modal-btn.btn-confirm:hover {
+    background-color: var(--color-acento-hover, #0056b3);
+}
+
+/* Botón de Cancelar */
+.custom-modal-overlay .custom-modal-btn.btn-cancel {
+    background-color: #6c757d; 
+    color: white;
+}
+.custom-modal-overlay .custom-modal-btn.btn-cancel:hover {
+    background-color: #5a6268;
+}

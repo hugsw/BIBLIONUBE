@@ -1,0 +1,75 @@
+/* --- ESTILOS PARA EL FOOTER --- */
+
+.footer {
+    /* Tu color de fondo */
+    background-color: var(--color-fondo-header);
+    
+    /* Activa Flexbox para las columnas */
+    display: flex;
+    justify-content: space-between; 
+    align-items: flex-start; /* <--- ESTA ES LA CORRECCIÓN */
+    
+    padding: 2rem 5%; 
+    margin-top: 3rem; 
+    
+    /* Para móviles (apila las columnas) */
+    flex-wrap: wrap; 
+    text-align: center;
+    gap: 1.5rem; 
+}
+
+/* * Define el tamaño de las columnas. 
+ * flex-basis: auto -> Se adaptan al contenido
+ * flex-grow: 1 -> Crecen para llenar el espacio si es necesario
+*/
+.footer__columna {
+    flex-basis: auto;
+    flex-grow: 1;
+    min-width: 250px; /* Ancho mínimo antes de que se apilen */
+    display: flex;
+    flex-direction: column; /* Apila enlaces dentro de la columna de nav */
+    gap: 0.5rem; /* Espacio entre enlaces de la misma columna */
+}
+
+/* Centra el texto de la columna de copyright */
+.footer__copyright {
+    justify-content: center;
+}
+
+/* Estilos para los enlaces del footer */
+.footer__enlace {
+    color: #333; /* Color de texto oscuro para legibilidad */
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.footer__enlace:hover {
+    color: #0d6efd; /* Un color azul al pasar el mouse */
+}
+
+/* Estilos para el texto de copyright */
+.footer__texto {
+    color: #555; /* Un gris un poco más claro */
+    font-size: 0.9rem;
+    margin: 0; /* Quita el margen por defecto del párrafo */
+}
+
+/* Ajustes específicos para las columnas en pantallas grandes */
+@media (min-width: 768px) {
+    .footer__navegacion {
+        /* Alinea los enlaces de nav a la izquierda */
+        text-align: left;
+        align-items: flex-start;
+    }
+    .footer__redes {
+        /* Centra las redes */
+        text-align: center;
+        align-items: center;
+    }
+    .footer__copyright {
+         /* Alinea el copyright a la derecha */
+        text-align: right;
+        align-items: flex-end;
+    }
+}

@@ -1,0 +1,173 @@
+/* =============================================
+    ESTILOS PARA EL GRID DE "GUARDADOS"
+    (Versión actualizada basada en tus estilos)
+    ============================================= */
+
+/**
+ * 1. El Contenedor (el 'div' con id="grid-guardados")
+ * Mantenemos este estilo para crear el grid.
+ */
+.grid-categoria {
+    display: grid;
+    /* Crea columnas automáticas */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2rem;
+    /* Espacio entre las tarjetas */
+
+    /* Centrado y padding */
+    max-width: 1800px;
+
+    /* --- ¡CORRECCIÓN AQUÍ! ---
+        Cambiamos 'margin: 2rem auto;' por 'margin: 2rem 0;' 
+        para eliminar el centrado. 
+        El padding de abajo se encargará del espacio lateral.
+    */
+    margin: 2rem 0;
+
+    padding: 0 1rem;
+    width: 100%;
+}
+
+/**
+ * 2. La Tarjeta de Producto (class="producto")
+ * Adaptado de tu clase '.grid-productos .producto'
+ */
+.grid-categoria .producto {
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    padding: 0.8rem;
+    /* El padding interno */
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    /* Asegura que todas las tarjetas tengan la misma altura */
+    display: flex;
+    flex-direction: column;
+}
+
+/* El efecto hover (Asumiendo que --color-acento está definido) */
+.grid-categoria .producto:hover {
+    transform: translateY(-5px);
+    /* Si '--color-acento' no está definido, usa un color por defecto */
+    box-shadow: 0 0 8px 1px var(--color-acento, #ffa500);
+    position: relative;
+    z-index: 10;
+}
+
+/**
+ * 3. La Imagen de la tarjeta
+ */
+.grid-categoria .producto img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    box-shadow: none;
+    border-radius: 4px;
+    /* Bordes redondeados para la imagen */
+}
+
+/**
+ * 4. Contenedor de la información
+ */
+.grid-categoria .producto__informacion {
+    padding: 0;
+    margin-top: 1.5rem;
+    text-align: left;
+
+    /* Asegura que el botón se alinee al fondo */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* Ocupa el espacio restante */
+}
+
+/**
+ * 5. Estilos para el título del libro en la tarjeta
+ */
+.grid-categoria .producto__nombre {
+    /* Asumiendo que --fuentePrincipal está definida */
+    font-family: var(--fuentePrincipal, 'Staatliches', sans-serif);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+    text-align: left;
+    line-height: 1.3;
+
+    /* Aprox 2 líneas para alinear tarjetas */
+    min-height: 4rem;
+
+    /* La "magia" para cortar el texto con "..." */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    /* Para navegadores WebKit (Safari, Chrome) */
+    line-clamp: 2;
+    /* La propiedad estándar */
+}
+
+
+/**
+ * ==================================================
+ * 6. ¡CORRECCIÓN! Estilos para el botón "Eliminar"
+ * ==================================================
+ * Reemplazamos los estilos de '.btn-ver-mas' por estos
+ * para darle estilo al '.btn-eliminar'.
+ */
+.grid-categoria .btn-eliminar {
+    /* Layout */
+    display: inline-block;
+    width: 100%;
+    /* Ocupa todo el ancho */
+    padding: 0.75rem 1rem;
+
+    /* ¡CLAVE! Empuja el botón al fondo de la tarjeta */
+    margin-top: auto;
+    padding-top: 1rem;
+    /* Un poco de espacio arriba */
+
+    /* Apariencia de botón rojo */
+    background-color: #dc3545;
+    /* Rojo de "peligro" */
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+
+    /* Texto */
+    font-family: var(--fuentePrincipal);
+    font-size: 1.6rem;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+
+    /* Interacción */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Espacio entre el ícono y el texto */
+.grid-categoria .btn-eliminar i {
+    margin-right: 0.5rem;
+}
+
+/* Efecto hover más oscuro */
+.grid-categoria .btn-eliminar:hover {
+    background-color: #c82333;
+    transform: scale(1.02);
+    /* Ligero zoom al pasar el ratón */
+}
+
+.grid-categoria .btn-eliminar:active {
+    transform: scale(0.98);
+    /* Efecto de clic */
+}
+
+
+
+

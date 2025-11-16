@@ -1,0 +1,308 @@
+/* =============================================
+    ESTILOS GENERALES DE LA SECCIÓN DE LIBROS
+    ============================================= */
+
+.seccion-libros {
+    margin-bottom: 4rem;
+    padding: 0 2rem;
+    min-width: 0;
+}
+
+.seccion-libros__header {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.seccion-libros__titulo {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+/* Botón "VER MÁS" (usado en el index) */
+.btn-ver-todo {
+    background-color: transparent;
+    border: 2px solid var(--color-acento);
+    color: var(--color-acento);
+    padding: 0.8rem 2rem;
+    font-family: var(--fuentePrincipal);
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-ver-todo:hover {
+    background-color: var(--color-acento);
+    color: #fff;
+}
+
+/* =============================================
+    ESTILO UNIFICADO PARA TARJETAS DE PRODUCTO
+    (Se aplica en SLIDER y en GRID DE CATEGORÍA)
+    ============================================= */
+
+/* A. Contenedores (Layout) */
+/* ---------------------------------- */
+
+/* Contenedor del slider (para las flechas) */
+.slider-contenedor {
+    position: relative;
+}
+
+/*
+    AÑADIDO: EFECTO DE DESVANECIDO (FADE) A LA DERECHA
+    Esto crea el efecto de que el slider continúa.
+*/
+.slider-contenedor::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8rem;
+    /* Ancho del desvanecido */
+    height: 100%;
+    /* Evita que el gradiente bloquee los clics */
+    pointer-events: none;
+    /* Gradiente de transparente a blanco */
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 50%, rgb(255, 255, 255) 90%);
+    /* z-index 15: por encima de las tarjetas (z-index 10), debajo de las flechas (z-index 20) */
+    z-index: 15;
+}
+
+
+
+.grid-productos.slider-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 180px;
+    gap: 2rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    scroll-padding-left: 3rem;
+    /* Mantenemos esto por usabilidad */
+    scroll-padding-right: 3rem;
+    /* Mantenemos esto por usabilidad */
+}
+
+/* Oculta scrollbar en Chrome/Safari */
+.grid-productos.slider-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* La cuadrícula de categoría (infantil.html) */
+.grid-productos.grid-categoria {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17.3rem, 1fr));
+    gap: 2rem;
+    max-width: 200rem;
+    margin: 0 auto;
+    padding: 0 2rem 2rem 2rem;
+}
+
+/* Título de la página de categoría */
+.seccion-libros-header {
+    padding: 4rem 2rem 2rem 2rem;
+}
+
+.seccion-libros-titulo {
+    font-family: var(--fuentePrincipal);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--colortitulos);
+    margin: 0;
+}
+
+
+/* B. Tarjeta de Producto (Estilo Visual) */
+/* ---------------------------------- */
+/* Este es el estilo que se aplicará AHORA en todas las tarjetas */
+
+.grid-productos .producto {
+    background-color: #ffffff;
+    /* Fondo blanco */
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    padding: 0.8rem;
+    /* El padding interno que querías */
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    /* Propiedades para que funcione bien en el slider */
+    scroll-snap-align: start;
+    flex-shrink: 0;
+
+    /* ¡NUEVO! Asegura que todas las tarjetas tengan la misma altura */
+    display: flex;
+    flex-direction: column;
+}
+
+/* El efecto hover naranja */
+.grid-productos .producto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 8px 1px var(--color-acento);
+    position: relative;
+    z-index: 10;
+}
+
+/* La imagen del libro */
+.grid-productos .producto img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    box-shadow: none;
+    border-radius: 4px;
+    /* Bordes redondeados para la imagen */
+}
+
+/* Contenedor de la información */
+.grid-productos .producto__informacion {
+    padding: 0;
+    margin-top: 1.5rem;
+    text-align: left;
+
+    /* ¡NUEVO! Asegura que el botón se alinee al fondo */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/*
+  Estilos para el título del libro en la tarjeta
+*/
+.grid-productos .producto__nombre {
+    font-family: var(--fuentePrincipal);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+    text-align: left;
+    line-height: 1.3;
+
+    /* min-height: 4rem;
+      Aprox 2 líneas (1.5rem * 1.3 * 2 = 3.9rem)
+      Esto alinea las tarjetas aunque un título ocupe 1 línea y otro 2.
+    */
+    min-height: 4rem;
+
+    /* La "magia" para cortar el texto con "..." */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    -webkit-line-clamp: 2;
+    /* Para navegadores WebKit (Safari, Chrome) */
+    line-clamp: 2;
+    /* La propiedad estándar (para Firefox y futuros) */
+}
+
+
+
+/* Oculta autor, precio, etc. (puedes cambiarlo si quieres) */
+.grid-productos .producto__autor,
+.grid-productos .producto__precio,
+.grid-productos .btn-ver-mas {
+    display: none;
+
+    /* NOTA: Tu app.js SÍ AÑADE un 'btn-ver-mas'.
+      Esta regla 'display: none' lo está ocultando.
+      Si quieres mostrarlo, borra la línea de arriba y usa los
+      estilos de mi respuesta anterior (con margin-top: auto).
+    */
+}
+
+
+/* C. Flechas del Slider */
+/* ---------------------------------- */
+/* (Esto se queda igual) */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #555;
+    z-index: 20;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.slider-btn:hover {
+    background-color: var(--color-acento);
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-color: var(--color-acento);
+}
+
+.slider-btn--prev {
+    left: 1rem;
+}
+
+.slider-btn--next {
+    right: 1rem;
+}
+
+
+/* =============================================
+    MEDIA QUERIES (AJUSTES PARA MÓVIL)
+    ============================================= */
+/* (Esta sección no necesita cambios) */
+@media (max-width: 768px) {
+    .seccion-libros {
+        padding: 0 1rem;
+    }
+
+    /* Ajuste de flechas en móvil */
+    .slider-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+    }
+
+    .slider-btn--prev {
+        left: 0.5rem;
+    }
+
+    .slider-btn--next {
+        right: 0.5rem;
+    }
+
+    /* Ajuste de la cuadrícula de categoría en móvil */
+    .grid-productos.grid-categoria {
+        padding: 0 1rem 2rem 1rem;
+        /* Ajustamos el tamaño mínimo de tarjeta para que quepan 2 */
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* AÑADIDO: Ajuste del fade en móvil */
+    .slider-contenedor::after {
+        width: 4rem;
+        /* Un desvanecido más corto en pantallas pequeñas */
+    }
+
+}

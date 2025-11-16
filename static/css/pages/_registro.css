@@ -1,0 +1,163 @@
+/*------------------------------------------------------*/
+/*-------------------- _registro.css--------------------*/
+/*------------------------------------------------------*/
+body.pagina-registro {
+    background-color: var(--color-fondo-oscuro);
+    background-image: url('/static/img/F.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: var(--fuentePrincipal);
+}
+
+.register-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.register-container h1 {
+    color: var(--color-fondo-oscuro);
+    margin-bottom: 30px;
+    font-size: 2.8rem;
+    text-align: left;
+}
+
+.register-container .form-group {
+    margin-bottom: 20px;
+    position: relative;
+    text-align: left;
+}
+
+.register-container .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+/* --------------------------------------------------------
+¡BLOQUE DE ESTILOS CORREGIDO!
+--------------------------------------------------------
+*/
+
+/* 1. Estilos COMUNES para TODOS los campos */
+.register-container .form-group input[type="email"],
+.register-container .form-group input[type="text"],
+.register-container .form-group input[type="password"],
+.register-container .form-group input[type="date"],  /* <-- AÑADIDO 'date' */
+.register-container .form-group select {
+    width: 100%;
+    padding: 12px 15px; /* <-- Padding base (sin icono) */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    color: #333;
+    box-sizing: border-box;
+    font-family: var(--fuentePrincipal);
+}
+
+/* 2. Padding extra SOLO para campos CON icono izquierdo */
+.register-container .form-group input[type="email"],
+.register-container .form-group input[type="text"],
+.register-container .form-group input[type="password"],
+.register-container .form-group select {
+    padding-left: 45px; 
+}
+
+/* 3. Padding extra SOLO para campos CON icono derecho */
+.register-container .form-group #password {
+    padding-right: 45px;
+}
+
+/* 4. Quitar apariencia de flecha a 'select' */
+.register-container .form-group select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* --------------------------------------------------------
+FIN DE LA CORRECCIÓN
+--------------------------------------------------------
+*/
+
+
+.register-container .form-group input::placeholder,
+.register-container .form-group select option[value=""] {
+    color: #888;
+}
+
+/* Flecha del select */
+.register-container .form-group.select-wrapper::after {
+    content: "\f078";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    pointer-events: none;
+}
+
+/* --- Posición de ICONOS IZQUIERDOS --- */
+.register-container .form-group>i:first-of-type {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 1.1em;
+}
+
+
+/* --------------------------------------------------------
+¡BLOQUES DE CSS ELIMINADOS!
+Las siguientes reglas ya no son necesarias porque 
+eliminamos los iconos del campo de fecha.
+
+.input-with-icons
+.input-with-icons .fa-solid
+.input-with-icons .fa-user
+.input-with-icons .fa-calendar-days
+.form-group #dob
+--------------------------------------------------------
+*/
+
+
+/* --- ESTILOS DE OJO DE CONTRASEÑA --- */
+#toggleAllPasswords {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 1.1em;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* ---- COLOR DEL MENSAJE ERROR CONTRASEÑA ---- */
+.error-mensaje {
+    color: var(--color-rojo-boton);
+    /* Reutilizamos tu variable de color rojo */
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: left;
+    margin-top: -10px;
+    /* Ajusta el espaciado */
+    margin-bottom: 15px;
+}
