@@ -140,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = 'ENTRAR';
-                T
             }
         });
     }
@@ -167,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * Carga los detalles del usuario en la página "Mi Cuenta".
  * (Tu código antiguo, pero modificado para obtener el token de Firebase)
-SI*/
+ */
 async function cargarDatosMiCuenta() {
     console.log("Cargando datos de Mi Cuenta...");
 
@@ -202,13 +201,13 @@ async function cargarDatosMiCuenta() {
 
         // --- 2. LÓGICA DE INICIALES (Tu código original) ---
         const nombre = data.nombre_usuario || "";
-        const partesNombre = nombre.split(' ');
-        let iniciales = partesNombre[0].substring(0, 2).toUpperCase();
+        const partesNombre = nombre.split(' ').filter(part => part.length > 0); // Limpio el split para manejar múltiples espacios
+        let iniciales = "";
 
-        if (partesNombre.length === 1 && partesNombre[0].length > 0) {
+        if (partesNombre.length > 1) {
+            iniciales = (partesNombre[0].substring(0, 1) + partesNombre[1].substring(0, 1)).toUpperCase();
+        } else if (partesNombre.length === 1) {
             iniciales = partesNombre[0].substring(0, 2).toUpperCase();
-        } else if (partesNombre.length > 1) {
-            iniciales = partesNombre[0].substring(0, 1) + partesNombre[1].substring(0, 1);
         }
         // ------------------------------------
 
@@ -232,7 +231,7 @@ async function cargarDatosMiCuenta() {
         document.getElementById('detalle-nacimiento').textContent = fechaNacimiento;
         document.getElementById('detalle-registro').textContent = fechaRegistro;
         document.getElementById('detalle-estado').textContent = data.estado_cuenta === 'activo' ? 'Activa' : 'Pendiente';
-        
+
     } catch (error) {
         console.error("Error cargando datos de cuenta:", error);
         const container = document.querySelector('.profile-card');
