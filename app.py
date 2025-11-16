@@ -13,23 +13,23 @@ from database import connect_with_connector, warm_up_db
 # Cargar variables de entorno PRIMERO
 load_dotenv() 
 
-# --- 1. Inicialización de Firebase (fuera de la fábrica) ---
-# Esto se hace una vez al inicio del proceso de Gunicorn
+# --- 1. Inicialización de Firebase (CORREGIDO) ---
 print("Inicializando Firebase Admin...")
 try:
-    # Lee la ruta del archivo de credenciales desde una variable de entorno
+    # Lee la ruta del archivo de credenciales
     cred_path = os.environ.get('FIREBASE_CREDS_PATH', '/etc/secrets/firebase-service-account.json')
     
-    if os.path.exists(cred_path):
+    # ESTA ES LA COMPROBACIÓN CORRECTA Y SEGURA PARA GUNICORN
+    if not firebase_admin._apps and os.path.exists(cred_path):
         cred = credentials.Certificate(cred_path)
         firebase_admin.initialize_app(cred)
         print("¡Firebase Admin inicializado con éxito!")
-    else:
+    elif not os.path.exists(cred_path):
         print(f"ADVERTENCIA: No se encontró el archivo de credenciales de Firebase en '{cred_path}'.")
+    else:
+        # Esto significa que _apps ya tiene algo, por lo que ya está inicializado.
+        print("Firebase Admin ya estaba inicializado (en este worker).")
 
-except ValueError:
-    # Evita el error si el worker de Gunicorn intenta inicializar dos veces
-    print("Firebase Admin ya estaba inicializado.")
 except Exception as e:
     # Captura cualquier otro error de inicialización
     print(f"Un error inesperado ocurrió al inicializar Firebase: {e}")
@@ -77,16 +77,16 @@ def create_app():
 # Gunicorn busca esta variable 'app'
 app = create_app()
 
-# --- 4. CONFIGURACIÓN DE WHITENOISE (CRUCIAL PARA PRODUCCIÓN) ---
-# Configura WhiteNoise para servir archivos estáticos (CSS/JS/Imágenes)
-# en el entorno de Render (donde Flask no lo hace por sí mismo).
+# --- 4. CONFIGURACIÓN DE WHITENOISE (CORREGIDO) ---
+# Esta línea define la ruta a tu carpeta 'static'
 static_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 
-# 2. Asigna la aplicación WSGI envuelta en WhiteNoise
-app.wsgi_app = WhiteNoise(app.wsgi_app) 
+# 2. CORRECCIÓN: Pasa la app Y la ruta 'root' a WhiteNoise
+# Esto le dice a WhiteNoise dónde encontrar los archivos estáticos.
+app.wsgi_app = WhiteNoise(app.wsgi_app, root=static_root) 
 
-# 3. Le decimos a WhiteNoise dónde buscar los archivos estáticos
-app.config['WHITENOISE_ROOT'] = static_root
+# 3. (Esta línea ya no es necesaria)
+# app.config['WHITENOISE_ROOT'] = static_root
 
 print(f"WhiteNoise configurado para servir archivos desde: {static_root}")
 # --- FIN DE CONFIGURACIÓN DE WHITENOISE ---
