@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ESTA ES LA FUNCIÓN MÁS IMPORTANTE
     // Se ejecuta al cargar la página y cada vez que el usuario
-    // inicia o cierra sesión. Reemplaza tu 'inicializarGestorSesion'.
+    // inicia o cierra sesión.
     auth.onAuthStateChanged(async (user) => {
 
         // Obtenemos los elementos de la UI
@@ -74,8 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     emailUsuarioDropdown.textContent = email; // Muestra el email completo
                 }
 
-                // La variable 'body' se definió en el bloque anterior de tu auth.js,
-                // por lo que está disponible aquí.
                 body.classList.add('sesion-iniciada');
             }
             else {
@@ -117,9 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
 
                 if (redirectUrl) {
+                    // 2. Si existe, borra el item y redirige
                     sessionStorage.removeItem('redirectAfterLogin');
                     window.location.href = redirectUrl; // ¡Te lleva a /guardado!
-
                 } else {
                     // 3. Si no, es un login normal. Solo cierra el modal.
                     if (modal) {
@@ -137,13 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     errorMsg.textContent = 'Demasiados intentos. Intenta más tarde.';
                 } else {
                     errorMsg.textContent = 'Error al iniciar sesión.';
-                    ISO
                 }
                 console.error("Error en login:", error);
-                _
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = 'ENTRAR';
+                T
             }
         });
     }
@@ -170,12 +167,13 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * Carga los detalles del usuario en la página "Mi Cuenta".
  * (Tu código antiguo, pero modificado para obtener el token de Firebase)
- */
+SI*/
 async function cargarDatosMiCuenta() {
     console.log("Cargando datos de Mi Cuenta...");
 
     const user = auth.currentUser; // Obtiene el usuario de Firebase
-    // // 1. Si no hay usuario, lo echamos.
+
+    // 1. Si no hay usuario, lo echamos.
     if (!user) {
         window.location.href = '/'; // Redirige al inicio
         return;
@@ -234,7 +232,7 @@ async function cargarDatosMiCuenta() {
         document.getElementById('detalle-nacimiento').textContent = fechaNacimiento;
         document.getElementById('detalle-registro').textContent = fechaRegistro;
         document.getElementById('detalle-estado').textContent = data.estado_cuenta === 'activo' ? 'Activa' : 'Pendiente';
-
+        
     } catch (error) {
         console.error("Error cargando datos de cuenta:", error);
         const container = document.querySelector('.profile-card');

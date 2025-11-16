@@ -74,7 +74,7 @@ export function inicializarBarraBusqueda() {
  * Inicializa el botón "Guardados". Si el usuario no está logueado,
  * abre el modal de login.
  * (Extraído de tu 'inicializarScriptsDelHeader')
- */
+ 
 export function inicializarBotonGuardados() {
     const botonGuardados = document.getElementById('boton-guardados');
     const modal = document.getElementById('modalLogin'); // Dependencia
@@ -96,7 +96,7 @@ export function inicializarBotonGuardados() {
             }
         });
     }
-}
+}*/
 
 /**
  * Inicializa el "ojo" para ver contraseña EN EL MODAL DE LOGIN.
