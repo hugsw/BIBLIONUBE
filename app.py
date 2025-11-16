@@ -1,15 +1,14 @@
-# app.py (El nuevo archivo principal)
+# app.py (Corregido para evitar importación circular)
 import os
 import sqlalchemy
 from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
 
-# Importa tus nuevas funciones y Blueprints
+# Importa SÓLO la lógica de la base de datos
 from database import connect_with_connector, warm_up_db
-from routes.web_routes import web_bp
-from routes.auth_routes import auth_bp
-from routes.book_routes import book_bp
+
+# NO importamos las rutas aquí todavía
 
 # Cargar variables de entorno
 load_dotenv()
@@ -25,7 +24,7 @@ db: sqlalchemy.engine.base.Engine = None
 
 print("Iniciando conexión a la base de datos...")
 # Pasamos 'app' a la función para que pueda leer app.config
-db = connect_with_connector(app)
+db = connect_with_connector(app) # <--- db SE CREA AQUÍ
 
 if db is None:
     print("¡ERROR! No se pudo inicializar la conexión a la base de datos.")
@@ -34,6 +33,13 @@ else:
     warm_up_db(db) # Calentamos el pool
 
 # --- 3. Registro de Blueprints (Rutas) ---
+
+# ¡AHORA SÍ importamos las rutas!
+# En este punto, 'db' ya existe y las rutas pueden importarlo sin error.
+from routes.web_routes import web_bp
+from routes.auth_routes import auth_bp
+from routes.book_routes import book_bp
+
 # Aquí le decimos a Flask que use las rutas de tus otros archivos
 app.register_blueprint(web_bp)
 app.register_blueprint(auth_bp)
