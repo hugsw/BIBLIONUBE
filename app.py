@@ -78,15 +78,13 @@ def create_app():
 app = create_app()
 
 # --- 4. CONFIGURACIÓN DE WHITENOISE (CORREGIDO) ---
-# Esta línea define la ruta a tu carpeta 'static'
-static_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+# Define el directorio raíz del PROYECTO (un nivel ARRIBA de este archivo 'app.py')
+project_root = os.path.dirname(os.path.abspath(__file__)) 
+# Define la raíz estática que está en el directorio superior, en la carpeta 'static'
+static_root = os.path.join(os.path.dirname(project_root), 'static')
 
-# 2. CORRECCIÓN: Pasa la app Y la ruta 'root' a WhiteNoise
-# Esto le dice a WhiteNoise dónde encontrar los archivos estáticos.
+# Le decimos a WhiteNoise que sirva los archivos desde esa ruta
 app.wsgi_app = WhiteNoise(app.wsgi_app, root=static_root) 
-
-# 3. (Esta línea ya no es necesaria)
-# app.config['WHITENOISE_ROOT'] = static_root
 
 print(f"WhiteNoise configurado para servir archivos desde: {static_root}")
 # --- FIN DE CONFIGURACIÓN DE WHITENOISE ---

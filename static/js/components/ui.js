@@ -86,6 +86,11 @@ export function inicializarBotonGuardados() {
             if (token) {
                 window.location.href = '/guardado';
             } else {
+                // --- ¡CORRECCIÓN! ---
+                // 1. Guarda la página a la que el usuario quería ir.
+                sessionStorage.setItem('redirectAfterLogin', '/guardado');
+
+                // 2. Ahora sí, abre el modal.
                 modal.classList.add('visible');
                 document.body.classList.add('modal-open');
             }
@@ -127,7 +132,7 @@ export function inicializarTogglePasswordRegistro() {
     const confirmPassField = document.getElementById('confirmPassword');
     const togglePassButton = document.getElementById('toggleAllPasswords');
 
-     if (togglePassButton && passField && confirmPassField) {
+    if (togglePassButton && passField && confirmPassField) {
         togglePassButton.addEventListener('click', () => {
             const isPassword = passField.type === 'password';
             const newType = isPassword ? 'text' : 'password';

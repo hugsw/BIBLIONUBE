@@ -3,12 +3,13 @@
 // --- PASO 1: PEGA TU CÓDIGO DE FIREBASE CONFIG AQUÍ ---
 // (¡El mismo que usaste en registro.js!)
 const firebaseConfig = {
-  apiKey: "AIzaSy...xxxxxxxxxxxx", // ¡Pega el tuyo!
-  authDomain: "biblionube-xxxx.firebaseapp.com", // ¡Pega el tuyo!
-  projectId: "biblionube-xxxx", // ¡Pega el tuyo!
-  storageBucket: "biblionube-xxxx.appspot.com", // ¡Pega el tuyo!
-  messagingSenderId: "...", // ¡Pega el tuyo!
-  appId: "1:..." // ¡Pega el tuyo!
+    apiKey: "AIzaSyA19ORaIYFCH_vfPfamUjyR9iMxLGT1FVI",
+    authDomain: "biblionube-328e4.firebaseapp.com",
+    projectId: "biblionube-328e4",
+    storageBucket: "biblionube-328e4.firebasestorage.app",
+    messagingSenderId: "911996701364",
+    appId: "1:911996701364:web:97ff11275b17a91b85a5e1",
+    measurementId: "G-VWPDZYGQ88"
 };
 
 // --- PASO 2: INICIALIZA FIREBASE ---
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Se ejecuta al cargar la página y cada vez que el usuario
     // inicia o cierra sesión. Reemplaza tu 'inicializarGestorSesion'.
     auth.onAuthStateChanged(async (user) => {
-        
+
         // Obtenemos los elementos de la UI
         const body = document.body;
         const btnLogin = document.getElementById('abrirModal'); // Botón "IDENTIFICATE"
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (user) {
             // --- EL USUARIO TIENE SESIÓN ---
-            
+
             // 1. Revisamos si verificó su correo
             if (user.emailVerified) {
                 // ¡Usuario verificado!
@@ -44,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 2. Calcular Iniciales (como en tu código antiguo)
                 const inicialesUsuario = document.getElementById('user-initials');
                 const emailUsuarioDropdown = document.getElementById('user-dropdown-email');
-                
+
                 let iniciales = nombre ? nombre.substring(0, 2).toUpperCase() : email.substring(0, 2).toUpperCase();
                 const partesNombre = nombre ? nombre.split(' ') : [];
                 if (partesNombre.length === 1 && partesNombre[0].length > 0) {
@@ -74,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const email = loginForm['email-login'].value;
             const password = loginForm['password-login'].value;
             const errorMsg = document.getElementById('login-error');
@@ -89,14 +90,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 // ¡AQUÍ ESTÁ LA MAGIA!
                 // Llama a Firebase para iniciar sesión
                 await auth.signInWithEmailAndPassword(email, password);
-                
+
                 // ¡Éxito! onAuthStateChanged se encargará de actualizar la UI
-                
-                // 3. Cierra el modal
-                if (modal) {
-                    modal.classList.remove('visible');
-                    document.body.classList.remove('modal-open');
+
+                // --- BLOQUE CORREGIDO ---
+                // 1. Revisa si hay una URL guardada en sessionStorage
+                const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
+
+                if (redirectUrl) {
+                    sessionStorage.removeItem('redirectAfterLogin');
+                    window.location.href = redirectUrl; // ¡Te lleva a /guardado!
+
+                } else {
+                    // 3. Si no, es un login normal. Solo cierra el modal.
+                    if (modal) {
+                        modal.classList.remove('visible');
+                        document.body.classList.remove('modal-open');
+                    }
                 }
+                // --- FIN DEL BLOQUE CORREGIDO ---
 
             } catch (error) {
                 // Maneja errores de Firebase (ej. auth/wrong-password)
@@ -106,8 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     errorMsg.textContent = 'Demasiados intentos. Intenta más tarde.';
                 } else {
                     errorMsg.textContent = 'Error al iniciar sesión.';
+                    ISO
                 }
                 console.error("Error en login:", error);
+                _
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = 'ENTRAR';
@@ -142,8 +156,7 @@ async function cargarDatosMiCuenta() {
     console.log("Cargando datos de Mi Cuenta...");
 
     const user = auth.currentUser; // Obtiene el usuario de Firebase
-
-    // 1. Si no hay usuario, lo echamos.
+    // // 1. Si no hay usuario, lo echamos.
     if (!user) {
         window.location.href = '/'; // Redirige al inicio
         return;
@@ -163,7 +176,7 @@ async function cargarDatosMiCuenta() {
         if (!response.ok) {
             if (response.status === 401) {
                 auth.signOut(); // Si el token es inválido, deslogueamos
-                window.location.href = '/'; 
+                window.location.href = '/';
             }
             throw new Error('No se pudieron cargar los datos.');
         }
@@ -184,17 +197,17 @@ async function cargarDatosMiCuenta() {
 
         // 3. Formatear fechas (Tu código original)
         const formatoFecha = { day: 'numeric', month: 'long', year: 'numeric' };
-        
-        const fechaNacimiento = data.fecha_nacimiento 
-            ? new Date(data.fecha_nacimiento).toLocaleDateString('es-ES', formatoFecha) 
+
+        const fechaNacimiento = data.fecha_nacimiento
+            ? new Date(data.fecha_nacimiento).toLocaleDateString('es-ES', formatoFecha)
             : 'No especificada';
-            
+
         const fechaRegistro = data.fecha_registro
             ? new Date(data.fecha_registro).toLocaleDateString('es-ES', formatoFecha)
             : 'No especificada';
 
         // 4. Rellenar el HTML (Tu código original)
-        document.getElementById('detalle-iniciales').textContent = iniciales; 
+        document.getElementById('detalle-iniciales').textContent = iniciales;
         document.getElementById('detalle-nombre').textContent = data.nombre_usuario;
         document.getElementById('detalle-correo').textContent = data.correo_usuario;
         document.getElementById('detalle-tipo-doc').textContent = data.tipo_documento.toUpperCase();
@@ -206,7 +219,7 @@ async function cargarDatosMiCuenta() {
     } catch (error) {
         console.error("Error cargando datos de cuenta:", error);
         const container = document.querySelector('.profile-card');
-        if(container) {
+        if (container) {
             container.innerHTML = '<h1>Error</h1><p>No se pudieron cargar los detalles de tu cuenta. Por favor, intenta iniciar sesión de nuevo.</p>';
         }
     }
