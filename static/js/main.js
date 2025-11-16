@@ -13,7 +13,7 @@ import {
     inicializarSliders,
     inicializarModalLogin,
     inicializarBarraBusqueda,
-    inicializarBotonGuardados,
+    //inicializarBotonGuardados,
     inicializarTogglePasswordLogin,
     inicializarTogglePasswordRegistro,
     inicializarDropdownUsuario
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // (Esta es la lógica de tu 'inicializarLogicaHeader' y 'ui.js')
     inicializarModalLogin();
     inicializarBarraBusqueda();
-    inicializarBotonGuardados();
+    //inicializarBotonGuardados();
     inicializarTogglePasswordLogin(); // El "ojo" del modal
     inicializarDropdownUsuario();
     console.log("Lógica del Header y UI inicializada.");
