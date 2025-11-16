@@ -16,11 +16,23 @@
     <div class="register-container">
         <h1>Regístrate</h1>
         
-        <form id="register-form" method="POST">
+        <!-- 
+            Quitamos el 'method="POST"' porque JavaScript
+            manejará el envío del formulario.
+        -->
+        <form id="register-form">
             
             <div class="form-group">
                 <i class="fa-solid fa-user"></i>
-                <input type="text" id="nombre_completo" name="nombre_completo" placeholder="Ingrese su Nombre Completo" required>
+                <!-- 
+                    Asegúrate de que los ID sean correctos:
+                    Cambié 'nombre_completo' a 'nombre'
+                    Cambié 'documentType' a 'tipo_documento'
+                    Cambié 'documentNumber' a 'numero_documento'
+                    Cambié 'dob' a 'fecha_nacimiento'
+                    para que coincidan con el backend.
+                -->
+                <input type="text" id="nombre" name="nombre" placeholder="Ingrese su Nombre Completo" required>
             </div>
             <div class="form-group">
                 <i class="fa-solid fa-envelope"></i>
@@ -29,7 +41,7 @@
 
             <div class="form-group select-wrapper">
                 <i class="fa-solid fa-flag"></i> 
-                <select id="documentType" name="documentType" required>
+                <select id="tipo_documento" name="tipo_documento" required>
                     <option value="">Seleccione Tipo de Documento</option>
                     <option value="dni">DNI</option>
                     <option value="passport">Pasaporte</option>
@@ -38,12 +50,12 @@
             </div>
             <div class="form-group" id="document-number-group" style="display: none;">
                 <i class="fa-solid fa-id-card"></i> 
-                <input type="text" id="documentNumber" name="documentNumber" placeholder="Ingrese Número de Documento" inputmode="numeric">
+                <input type="text" id="numero_documento" name="numero_documento" placeholder="Ingrese Número de Documento" inputmode="numeric">
             </div>
 
             <div class="form-group">
-                <label for="dob">Ingrese Fecha de Nacimiento:</label>
-                <input type="date" id="dob" name="dob"
+                <label for="fecha_nacimiento">Ingrese Fecha de Nacimiento:</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento"
                        min="1925-01-01" 
                        max="2024-12-31" 
                        required>
@@ -58,10 +70,21 @@
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Verifique su Contraseña" required>
             </div>
+            
+            <!-- Mensaje de error para el frontend -->
             <p id="passwordError" class="error-mensaje"></p>
+            
             <button type="submit" class="register-button">Regístrese</button>
         </form>
     </div>
+
+    <!-- 
+      PASO 1: AÑADE LOS SCRIPTS DE FIREBASE
+      (Pégalos antes de tu script 'registro.js')
+    -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script type="module" src="/static/js/main.js"></script>
+
 </body>
 </html>
