@@ -59,11 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     inicializarDropdownUsuario();
     console.log("Lógica del Header y UI inicializada.");
 
-    // 3. Inicializa la lógica de autenticación de Firebase
-    // (Esto reemplaza tu 'inicializarGestorSesion' y 'inicializarLogicaAuth')
-    inicializarFirebaseGlobal();
-    console.log("Gestor de sesión de Firebase inicializado.");
-
     // 4. Lógica solo para el formulario de registro (si existe)
     if (document.getElementById('register-form')) {
         // (Esto reemplaza tu 'inicializarFormularioRegistro')
@@ -85,12 +80,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 7. Carga los datos de 'producto.html' (si estamos en esa página)
     await cargarProductoUnico();
     console.log("Carga de (producto único) completada.");
-
-    // 8. Inicializa el botón "Guardar" (si estamos en 'producto.html')
-    // ¡IMPORTANTE! books.js debe ser actualizado para usar tokens de Firebase
-    inicializarBotonGuardar(); 
-    console.log("Botón 'Guardar' inicializado.");
-
     // 9. Carga los libros en 'guardado.html' (si estamos en esa página)
     // ¡IMPORTANTE! books.js debe ser actualizado para usar tokens de Firebase
     await cargarLibrosGuardados();
