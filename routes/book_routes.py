@@ -1,14 +1,10 @@
-# routes/book_routes.py
 import sqlalchemy
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app # <-- 1. Importar current_app
 from sqlalchemy.exc import IntegrityError 
 
-# Importamos la variable 'db' desde nuestro archivo 'app.py'
-from app import db 
-# Importamos nuestro decorador
+# from app import db  <-- 2. ¡ELIMINADO!
 from utils.security import token_required
 
-# Creamos el Blueprint
 book_bp = Blueprint('book_bp', __name__)
 
 
@@ -16,7 +12,9 @@ book_bp = Blueprint('book_bp', __name__)
 @book_bp.route("/libros")
 def obtener_libros():
     try:
-        with db.connect() as conn:
+        # --- 3. CORRECCIÓN ---
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
             query_sql = """
                 SELECT 
                     l.id_libro, l.titulo_libro, l.autor_libro, l.publicacion, 
@@ -28,17 +26,27 @@ def obtener_libros():
             """
             query = sqlalchemy.text(query_sql)
             resultados = conn.execute(query).fetchall()
-            libros_lista = [
+            
+            # Convertimos las filas (Rows) a diccionarios
+            libros_lista = [row._asdict() for row in resultados]
+            
+            # Renombramos las claves si es necesario (opcional pero buena práctica)
+            libros_mapeados = [
                 {
-                    "id": row.id_libro, "titulo": row.titulo_libro, "autor": row.autor_libro,
-                    "publicacion": row.publicacion, 
-                    "descripcion": row.descripcion,
-                    "url": row.url_libro, "categoria": row.nombre_categoria,
-                    "imagen": row.url_portada, 
-                    "alt": row.titulo_libro 
-                } for row in resultados
+                    "id": libro["id_libro"],
+                    "titulo": libro["titulo_libro"],
+                    "autor": libro["autor_libro"],
+                    "publicacion": libro["publicacion"],
+                    "descripcion": libro["descripcion"],
+                    "url": libro["url_libro"],
+                    "categoria": libro["nombre_categoria"],
+                    "imagen": libro["url_portada"],
+                    "alt": libro["titulo_libro"]
+                } for libro in libros_lista
             ]
-            return jsonify(libros_lista)
+            
+            return jsonify(libros_mapeados)
+            
     except Exception as e:
         print(f"Error en /libros: {e}")
         return jsonify({"error": str(e)}), 500
@@ -47,7 +55,9 @@ def obtener_libros():
 @book_bp.route("/libros/<int:libro_id>")
 def obtener_libro_por_id(libro_id):
     try:
-        with db.connect() as conn:
+        # --- 3. CORRECCIÓN ---
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
             query = sqlalchemy.text(
                 "SELECT titulo_libro, autor_libro, publicacion, descripcion, url_libro, "
                 "url_portada " 
@@ -56,15 +66,20 @@ def obtener_libro_por_id(libro_id):
             resultado = conn.execute(query, {"id": libro_id}).fetchone()
 
             if resultado:
-                libro_encontrado = {
-                    "titulo": resultado.titulo_libro, "autor": resultado.autor_libro,
-                    "publicacion": resultado.publicacion, 
-                    "descripcion": resultado.descripcion,
-                    "url": resultado.url_libro,
-                    "imagen": resultado.url_portada, 
-                    "url_portada": resultado.url_portada 
+                # Convertimos la fila (Row) a un diccionario
+                libro_encontrado = resultado._asdict()
+                
+                # Mapeamos a las claves que espera el frontend
+                libro_mapeado = {
+                    "titulo": libro_encontrado["titulo_libro"],
+                    "autor": libro_encontrado["autor_libro"],
+                    "publicacion": libro_encontrado["publicacion"],
+                    "descripcion": libro_encontrado["descripcion"],
+                    "url": libro_encontrado["url_libro"],
+                    "imagen": libro_encontrado["url_portada"],
+                    "url_portada": libro_encontrado["url_portada"]
                 }
-                return jsonify(libro_encontrado)
+                return jsonify(libro_mapeado)
             else:
                 return jsonify({"error": "Libro no encontrado"}), 404
     except Exception as e:
@@ -86,7 +101,9 @@ def guardar_libro(current_user_id):
         if not libro_id:
             return jsonify({"error": "Falta 'libro_id'."}), 400
 
-        with db.connect() as conn:
+        # --- 3. CORRECCIÓN ---
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
             sql_check = sqlalchemy.text(
                 "SELECT 1 FROM libros_guardados WHERE usuario_id = :uid AND libro_id = :lid"
             )
@@ -119,7 +136,9 @@ def get_mis_libros(current_user_id):
         return jsonify({"message": "CORS preflight OK"}), 200
 
     try:
-        with db.connect() as conn:
+        # --- 3. CORRECCIÓN ---
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
             sql_query = sqlalchemy.text("""
                 SELECT 
                     L.id_libro, 
@@ -131,16 +150,20 @@ def get_mis_libros(current_user_id):
             """)
             resultados = conn.execute(sql_query, {"uid": current_user_id}).fetchall()
             
-            libros_lista = [
+            # Convertimos las filas (Rows) a diccionarios
+            libros_lista = [row._asdict() for row in resultados]
+            
+            # Mapeamos a las claves que espera el frontend
+            libros_mapeados = [
                 {
-                    "id": row.id_libro,
-                    "titulo": row.titulo_libro,
-                    "imagen": row.url_portada, 
-                    "alt": row.titulo_libro
-                } for row in resultados
+                    "id": libro["id_libro"],
+                    "titulo": libro["titulo_libro"],
+                    "imagen": libro["url_portada"],
+                    "alt": libro["titulo_libro"]
+                } for libro in libros_lista
             ]
             
-            return jsonify(libros_lista)
+            return jsonify(libros_mapeados)
             
     except Exception as e:
         print(f"Error al obtener libros guardados: {e}")
@@ -161,7 +184,9 @@ def quitar_libro(current_user_id):
         if not libro_id:
             return jsonify({"error": "Falta 'libro_id'."}), 400
             
-        with db.connect() as conn:
+        # --- 3. CORRECCIÓN ---
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
             sql_delete = sqlalchemy.text(
                 "DELETE FROM libros_guardados WHERE usuario_id = :uid AND libro_id = :lid"
             )

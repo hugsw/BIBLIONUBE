@@ -1,10 +1,9 @@
-# routes/auth_routes.py (ACTUALIZADO para Firebase)
 import sqlalchemy
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app # <-- 1. Importar current_app
 from sqlalchemy.exc import IntegrityError 
 
-from app import db 
-from utils.security import token_required # <--- Importa el NUEVO decorador
+# from app import db  <-- 2. ¡ELIMINADO! Esta línea causaba el error de importación circular.
+from utils.security import token_required 
 
 auth_bp = Blueprint('auth_bp', __name__)
 
@@ -51,7 +50,10 @@ def crear_perfil_usuario(current_user_id):
             """
         )
         
-        with db.connect() as conn:
+        # --- 3. CORRECCIÓN ---
+        # Accedemos a la BD usando 'current_app.db' en lugar de 'db'
+        db_engine = current_app.db 
+        with db_engine.connect() as conn:
             conn.execute(sql_insert, {
                 "uid": current_user_id, # <--- El ID de Firebase
                 "nombre": nombre_completo, 
@@ -86,7 +88,10 @@ def get_mi_cuenta(current_user_id):
         return jsonify({"message": "CORS preflight OK"}), 200
 
     try:
-        with db.connect() as conn:
+        # --- 4. CORRECCIÓN ---
+        # Accedemos a la BD usando 'current_app.db'
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
             # Buscamos al usuario usando el ID de Firebase
             sql_query = sqlalchemy.text("""
                 SELECT 
@@ -101,6 +106,7 @@ def get_mi_cuenta(current_user_id):
             if not resultado:
                 return jsonify({"error": "Perfil de usuario no encontrado."}), 404
 
+            # Convertimos el resultado de SQLAlchemy (Row) a un diccionario
             detalles_usuario = {
                 "nombre_usuario": resultado.nombre_usuario,
                 "correo_usuario": resultado.correo_usuario,

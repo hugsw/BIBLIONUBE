@@ -1,4 +1,3 @@
-# routes/web_routes.py
 from flask import Blueprint, render_template
 
 # Creamos un "Blueprint". Es como un mini-app
