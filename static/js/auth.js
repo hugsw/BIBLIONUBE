@@ -1,7 +1,6 @@
 // static/js/auth.js
 
-// --- PASO 1: PEGA TU CÓDIGO DE FIREBASE CONFIG AQUÍ ---
-// (¡El mismo que usaste en registro.js!)
+// --- PASO 1: CONFIGURACIÓN DE FIREBASE ---
 const firebaseConfig = {
     apiKey: "AIzaSyA19ORaIYFCH_vfPfamUjyR9iMxLGT1FVI",
     authDomain: "biblionube-328e4.firebaseapp.com",
@@ -23,57 +22,67 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnLogout = document.getElementById('logout-button');
     const miCuentaCard = document.querySelector('.profile-card');
 
-    // ESTA ES LA FUNCIÓN MÁS IMPORTANTE
-    // Se ejecuta al cargar la página y cada vez que el usuario
-    // inicia o cierra sesión.
+    // --- ¡LA CORRECCIÓN DEFINITIVA! ---
+    // Movemos la lógica del botón "Guardados" aquí.
+    const botonGuardados = document.getElementById('boton-guardados');
+    const modalLogin = document.getElementById('modalLogin');
+
+    if (botonGuardados && modalLogin) {
+        // 1. Asignamos el listener INMEDIATAMENTE al cargar la página.
+        botonGuardados.addEventListener('click', (e) => {
+            // 2. SIEMPRE prevenimos que el enlace navegue.
+            e.preventDefault();
+
+            // 3. Revisamos el estado de Firebase EN EL MOMENTO DEL CLIC.
+            // auth.currentUser es síncrono, nos da el usuario actual (o null).
+            const user = auth.currentUser;
+
+            if (user && user.emailVerified) {
+                // --- Caso 1: Usuario LOGUEADO y VERIFICADO ---
+                window.location.href = '/guardado';
+            } else {
+                // --- Caso 2: Usuario NO logueado (o no verificado) ---
+                sessionStorage.setItem('redirectAfterLogin', '/guardado');
+                modalLogin.classList.add('visible');
+                document.body.classList.add('modal-open');
+            }
+        });
+    }
+    // --- FIN DE LA CORRECCIÓN ---
+
+
+    // onAuthStateChanged AHORA solo se encarga de actualizar la UI
+    // (mostrar/ocultar "IDENTIFICATE" vs el círculo de usuario)
     auth.onAuthStateChanged(async (user) => {
 
-        // Obtenemos los elementos de la UI
         const body = document.body;
-        const btnLogin = document.getElementById('abrirModal'); // Botón "IDENTIFICATE"
-        const menuUsuario = document.getElementById('user-menu-wrapper'); // Contenedor del círculo
 
         if (user) {
             // --- EL USUARIO TIENE SESIÓN ---
-
-            // 1. Revisamos si verificó su correo
             if (user.emailVerified) {
                 // ¡Usuario verificado!
-
-                // 1. Asignar valores por defecto seguros (evita errores si son null)
                 const nombre = user.displayName || "";
                 const email = user.email || "";
 
-                // 2. Calcular Iniciales
+                // Calcular Iniciales
                 const inicialesUsuario = document.getElementById('user-initials');
                 const emailUsuarioDropdown = document.getElementById('user-dropdown-email');
-
                 let iniciales = "";
-                // Filtra partes vacías (ej. si el nombre es "John  Doe")
                 const partesNombre = nombre.split(' ').filter(part => part.length > 0);
 
                 if (partesNombre.length > 1) {
-                    // Caso: "John Doe" -> "JD"
                     iniciales = (partesNombre[0].substring(0, 1) + partesNombre[1].substring(0, 1)).toUpperCase();
                 } else if (partesNombre.length === 1) {
-                    // Caso: "John" -> "JO"
                     iniciales = partesNombre[0].substring(0, 2).toUpperCase();
                 } else if (email) {
-                    // Caso: Sin nombre, pero con email -> "TE" (de "test@...")
                     iniciales = email.substring(0, 2).toUpperCase();
                 } else {
-                    // Caso: Sin nombre ni email (raro) -> "??"
                     iniciales = "??";
                 }
 
-                // 3. Actualizar UI
-                if (inicialesUsuario) {
-                    inicialesUsuario.textContent = iniciales;
-                }
-                if (emailUsuarioDropdown) {
-                    emailUsuarioDropdown.textContent = email; // Muestra el email completo
-                }
-
+                // Actualizar UI
+                if (inicialesUsuario) inicialesUsuario.textContent = iniciales;
+                if (emailUsuarioDropdown) emailUsuarioDropdown.textContent = email;
                 body.classList.add('sesion-iniciada');
             }
             else {
@@ -92,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const email = loginForm['email-login'].value;
             const password = loginForm['password-login'].value;
             const errorMsg = document.getElementById('login-error');
@@ -104,31 +112,26 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.textContent = 'INGRESANDO...';
 
             try {
-                // ¡AQUÍ ESTÁ LA MAGIA!
-                // Llama a Firebase para iniciar sesión
                 await auth.signInWithEmailAndPassword(email, password);
-
                 // ¡Éxito! onAuthStateChanged se encargará de actualizar la UI
 
-                // --- BLOQUE CORREGIDO ---
-                // 1. Revisa si hay una URL guardada en sessionStorage
+                // --- BLOQUE DE REDIRECCIÓN (Esto está correcto) ---
                 const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
 
                 if (redirectUrl) {
-                    // 2. Si existe, borra el item y redirige
                     sessionStorage.removeItem('redirectAfterLogin');
                     window.location.href = redirectUrl; // ¡Te lleva a /guardado!
                 } else {
-                    // 3. Si no, es un login normal. Solo cierra el modal.
+                    // Login normal. Solo cierra el modal.
                     if (modal) {
                         modal.classList.remove('visible');
                         document.body.classList.remove('modal-open');
                     }
                 }
-                // --- FIN DEL BLOQUE CORREGIDO ---
+                // --- FIN DEL BLOQUE ---
 
             } catch (error) {
-                // Maneja errores de Firebase (ej. auth/wrong-password)
+                // Maneja errores de Firebase
                 if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
                     errorMsg.textContent = 'Correo o contraseña incorrectos.';
                 } else if (error.code === 'auth/too-many-requests') {
@@ -148,9 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnLogout) {
         btnLogout.addEventListener('click', () => {
             auth.signOut().then(() => {
-                // onAuthStateChanged se encargará de limpiar la UI
                 // Recargamos para un estado limpio
-                window.location.reload();
+                window.location.href = '/'; // Redirige al index al cerrar sesión
             });
         });
     }
@@ -165,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Carga los detalles del usuario en la página "Mi Cuenta".
- * (Tu código antiguo, pero modificado para obtener el token de Firebase)
  */
 async function cargarDatosMiCuenta() {
     console.log("Cargando datos de Mi Cuenta...");
@@ -199,9 +200,9 @@ async function cargarDatosMiCuenta() {
 
         const data = await response.json();
 
-        // --- 2. LÓGICA DE INICIALES (Tu código original) ---
+        // --- 2. LÓGICA DE INICIALES ---
         const nombre = data.nombre_usuario || "";
-        const partesNombre = nombre.split(' ').filter(part => part.length > 0); // Limpio el split para manejar múltiples espacios
+        const partesNombre = nombre.split(' ').filter(part => part.length > 0);
         let iniciales = "";
 
         if (partesNombre.length > 1) {
@@ -211,7 +212,7 @@ async function cargarDatosMiCuenta() {
         }
         // ------------------------------------
 
-        // 3. Formatear fechas (Tu código original)
+        // 3. Formatear fechas
         const formatoFecha = { day: 'numeric', month: 'long', year: 'numeric' };
 
         const fechaNacimiento = data.fecha_nacimiento
@@ -222,7 +223,7 @@ async function cargarDatosMiCuenta() {
             ? new Date(data.fecha_registro).toLocaleDateString('es-ES', formatoFecha)
             : 'No especificada';
 
-        // 4. Rellenar el HTML (Tu código original)
+        // 4. Rellenar el HTML
         document.getElementById('detalle-iniciales').textContent = iniciales;
         document.getElementById('detalle-nombre').textContent = data.nombre_usuario;
         document.getElementById('detalle-correo').textContent = data.correo_usuario;
