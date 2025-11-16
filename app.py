@@ -77,16 +77,21 @@ def create_app():
 # Gunicorn busca esta variable 'app'
 app = create_app()
 
-# --- 4. CONFIGURACIÓN DE WHITENOISE (CORREGIDO) ---
-# Define el directorio raíz del PROYECTO (un nivel ARRIBA de este archivo 'app.py')
+# --- 4. CONFIGURACIÓN DE WHITENOISE (LA VERSIÓN CORRECTA) ---
+# 1. Define la ruta al directorio de este archivo (app.py)
+#    (Esto será /opt/render/project/src)
 project_root = os.path.dirname(os.path.abspath(__file__)) 
-# Define la raíz estática que está en el directorio superior, en la carpeta 'static'
-static_root = os.path.join(os.path.dirname(project_root), 'static')
 
-# Le decimos a WhiteNoise que sirva los archivos desde esa ruta
+# 2. Define la ruta a la carpeta 'static' (que está EN EL MISMO DIRECTORIO)
+#    (Esto será /opt/render/project/src/static)
+static_root = os.path.join(project_root, 'static')
+
+# 3. Le decimos a WhiteNoise que sirva los archivos desde esa ruta
 app.wsgi_app = WhiteNoise(app.wsgi_app, root=static_root) 
 
 print(f"WhiteNoise configurado para servir archivos desde: {static_root}")
+
+
 # --- FIN DE CONFIGURACIÓN DE WHITENOISE ---
 
 
