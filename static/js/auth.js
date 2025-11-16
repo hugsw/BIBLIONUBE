@@ -39,27 +39,46 @@ document.addEventListener('DOMContentLoaded', () => {
             // 1. Revisamos si verificó su correo
             if (user.emailVerified) {
                 // ¡Usuario verificado!
-                const nombre = user.displayName;
-                const email = user.email;
 
-                // 2. Calcular Iniciales (como en tu código antiguo)
+                // 1. Asignar valores por defecto seguros (evita errores si son null)
+                const nombre = user.displayName || "";
+                const email = user.email || "";
+
+                // 2. Calcular Iniciales
                 const inicialesUsuario = document.getElementById('user-initials');
                 const emailUsuarioDropdown = document.getElementById('user-dropdown-email');
 
-                let iniciales = nombre ? nombre.substring(0, 2).toUpperCase() : email.substring(0, 2).toUpperCase();
-                const partesNombre = nombre ? nombre.split(' ') : [];
-                if (partesNombre.length === 1 && partesNombre[0].length > 0) {
+                let iniciales = "";
+                // Filtra partes vacías (ej. si el nombre es "John  Doe")
+                const partesNombre = nombre.split(' ').filter(part => part.length > 0);
+
+                if (partesNombre.length > 1) {
+                    // Caso: "John Doe" -> "JD"
+                    iniciales = (partesNombre[0].substring(0, 1) + partesNombre[1].substring(0, 1)).toUpperCase();
+                } else if (partesNombre.length === 1) {
+                    // Caso: "John" -> "JO"
                     iniciales = partesNombre[0].substring(0, 2).toUpperCase();
-                } else if (partesNombre.length > 1) {
-                    iniciales = partesNombre[0].substring(0, 1) + partesNombre[1].substring(0, 1);
+                } else if (email) {
+                    // Caso: Sin nombre, pero con email -> "TE" (de "test@...")
+                    iniciales = email.substring(0, 2).toUpperCase();
+                } else {
+                    // Caso: Sin nombre ni email (raro) -> "??"
+                    iniciales = "??";
                 }
 
                 // 3. Actualizar UI
-                if (inicialesUsuario) inicialesUsuario.textContent = iniciales;
-                if (emailUsuarioDropdown) emailUsuarioDropdown.textContent = email;
-                body.classList.add('sesion-iniciada');
+                if (inicialesUsuario) {
+                    inicialesUsuario.textContent = iniciales;
+                }
+                if (emailUsuarioDropdown) {
+                    emailUsuarioDropdown.textContent = email; // Muestra el email completo
+                }
 
-            } else {
+                // La variable 'body' se definió en el bloque anterior de tu auth.js,
+                // por lo que está disponible aquí.
+                body.classList.add('sesion-iniciada');
+            }
+            else {
                 // Usuario registrado pero NO ha verificado su correo
                 alert("Por favor, revisa tu correo electrónico para verificar tu cuenta antes de iniciar sesión.");
                 auth.signOut(); // Lo deslogueamos
