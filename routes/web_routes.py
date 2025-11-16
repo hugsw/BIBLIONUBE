@@ -9,6 +9,13 @@ web_bp = Blueprint('web_bp', __name__)
 def index():
     return render_template('index.html')
 
+@web_bp.route('/registro')
+def registro_page():
+    # Esta ruta solo sirve el HTML.
+    # Todo el trabajo de registro (Firebase + API)
+    # lo hará el JavaScript que está dentro de esta página.
+    return render_template('registro.html')
+
 @web_bp.route('/infantil')
 def infantil():
     return render_template('infantil.html')
