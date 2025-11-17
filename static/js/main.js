@@ -25,13 +25,13 @@ import {
 // --- PASO 2: PEGA TU FIREBASE CONFIG AQUÍ ---
 // (¡El mismo que copiaste de la consola de Firebase!)
 const firebaseConfig = {
-    apiKey: "AIzaSyA19ORaIYFCH_vfPfamUjyR9iMxLGT1FVI", // ¡Pega el tuyo!
-    authDomain: "biblionube-328e4.firebaseapp.com", // ¡Pega el tuyo!
-    projectId: "biblionube-328e4", // ¡Pega el tuyo!
-    storageBucket: "biblionube-328e4.firebasestorage.app", // ¡Pega el tuyo!
-    messagingSenderId: "911996701364", // ¡Pega el tuyo!
-    appId: "1:911996701364:web:97ff11275b17a91b85a5e1", // ¡Pega el tuyo!
-    measurementId: "G-VWPDZYGQ88" // ¡Pega el tuyo!
+  apiKey: "AIzaSyA19ORaIYFCH_vfPfamUjyR9iMxLGT1FVI", // ¡Pega el tuyo!
+  authDomain: "biblionube-328e4.firebaseapp.com", // ¡Pega el tuyo!
+  projectId: "biblionube-328e4", // ¡Pega el tuyo!
+  storageBucket: "biblionube-328e4.firebasestorage.app", // ¡Pega el tuyo!
+  messagingSenderId: "911996701364", // ¡Pega el tuyo!
+  appId: "1:911996701364:web:97ff11275b17a91b85a5e1", // ¡Pega el tuyo!
+  measurementId: "G-VWPDZYGQ88" // ¡Pega el tuyo!
 };
 
 // --- PASO 3: INICIALIZA FIREBASE ---
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // (Esta es la lógica de tu 'inicializarLogicaHeader' y 'ui.js')
     inicializarModalLogin();
     inicializarBarraBusqueda();
-    inicializarBotonGuardar();
+    inicializarBotonGuardar(); // <-- ¡CORRECTO!
     //inicializarBotonGuardados();
     inicializarTogglePasswordLogin(); // El "ojo" del modal
     inicializarDropdownUsuario();
@@ -83,10 +83,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 7. Carga los datos de 'producto.html' (si estamos en esa página)
     await cargarProductoUnico();
     console.log("Carga de (producto único) completada.");
+    
     // 9. Carga los libros en 'guardado.html'
     await cargarLibrosGuardados();
     // ¡AQUÍ! ACTIVA LOS BOTONES "ELIMINAR" (SI EXISTEN)
-    inicializarDelegacionEliminar(document.getElementById('grid-guardados'));
+    inicializarDelegacionEliminar(document.getElementById('grid-guardados')); // <-- ¡CORRECTO!
     console.log("Página 'Guardados' cargada y renderizada.");
 
     // 10. Carga los datos de 'mi_cuenta.html' (si estamos en esa página)
@@ -209,9 +210,9 @@ function inicializarFirebaseGlobal() {
 
 
 /**
- * Lógica para la página de Registro
- * (Reemplaza tu 'inicializarFormularioRegistro')
- */
+* Lógica para la página de Registro
+* (Reemplaza tu 'inicializarFormularioRegistro')
+*/
 function inicializarRegistroFirebase() {
     const registerForm = document.getElementById('register-form');
     const passwordError = document.getElementById('passwordError');
@@ -317,9 +318,9 @@ function inicializarRegistroFirebase() {
 
 
 /**
- * Carga los detalles del usuario en la página "Mi Cuenta".
- * (Reemplaza tu 'cargarDatosMiCuenta')
- */
+* Carga los detalles del usuario en la página "Mi Cuenta".
+* (Reemplaza tu 'cargarDatosMiCuenta')
+*/
 async function cargarDatosMiCuentaFirebase() {
     console.log("Cargando datos de Mi Cuenta (Firebase)...");
 
