@@ -25,13 +25,13 @@ import {
 // --- PASO 2: PEGA TU FIREBASE CONFIG AQUÍ ---
 // (¡El mismo que copiaste de la consola de Firebase!)
 const firebaseConfig = {
-  apiKey: "AIzaSyA19ORaIYFCH_vfPfamUjyR9iMxLGT1FVI", // ¡Pega el tuyo!
-  authDomain: "biblionube-328e4.firebaseapp.com", // ¡Pega el tuyo!
-  projectId: "biblionube-328e4", // ¡Pega el tuyo!
-  storageBucket: "biblionube-328e4.firebasestorage.app", // ¡Pega el tuyo!
-  messagingSenderId: "911996701364", // ¡Pega el tuyo!
-  appId: "1:911996701364:web:97ff11275b17a91b85a5e1", // ¡Pega el tuyo!
-  measurementId: "G-VWPDZYGQ88" // ¡Pega el tuyo!
+    apiKey: "AIzaSyA19ORaIYFCH_vfPfamUjyR9iMxLGT1FVI", // ¡Pega el tuyo!
+    authDomain: "biblionube-328e4.firebaseapp.com", // ¡Pega el tuyo!
+    projectId: "biblionube-328e4", // ¡Pega el tuyo!
+    storageBucket: "biblionube-328e4.firebasestorage.app", // ¡Pega el tuyo!
+    messagingSenderId: "911996701364", // ¡Pega el tuyo!
+    appId: "1:911996701364:web:97ff11275b17a91b85a5e1", // ¡Pega el tuyo!
+    measurementId: "G-VWPDZYGQ88" // ¡Pega el tuyo!
 };
 
 // --- PASO 3: INICIALIZA FIREBASE ---
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 7. Carga los datos de 'producto.html' (si estamos en esa página)
     await cargarProductoUnico();
     console.log("Carga de (producto único) completada.");
-    
+
     // 9. Carga los libros en 'guardado.html'
     await cargarLibrosGuardados();
     // ¡AQUÍ! ACTIVA LOS BOTONES "ELIMINAR" (SI EXISTEN)
@@ -111,18 +111,30 @@ document.addEventListener("DOMContentLoaded", async () => {
  * Reemplaza a tu 'inicializarGestorSesion'.
  */
 function inicializarFirebaseGlobal() {
+    // 1. Verificamos que esta función se llame
+    console.log("🟢 'inicializarFirebaseGlobal' SÍ se está llamando.");
 
     const loginForm = document.getElementById('login-form');
     const btnLogout = document.getElementById('logout-button');
 
-    // Cerebro de la sesión: se ejecuta al cargar y cuando cambia el estado
+    // Cerebro de la sesión
     auth.onAuthStateChanged(async (user) => {
+        // 2. Verificamos que el listener se dispare
+        console.log("🟡 'onAuthStateChanged' se disparó.");
+
         const body = document.body;
         const menuUsuario = document.getElementById('user-menu-wrapper');
 
         if (user) {
+            // 3. Vemos si encontró un usuario y su estado
+            console.log("✅ Usuario ENCONTRADO:", user.email);
+            console.log("   ¿Está verificado?", user.emailVerified);
+
             // --- EL USUARIO TIENE SESIÓN ---
             if (user.emailVerified) {
+                // 4. Vemos si entra al camino correcto
+                console.log("➡️ Entrando al camino 'VERIFICADO'.");
+
                 const nombre = user.displayName;
                 const email = user.email;
 
@@ -130,26 +142,35 @@ function inicializarFirebaseGlobal() {
                 const inicialesUsuario = document.getElementById('user-initials');
                 const emailUsuarioDropdown = document.getElementById('user-dropdown-email');
 
-                let iniciales = nombre ? nombre.substring(0, 2).toUpperCase() : email.substring(0, 2).toUpperCase();
-                const partesNombre = nombre ? nombre.split(' ') : [];
-                if (partesNombre.length === 1 && partesNombre[0].length > 0) {
-                    iniciales = partesNombre[0].substring(0, 2).toUpperCase();
-                } else if (partesNombre.length > 1) {
-                    iniciales = partesNombre[0].substring(0, 1) + partesNombre[1].substring(0, 1);
+                let iniciales = "??"; // Valor por defecto
+                if (nombre) {
+                    const partesNombre = nombre.split(' ');
+                    if (partesNombre.length === 1 && partesNombre[0].length > 0) {
+                        iniciales = partesNombre[0].substring(0, 2).toUpperCase();
+                    } else if (partesNombre.length > 1) {
+                        iniciales = partesNombre[0].substring(0, 1) + partesNombre[1].substring(0, 1);
+                    }
+                } else if (email) {
+                    iniciales = email.substring(0, 2).toUpperCase();
                 }
 
                 // Actualizar UI
                 if (inicialesUsuario) inicialesUsuario.textContent = iniciales;
                 if (emailUsuarioDropdown) emailUsuarioDropdown.textContent = email;
+
                 body.classList.add('sesion-iniciada');
+                // 5. La prueba final
+                console.log("✅ CLASE 'sesion-iniciada' AÑADIDA AL BODY.");
 
             } else {
-                console.warn("Usuario no verificado. Deslogueando.");
+                // 4b. Vemos si entra al camino de "no verificado"
+                console.warn("➡️ Entrando al camino 'NO VERIFICADO'. (Cerrando sesión)");
                 auth.signOut();
                 body.classList.remove('sesion-iniciada');
             }
         } else {
-            // --- EL USUARIO NO TIENE SESIÓN ---
+            // 4c. Vemos si entra al camino de "sin usuario"
+            console.log("❌ NO hay usuario (sesión cerrada o estado inicial).");
             body.classList.remove('sesion-iniciada');
         }
     });
