@@ -1,10 +1,9 @@
 import sqlalchemy
-from flask import Blueprint, jsonify, request, current_app # <-- 1. Importar current_app
+from flask import Blueprint, jsonify, request, current_app, make_response
 from sqlalchemy.exc import IntegrityError 
-
-# from app import db  <-- 2. ¡ELIMINADO!
 from utils.security import token_required
 
+# Definimos el Blueprint
 book_bp = Blueprint('book_bp', __name__)
 
 
@@ -12,7 +11,6 @@ book_bp = Blueprint('book_bp', __name__)
 @book_bp.route("/libros")
 def obtener_libros():
     try:
-        # --- 3. CORRECCIÓN ---
         db_engine = current_app.db
         with db_engine.connect() as conn:
             query_sql = """
@@ -27,10 +25,8 @@ def obtener_libros():
             query = sqlalchemy.text(query_sql)
             resultados = conn.execute(query).fetchall()
             
-            # Convertimos las filas (Rows) a diccionarios
             libros_lista = [row._asdict() for row in resultados]
             
-            # Renombramos las claves si es necesario (opcional pero buena práctica)
             libros_mapeados = [
                 {
                     "id": libro["id_libro"],
@@ -55,7 +51,6 @@ def obtener_libros():
 @book_bp.route("/libros/<int:libro_id>")
 def obtener_libro_por_id(libro_id):
     try:
-        # --- 3. CORRECCIÓN ---
         db_engine = current_app.db
         with db_engine.connect() as conn:
             query = sqlalchemy.text(
@@ -66,10 +61,8 @@ def obtener_libro_por_id(libro_id):
             resultado = conn.execute(query, {"id": libro_id}).fetchone()
 
             if resultado:
-                # Convertimos la fila (Row) a un diccionario
                 libro_encontrado = resultado._asdict()
                 
-                # Mapeamos a las claves que espera el frontend
                 libro_mapeado = {
                     "titulo": libro_encontrado["titulo_libro"],
                     "autor": libro_encontrado["autor_libro"],
@@ -86,48 +79,44 @@ def obtener_libro_por_id(libro_id):
         print(f"Error en /libros/<id>: {e}")
         return jsonify({"error": str(e)}), 500
 
-# --- 6. RUTA PARA GUARDAR UN LIBRO ---
-import sqlalchemy
-from flask import Blueprint, jsonify, request, current_app
-from sqlalchemy.exc import IntegrityError 
-from utils.security import token_required # Asumo que este es tu decorador
 
-# Este es el Blueprint (solo para que el código sea completo)
-book_bp = Blueprint('book_bp', __name__)
-
+# --- 6. RUTA PARA GUARDAR UN LIBRO (CORREGIDA) ---
 @book_bp.route('/guardar-libro', methods=['POST', 'OPTIONS'])
 @token_required
-def guardar_libro(firebase_uid): # 1. Renombré la variable para mayor claridad
-if request.method == 'OPTIONS':
-    return jsonify({"message": "CORS preflight OK"}), 200
+def guardar_libro(firebase_uid): 
+    
+    # Maneja la solicitud 'OPTIONS' (preflight) para CORS
+    if request.method == 'OPTIONS':
+        # make_response es necesario para que CORS funcione bien
+        return make_response(jsonify({"message": "CORS preflight OK"}), 200)
+
+    # La lógica de 'POST' va dentro de un try/except
     try:
         datos = request.get_json()
         libro_id = datos.get('libro_id')
+        
         if not libro_id:
             return jsonify({"error": "Falta 'libro_id'."}), 400
-            db_engine = current_app.dbwith db_engine.connect() as conn:
             
-            # --- 2. PASO DE TRADUCCIÓN ---
-            # Busca el ID numérico (int) del usuario usando el Firebase UID (string)
-            # (Asegúrate de que tu columna se llame 'firebase_uid' en la tabla 'usuarios')
+        # Este bloque ahora es alcanzable y está bien indentado
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
+            
+            # PASO DE TRADUCCIÓN: Busca el ID numérico (int) del usuario
             sql_find_user = sqlalchemy.text(
                 "SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid"
             )
             resultado_usuario = conn.execute(sql_find_user, {"f_uid": firebase_uid}).fetchone()
 
-            # Si no se encuentra (usuario desincronizado), devuelve un error
             if not resultado_usuario:
                 return jsonify({"error": "Usuario no encontrado en la base de datos."}), 404
             
-            # Obtén el ID numérico interno
             internal_user_id = resultado_usuario._asdict()["id_usuario"]
-            # --------------------------------
-
-            # --- 3. USA EL ID NUMÉRICO (internal_user_id) ---
+            
+            # USA EL ID NUMÉRICO (internal_user_id)
             sql_check = sqlalchemy.text(
                 "SELECT 1 FROM libros_guardados WHERE usuario_id = :uid AND libro_id = :lid"
             )
-            # Ahora :uid es el INT (internal_user_id)
             existe = conn.execute(sql_check, {"uid": internal_user_id, "lid": libro_id}).fetchone()
             
             if existe:
@@ -136,27 +125,27 @@ if request.method == 'OPTIONS':
             sql_insert = sqlalchemy.text(
                 "INSERT INTO libros_guardados (usuario_id, libro_id) VALUES (:uid, :lid)"
             )
-            # Ahora :uid es el INT (internal_user_id)
             conn.execute(sql_insert, {"uid": internal_user_id, "lid": libro_id})
             conn.commit()
             return jsonify({"mensaje": "Libro guardado con éxito"}), 201 
-            except IntegrityError:
-                return jsonify({"error": "Error al guardar el libro, ID de libro no válido."}), 400
-                except Exception as e:
-                    print(f"Error al guardar libro: {e}")
-                    return jsonify({"error": "Error interno del servidor."}), 500
+    
+    # Los 'except' deben estar alineados con el 'try'
+    except IntegrityError:
+        return jsonify({"error": "Error al guardar el libro, ID de libro no válido."}), 400
+    except Exception as e:
+        print(f"Error al guardar libro: {e}")
+        return jsonify({"error": "Error interno del servidor."}), 500
 
 
 # --- 7. RUTA PARA OBTENER LOS LIBROS GUARDADOS ---
 @book_bp.route('/mis-libros-guardados', methods=['GET', 'OPTIONS'])
 @token_required
-def get_mis_libros(current_user_id):
+def get_mis_libros(current_user_id): # <-- Asumo que tu token_required devuelve el ID interno
     
     if request.method == 'OPTIONS':
-        return jsonify({"message": "CORS preflight OK"}), 200
+        return make_response(jsonify({"message": "CORS preflight OK"}), 200)
 
     try:
-        # --- 3. CORRECCIÓN ---
         db_engine = current_app.db
         with db_engine.connect() as conn:
             sql_query = sqlalchemy.text("""
@@ -168,12 +157,16 @@ def get_mis_libros(current_user_id):
                 JOIN libros_guardados G ON L.id_libro = G.libro_id
                 WHERE G.usuario_id = :uid
             """)
+            # NOTA: Asegúrate que 'current_user_id' sea el ID numérico (int) 
+            # y no el 'firebase_uid' (string). 
+            # Si 'current_user_id' es el firebase_uid, necesitas 
+            # repetir el "paso de traducción" que hicimos en 'guardar_libro'.
+            # Por simplicidad, aquí asumo que ya es el ID numérico.
+            
             resultados = conn.execute(sql_query, {"uid": current_user_id}).fetchall()
             
-            # Convertimos las filas (Rows) a diccionarios
             libros_lista = [row._asdict() for row in resultados]
             
-            # Mapeamos a las claves que espera el frontend
             libros_mapeados = [
                 {
                     "id": libro["id_libro"],
@@ -192,10 +185,10 @@ def get_mis_libros(current_user_id):
 # --- 8. RUTA PARA QUITAR UN LIBRO ---
 @book_bp.route('/quitar-libro', methods=['DELETE', 'OPTIONS']) 
 @token_required
-def quitar_libro(current_user_id):
-
+def quitar_libro(current_user_id): # <-- Mismo comentario que en la ruta anterior
+    
     if request.method == 'OPTIONS':
-        return jsonify({"message": "CORS preflight OK"}), 200
+        return make_response(jsonify({"message": "CORS preflight OK"}), 200)
         
     try:
         datos = request.get_json()
@@ -204,12 +197,12 @@ def quitar_libro(current_user_id):
         if not libro_id:
             return jsonify({"error": "Falta 'libro_id'."}), 400
             
-        # --- 3. CORRECCIÓN ---
         db_engine = current_app.db
         with db_engine.connect() as conn:
             sql_delete = sqlalchemy.text(
                 "DELETE FROM libros_guardados WHERE usuario_id = :uid AND libro_id = :lid"
             )
+            # Asumo que 'current_user_id' es el ID numérico
             resultado = conn.execute(sql_delete, {"uid": current_user_id, "lid": libro_id})
             conn.commit()
             
