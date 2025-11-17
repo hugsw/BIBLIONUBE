@@ -418,35 +418,39 @@ export function inicializarDelegacionEliminar(contenedor) {
 }
 
 
-// Dentro de /static/js/services/books.js
-
 /**
-* =======================================================
-* LÓGICA "ELIMINAR" LIBRO (¡CORREGIDO!)
-* =======================================================
-*/
-// 1. ACEPTA 'botonElemento' COMO TERCER ARGUMENTO
+ * =======================================================
+ * LÓGICA "ELIMINAR" LIBRO (¡CORREGIDO DEFINITIVAMENTE!)
+ * =======================================================
+ */
 async function handleEliminarLibro(libroId, tarjetaElemento, botonElemento) {
 
-    const confirmado = await mostrarConfirmacion('¿Estás seguro de que quieres eliminar este libro de tus guardados?');
-    if (!confirmado) {
-        return; // El usuario canceló, no hacemos nada.
-    }
-
-    // --- 2. ¡CORRECCIÓN ANTI-DOBLE-CLIC! ---
-    // Deshabilita el botón INMEDIATAMENTE después de confirmar,
-    // y ANTES de llamar a la API.
+    // --- ¡LA CORRECCIÓN DEFINITIVA! ---
+    // 1. Deshabilita el botón INMEDIATAMENTE al hacer clic,
+    // ANTES de mostrar la confirmación (await).
     if (botonElemento) {
         botonElemento.disabled = true;
-        botonElemento.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; // Opcional: ícono de carga
+        botonElemento.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
     }
 
-    // Obtenemos el token de Firebase
+    // 2. Muestra la confirmación
+    const confirmado = await mostrarConfirmacion('¿Estás seguro de que quieres eliminar este libro de tus guardados?');
+
+    if (!confirmado) {
+        // 3. Si el usuario cancela, VUELVE A HABILITAR el botón
+        if (botonElemento) {
+            botonElemento.disabled = false;
+            botonElemento.innerHTML = '<i class="fa-solid fa-trash-can"></i> Eliminar';
+        }
+        return; // El usuario canceló
+    }
+
+    // 4. Si el usuario aceptó, el botón ya está deshabilitado y procedemos...
     const token = await getFirebaseToken();
 
     if (!token) {
         await mostrarAlerta("Tu sesión ha expirado. Por favor, inicia sesión de nuevo.");
-        // 3. VUELVE A HABILITAR EL BOTÓN SI FALLA EL TOKEN
+        // 5. Si falla el token, vuelve a habilitar el botón
         if (botonElemento) {
             botonElemento.disabled = false;
             botonElemento.innerHTML = '<i class="fa-solid fa-trash-can"></i> Eliminar';
@@ -467,19 +471,17 @@ async function handleEliminarLibro(libroId, tarjetaElemento, botonElemento) {
 
         const data = await response.json();
         if (!response.ok) {
-            // Esto es lo que lanza el error 404 de "El libro no estaba en tu lista"
+            // Aquí es donde se lanza tu error
             throw new Error(data.error || "No se pudo eliminar el libro.");
         }
 
         // ÉXITO: Tu lógica para eliminar la tarjeta del DOM es perfecta
         if (tarjetaElemento) {
-            tarjetaElemento.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease';
+            tarjetaElemento.style.transition = 'opacity 0.3s ease-out';
             tarjetaElemento.style.opacity = '0';
-            tarjetaElemento.style.transform = 'scale(0.9)'; // Opcional: linda animación
 
             setTimeout(() => {
                 tarjetaElemento.remove();
-                // Revisa si el contenedor quedó vacío
                 const contenedor = document.getElementById('grid-guardados');
                 if (contenedor && contenedor.children.length === 0) {
                     contenedor.innerHTML = `<p style="color: #999; text-align: center;">No tienes ningún libro guardado todavía.</p>`;
@@ -491,7 +493,7 @@ async function handleEliminarLibro(libroId, tarjetaElemento, botonElemento) {
         console.error("Error al eliminar:", error);
         await mostrarAlerta("Error: " + error.message);
 
-        // 4. VUELVE A HABILITAR EL BOTÓN SI LA API FALLA
+        // 6. Si la API falla, vuelve a habilitar el botón
         if (botonElemento) {
             botonElemento.disabled = false;
             botonElemento.innerHTML = '<i class="fa-solid fa-trash-can"></i> Eliminar';
