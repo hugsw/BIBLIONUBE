@@ -70,7 +70,7 @@ main {
 .btn-volver {
     color: var(--color-acento, #ff8c00);
     /* Color anaranjado */
-    font-size: 1.8rem;
+    font-size: 2rem;
     /* Tamaño de fuente más grande */
     text-decoration: none;
     /* Sin subrayado */

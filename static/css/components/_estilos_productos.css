@@ -115,6 +115,11 @@
 /* Título de la página de categoría */
 .seccion-libros-header {
     padding: 4rem 2rem 2rem 2rem;
+
+    /* --- Añadido para el layout --- */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .seccion-libros-titulo {
