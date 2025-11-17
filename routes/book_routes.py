@@ -137,87 +137,108 @@ def guardar_libro(firebase_uid):
         return jsonify({"error": "Error interno del servidor."}), 500
 
 
-# --- 7. RUTA PARA OBTENER LOS LIBROS GUARDADOS ---
 # --- 7. RUTA PARA OBTENER LOS LIBROS GUARDADOS (CORREGIDA) ---
 @book_bp.route('/mis-libros-guardados', methods=['GET', 'OPTIONS'])
 @token_required
-def get_mis_libros(firebase_uid): # 1. Renombrado a 'firebase_uid' para claridad
-if request.method == 'OPTIONS':
-    return make_response(jsonify({"message": "CORS preflight OK"}), 200)
+def get_mis_libros(firebase_uid): 
+    # PASO 1: Indentación de toda la función
+    if request.method == 'OPTIONS':
+        return make_response(jsonify({"message": "CORS preflight OK"}), 200)
+    
+    # PASO 2: El 'try' debe estar indentado y 'except' debe alinearse con él
     try:
         db_engine = current_app.db
         with db_engine.connect() as conn:
-            # --- 2. PASO DE TRADUCCIÓN ---
-            # Buscar el ID numérico (int) usando el Firebase UID (string)
+            
+            # --- PASO DE TRADUCCIÓN ---
             sql_find_user = sqlalchemy.text(
                 "SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid"
             )
             resultado_usuario = conn.execute(sql_find_user, {"f_uid": firebase_uid}).fetchone()
+            
             if not resultado_usuario:
                 return jsonify({"error": "Usuario no encontrado en la base de datos."}), 404
-                # Este es el ID numérico (INT) que la BD espera
-                internal_user_id = resultado_usuario._asdict()["id_usuario"]
-                # ----------------------------
-                # --- 3. USAR EL ID NUMÉRICO ---
-                sql_query = sqlalchemy.text("""
-                SELECT 
+            
+            # PASO 3 (LÓGICA): Mover esta línea FUERA del 'if'
+            internal_user_id = resultado_usuario._asdict()["id_usuario"]
+
+            # --- USAR EL ID NUMÉRICO ---
+            sql_query = sqlalchemy.text("""
+            SELECT 
                 L.id_libro, 
                 L.titulo_libro, 
                 L.url_portada 
-                FROM libros L
-                JOIN libros_guardados G ON L.id_libro = G.libro_id
-                WHERE G.usuario_id = :uid
-                """)
-                # Usamos el 'internal_user_id' (INT)
-                resultados = conn.execute(sql_query, {"uid": internal_user_id}).fetchall()
-                # ... (Tu lógica de mapeo está perfecta) ...
-                libros_lista = [row._asdict() for row in resultados]
-                libros_mapeados = [
-                    {
-                        "id": libro["id_libro"],
-                        "titulo": libro["titulo_libro"],
-                        "imagen": libro["url_portada"],
-                        "alt": libro["titulo_libro"]
-                        } for libro in libros_lista
-                        ]
-                        return jsonify(libros_mapeados)
-                        except Exception as e:
-                            print(f"Error al obtener libros guardados: {e}")
-                            return jsonify({"error": "Error interno del servidor."}), 500
+            FROM libros L
+            JOIN libros_guardados G ON L.id_libro = G.libro_id
+            WHERE G.usuario_id = :uid
+            """)
+            
+            resultados = conn.execute(sql_query, {"uid": internal_user_id}).fetchall()
+            
+            libros_lista = [row._asdict() for row in resultados]
+            libros_mapeados = [
+                {
+                    "id": libro["id_libro"],
+                    "titulo": libro["titulo_libro"],
+                    "imagen": libro["url_portada"],
+                    "alt": libro["titulo_libro"]
+                } for libro in libros_lista
+            ]
+            
+            return jsonify(libros_mapeados)
+
+    # PASO 2 (Continuación): 'except' alineado con 'try'
+    except Exception as e:
+        print(f"Error al obtener libros guardados: {e}")
+        return jsonify({"error": "Error interno del servidor."}), 500
 
 
 # --- 8. RUTA PARA QUITAR UN LIBRO (CORREGIDA) ---
 @book_bp.route('/quitar-libro', methods=['DELETE', 'OPTIONS']) 
 @token_required
-def quitar_libro(firebase_uid): # 1. Renombrado a 'firebase_uid' para claridad
-if request.method == 'OPTIONS':
-    return make_response(jsonify({"message": "CORS preflight OK"}), 200)
+def quitar_libro(firebase_uid): 
+    # PASO 1: Indentación de toda la función
+    if request.method == 'OPTIONS':
+        return make_response(jsonify({"message": "CORS preflight OK"}), 200)
+    
+    # PASO 2: 'try' indentado
     try:
         datos = request.get_json()
         libro_id = datos.get('libro_id')
+        
         if not libro_id:
             return jsonify({"error": "Falta 'libro_id'."}), 400
-            db_engine = current_app.db
-            with db_engine.connect() as conn:
-                # --- 2. PASO DE TRADUCCIÓN ---
-                sql_find_user = sqlalchemy.text(
-                    "SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid"
-                    )
-                    resultado_usuario = conn.execute(sql_find_user, {"f_uid": firebase_uid}).fetchone()
-                    if not resultado_usuario:
-                        return jsonify({"error": "Usuario no encontrado en la base de datos."}), 404
-                        internal_user_id = resultado_usuario._asdict()["id_usuario"]
-                        # ----------------------------
-                        # --- 3. USAR EL ID NUMÉRICO ---
-                        sql_delete = sqlalchemy.text(
-                            "DELETE FROM libros_guardados WHERE usuario_id = :uid AND libro_id = :lid"
-                            )
-                            # Usamos el 'internal_user_id' (INT)
-                            resultado = conn.execute(sql_delete, {"uid": internal_user_id, "lid": libro_id})
-                            conn.commit()
-                            if resultado.rowcount == 0:
-                                return jsonify({"error": "El libro no estaba en tu lista."}), 404
-                                return jsonify({"mensaje": "Libro eliminado de tu lista."}), 200
-                                except Exception as e:
-                                    print(f"Error al quitar libro: {e}")
-                                    return jsonify({"error": "Error interno del servidor."}), 500
+        
+        # PASO 3 (LÓGICA): Mover el bloque de DB FUERA del 'if'
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
+            
+            # --- PASO DE TRADUCCIÓN ---
+            sql_find_user = sqlalchemy.text(
+                "SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid"
+            )
+            resultado_usuario = conn.execute(sql_find_user, {"f_uid": firebase_uid}).fetchone()
+            
+            if not resultado_usuario:
+                return jsonify({"error": "Usuario no encontrado en la base de datos."}), 404
+            
+            # PASO 3 (LÓGICA): Mover esta línea FUERA del 'if'
+            internal_user_id = resultado_usuario._asdict()["id_usuario"]
+            
+            # --- USAR EL ID NUMÉRICO ---
+            sql_delete = sqlalchemy.text(
+                "DELETE FROM libros_guardados WHERE usuario_id = :uid AND libro_id = :lid"
+            )
+            
+            resultado = conn.execute(sql_delete, {"uid": internal_user_id, "lid": libro_id})
+            conn.commit()
+            
+            if resultado.rowcount == 0:
+                return jsonify({"error": "El libro no estaba en tu lista."}), 404
+                
+            return jsonify({"mensaje": "Libro eliminado de tu lista."}), 200
+
+    # PASO 2 (Continuación): 'except' alineado con 'try'
+    except Exception as e:
+        print(f"Error al quitar libro: {e}")
+        return jsonify({"error": "Error interno del servidor."}), 500
