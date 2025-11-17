@@ -1,6 +1,6 @@
 /* =============================================
-    ESTILOS GENERALES DE LA SECCIÓN DE LIBROS
-    ============================================= */
+    ESTILOS GENERALES DE LA SECCIÓN DE LIBROS
+    ============================================= */
 
 .seccion-libros {
     margin-bottom: 4rem;
@@ -43,9 +43,9 @@
 }
 
 /* =============================================
-    ESTILO UNIFICADO PARA TARJETAS DE PRODUCTO
-    (Se aplica en SLIDER y en GRID DE CATEGORÍA)
-    ============================================= */
+    ESTILO UNIFICADO PARA TARJETAS DE PRODUCTO
+    (Se aplica en SLIDER y en GRID DE CATEGORÍA)
+    ============================================= */
 
 /* A. Contenedores (Layout) */
 /* ---------------------------------- */
@@ -56,8 +56,8 @@
 }
 
 /*
-    AÑADIDO: EFECTO DE DESVANECIDO (FADE) A LA DERECHA
-    Esto crea el efecto de que el slider continúa.
+    AÑADIDO: EFECTO DE DESVANECIDO (FADE) A LA DERECHA
+    Esto crea el efecto de que el slider continúa.
 */
 .slider-contenedor::after {
     content: "";
@@ -188,7 +188,7 @@
 }
 
 /*
-  Estilos para el título del libro en la tarjeta
+  Estilos para el título del libro en la tarjeta
 */
 .grid-productos .producto__nombre {
     font-family: var(--fuentePrincipal);
@@ -200,9 +200,9 @@
     line-height: 1.3;
 
     /* min-height: 4rem;
-      Aprox 2 líneas (1.5rem * 1.3 * 2 = 3.9rem)
-      Esto alinea las tarjetas aunque un título ocupe 1 línea y otro 2.
-    */
+      Aprox 2 líneas (1.5rem * 1.3 * 2 = 3.9rem)
+      Esto alinea las tarjetas aunque un título ocupe 1 línea y otro 2.
+    */
     min-height: 4rem;
 
     /* La "magia" para cortar el texto con "..." */
@@ -226,10 +226,10 @@
     display: none;
 
     /* NOTA: Tu app.js SÍ AÑADE un 'btn-ver-mas'.
-      Esta regla 'display: none' lo está ocultando.
-      Si quieres mostrarlo, borra la línea de arriba y usa los
-      estilos de mi respuesta anterior (con margin-top: auto).
-    */
+      Esta regla 'display: none' lo está ocultando.
+      Si quieres mostrarlo, borra la línea de arriba y usa los
+      estilos de mi respuesta anterior (con margin-top: auto).
+    */
 }
 
 
@@ -273,8 +273,8 @@
 
 
 /* =============================================
-    MEDIA QUERIES (AJUSTES PARA MÓVIL)
-    ============================================= */
+    MEDIA QUERIES (AJUSTES PARA MÓVIL)
+    ============================================= */
 /* (Esta sección no necesita cambios) */
 @media (max-width: 768px) {
     .seccion-libros {

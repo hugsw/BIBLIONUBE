@@ -87,27 +87,48 @@ def obtener_libro_por_id(libro_id):
         return jsonify({"error": str(e)}), 500
 
 # --- 6. RUTA PARA GUARDAR UN LIBRO ---
+import sqlalchemy
+from flask import Blueprint, jsonify, request, current_app
+from sqlalchemy.exc import IntegrityError 
+from utils.security import token_required # Asumo que este es tu decorador
+
+# Este es el Blueprint (solo para que el código sea completo)
+book_bp = Blueprint('book_bp', __name__)
+
 @book_bp.route('/guardar-libro', methods=['POST', 'OPTIONS'])
 @token_required
-def guardar_libro(current_user_id):
-    
-    if request.method == 'OPTIONS':
-        return jsonify({"message": "CORS preflight OK"}), 200
-    
+def guardar_libro(firebase_uid): # 1. Renombré la variable para mayor claridad
+if request.method == 'OPTIONS':
+    return jsonify({"message": "CORS preflight OK"}), 200
     try:
         datos = request.get_json()
         libro_id = datos.get('libro_id')
-        
         if not libro_id:
             return jsonify({"error": "Falta 'libro_id'."}), 400
+            db_engine = current_app.dbwith db_engine.connect() as conn:
+            
+            # --- 2. PASO DE TRADUCCIÓN ---
+            # Busca el ID numérico (int) del usuario usando el Firebase UID (string)
+            # (Asegúrate de que tu columna se llame 'firebase_uid' en la tabla 'usuarios')
+            sql_find_user = sqlalchemy.text(
+                "SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid"
+            )
+            resultado_usuario = conn.execute(sql_find_user, {"f_uid": firebase_uid}).fetchone()
 
-        # --- 3. CORRECCIÓN ---
-        db_engine = current_app.db
-        with db_engine.connect() as conn:
+            # Si no se encuentra (usuario desincronizado), devuelve un error
+            if not resultado_usuario:
+                return jsonify({"error": "Usuario no encontrado en la base de datos."}), 404
+            
+            # Obtén el ID numérico interno
+            internal_user_id = resultado_usuario._asdict()["id_usuario"]
+            # --------------------------------
+
+            # --- 3. USA EL ID NUMÉRICO (internal_user_id) ---
             sql_check = sqlalchemy.text(
                 "SELECT 1 FROM libros_guardados WHERE usuario_id = :uid AND libro_id = :lid"
             )
-            existe = conn.execute(sql_check, {"uid": current_user_id, "lid": libro_id}).fetchone()
+            # Ahora :uid es el INT (internal_user_id)
+            existe = conn.execute(sql_check, {"uid": internal_user_id, "lid": libro_id}).fetchone()
             
             if existe:
                 return jsonify({"error": "Este libro ya está en tu lista."}), 409 
@@ -115,7 +136,8 @@ def guardar_libro(current_user_id):
             sql_insert = sqlalchemy.text(
                 "INSERT INTO libros_guardados (usuario_id, libro_id) VALUES (:uid, :lid)"
             )
-            conn.execute(sql_insert, {"uid": current_user_id, "lid": libro_id})
+            # Ahora :uid es el INT (internal_user_id)
+            conn.execute(sql_insert, {"uid": internal_user_id, "lid": libro_id})
             conn.commit()
         
         return jsonify({"mensaje": "Libro guardado con éxito"}), 201 
