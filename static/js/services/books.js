@@ -80,52 +80,52 @@ export async function cargarYRenderizarLibros() {
     // ... (Tu código para cargar libros públicos está perfecto, no necesita token)
     // ... (Lo copio tal cual)
     const contInfantilSlider = document.getElementById('slider-infantil');
-    const contJuvenilSlider = document.getElementById('slider-juvenil');
-    const contAdultoSlider = document.getElementById('slider-adulto');
-    const contCategoria = document.querySelector('.grid-categoria');
+    const contJuvenilSlider = document.getElementById('slider-juvenil');
+    const contAdultoSlider = document.getElementById('slider-adulto');
+    const contCategoria = document.querySelector('.grid-categoria');
 
-    const esIndex = contInfantilSlider && contJuvenilSlider && contAdultoSlider;
-    const esCategoria = contCategoria && contCategoria.id !== 'grid-guardados';
+    const esIndex = contInfantilSlider && contJuvenilSlider && contAdultoSlider;
+    const esCategoria = contCategoria && contCategoria.id !== 'grid-guardados';
 
-    if (!esIndex && !esCategoria) {
-        return;
-    }
+    if (!esIndex && !esCategoria) {
+        return;
+    }
 
-    const API_URL = '/libros';
-    console.log("Cargando libros desde la API...");
+    const API_URL = '/libros';
+    console.log("Cargando libros desde la API...");
 
-    try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
-        const librosDesdeAPI = await response.json();
-        if (librosDesdeAPI.error) throw new Error(librosDesdeAPI.error);
+        const librosDesdeAPI = await response.json();
+        if (librosDesdeAPI.error) throw new Error(librosDesdeAPI.error);
 
-        if (esIndex) {
-            console.log("Renderizando sliders para index.html");
-            const librosInfantiles = librosDesdeAPI.filter(l => l.categoria === 'Sección Infantil');
-            const librosJuveniles = librosDesdeAPI.filter(l => l.categoria === 'Sección Juvenil');
-            const librosAdultos = librosDesdeAPI.filter(l => l.categoria === 'Sección Adulto');
+        if (esIndex) {
+            console.log("Renderizando sliders para index.html");
+            const librosInfantiles = librosDesdeAPI.filter(l => l.categoria === 'Sección Infantil');
+            const librosJuveniles = librosDesdeAPI.filter(l => l.categoria === 'Sección Juvenil');
+            const librosAdultos = librosDesdeAPI.filter(l => l.categoria === 'Sección Adulto');
 
-            renderizarLibros(librosInfantiles, contInfantilSlider);
-            renderizarLibros(librosJuveniles, contJuvenilSlider);
-            renderizarLibros(librosAdultos, contAdultoSlider);
+            renderizarLibros(librosInfantiles, contInfantilSlider);
+            renderizarLibros(librosJuveniles, contJuvenilSlider);
+            renderizarLibros(librosAdultos, contAdultoSlider);
 
-        } else if (esCategoria) {
-            const categoriaActual = contCategoria.dataset.categoria;
-            console.log(`Renderizando grid para: ${categoriaActual}`);
+        } else if (esCategoria) {
+            const categoriaActual = contCategoria.dataset.categoria;
+            console.log(`Renderizando grid para: ${categoriaActual}`);
 
-            if (categoriaActual) {
-                const librosFiltrados = librosDesdeAPI.filter(l => l.categoria === categoriaActual);
-                renderizarLibros(librosFiltrados, contCategoria);
-            } else {
-                console.error("Error: .grid-categoria no tiene 'data-categoria'");
-            }
-        }
-    } catch (error) {
-        console.error('Error grave al cargar libros desde la API:', error);
+            if (categoriaActual) {
+                const librosFiltrados = librosDesdeAPI.filter(l => l.categoria === categoriaActual);
+                renderizarLibros(librosFiltrados, contCategoria);
+            } else {
+                console.error("Error: .grid-categoria no tiene 'data-categoria'");
+            }
+        }
+    } catch (error) {
+        console.error('Error grave al cargar libros desde la API:', error);
         // ... (resto de tu manejo de errores)
-    }
+    }
 }
 
 
@@ -157,7 +157,7 @@ export async function cargarProductoUnico() {
         document.getElementById('libro-titulo').textContent = data.titulo || 'Título no disponible';
         document.getElementById('libro-autor').textContent = data.autor || 'Autor Desconocido';
         document.getElementById('libro-descripcion').textContent = data.descripcion || 'Descripción no disponible';
-        
+
         // ... (Tu lógica del año y separador)
         const anioElemento = document.getElementById('libro-anio');
         const separadorElemento = anioElemento ? anioElemento.previousElementSibling : null;
@@ -169,7 +169,7 @@ export async function cargarProductoUnico() {
             anioElemento.style.display = 'none';
             if (separadorElemento) separadorElemento.style.display = 'none';
         }
-        
+
         // ... (Tu lógica de imagen y botones)
         const imgElement = document.getElementById('libro-imagen');
         imgElement.src = data.url_portada || data.imagen || 'https://placehold.co/400x600/6c757d/white?text=Libro';
@@ -186,7 +186,7 @@ export async function cargarProductoUnico() {
 
         // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
         // 1. Reemplazamos localStorage.getItem('authToken')
-        const token = await getFirebaseToken(); 
+        const token = await getFirebaseToken();
 
         if (token) {
             // 2. El resto de tu lógica es la misma
@@ -222,71 +222,106 @@ export async function cargarProductoUnico() {
  * BOTÓN "GUARDAR" (PÁGINA DE PRODUCTO) - (¡CORREGIDO!)
  * =======================================================
  */
+// Asegúrate de que 'mostrarAlerta' esté disponible (ya sea global o importada)
+// import { mostrarAlerta } from '../Utils/customalert.js'; // Descomenta si usas módulos estrictos
+
 export function inicializarBotonGuardar() {
     const botonGuardar = document.getElementById('btn-guardar');
     const modalLogin = document.getElementById('modalLogin');
+
+    // Si no existe el botón (ej. no estamos en la página de producto), no hacemos nada.
     if (!botonGuardar) return;
 
     botonGuardar.addEventListener('click', async () => {
 
+        // 1. Obtener datos del dataset del HTML
+        // Asegúrate de que tu HTML sea: <button id="btn-guardar" data-id="5" ...>
         const libro = {
             id: botonGuardar.dataset.id,
-            titulo: botonGuardar.dataset.titulo,
-            imagen: botonGuardar.dataset.imagen
+            titulo: botonGuardar.dataset.titulo, // Opcional, si lo necesitas
+            imagen: botonGuardar.dataset.imagen  // Opcional, si lo necesitas
         };
 
         if (!libro.id) {
-            await mostrarAlerta("Error: No se pudo obtener la información del libro. Intente recargar la página.");
+            // Usamos console.error para depurar si falta el ID
+            console.error("Error: El botón no tiene data-id");
+            if (typeof mostrarAlerta === 'function') {
+                await mostrarAlerta("Error", "No se pudo identificar el libro. Recarga la página.");
+            } else {
+                alert("Error: No se pudo identificar el libro.");
+            }
             return;
         }
 
-        // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
-        // 1. Reemplazamos localStorage.getItem('authToken')
-        const token = await getFirebaseToken(); 
+        // --- CORRECCIÓN: Obtener el usuario y token de Firebase ---
+        const user = firebase.auth().currentUser;
 
-        if (!token) {
-            // 2. Tu lógica para abrir el modal es perfecta
+        if (!user) {
+            // --- CASO: NO LOGUEADO ---
+            // Guardamos la intención en sessionStorage por si acaso (opcional)
+            sessionStorage.setItem('redirectAfterLogin', window.location.href);
+
             if (modalLogin) {
                 modalLogin.classList.add('visible');
                 document.body.classList.add('modal-open');
             } else {
-                await mostrarAlerta("Necesitas iniciar sesión para guardar libros.");
+                alert("Inicia sesión para guardar este libro.");
             }
-            return; 
+            return;
         }
 
+        // Si hay usuario, obtenemos el token real
+        const token = await user.getIdToken();
+
+        // ----------------------------------------------------------
+
         try {
+            // Evitar doble clic
             if (botonGuardar.disabled) return;
 
+            // Estado de "Cargando"
+            const textoOriginal = botonGuardar.innerHTML; // Guardamos el icono/texto original
             botonGuardar.disabled = true;
             botonGuardar.textContent = 'Guardando...';
 
             const datos = { libro_id: parseInt(libro.id) };
+
+            // VERIFICA TU RUTA AQUÍ: ¿Es '/guardar-libro' o '/api/guardar-libro'?
             const response = await fetch('/guardar-libro', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // <--- Usa el token de Firebase
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(datos)
             });
 
             const data = await response.json();
-            if (!response.ok) throw new Error(data.error || "No se pudo guardar el libro.");
 
-            botonGuardar.textContent = 'Guardado ✔';
-            botonGuardar.classList.add('guardado');
+            if (!response.ok) {
+                throw new Error(data.error || "No se pudo guardar el libro.");
+            }
+
+            // ÉXITO
+            botonGuardar.innerHTML = '<i class="fa-solid fa-check"></i> Guardado';
+            botonGuardar.classList.add('guardado'); // Añade clase para cambiar color (ej. verde)
 
         } catch (error) {
             console.error("Error al guardar:", error);
-            await mostrarAlerta(error.message);
 
-            if (error.message.includes("ya está en tu lista")) {
-                botonGuardar.textContent = 'Guardado ✔';
+            // Restaurar botón si falla (excepto si ya estaba guardado)
+            if (error.message.includes("ya está en tu lista") || error.message.includes("Duplicate")) {
+                botonGuardar.innerHTML = '<i class="fa-solid fa-check"></i> Guardado';
                 botonGuardar.classList.add('guardado');
             } else {
                 botonGuardar.disabled = false;
-                botonGuardar.textContent = 'Guardar';
+                botonGuardar.innerHTML = '<i class="fa-solid fa-bookmark"></i> Guardar'; // Restaura texto original
+
+                if (typeof mostrarAlerta === 'function') {
+                    await mostrarAlerta("Error", error.message);
+                } else {
+                    alert(error.message);
+                }
             }
         }
     });
@@ -304,12 +339,12 @@ export async function cargarLibrosGuardados() {
 
     // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
     // 1. Reemplazamos localStorage.getItem('authToken')
-    const token = await getFirebaseToken(); 
+    const token = await getFirebaseToken();
 
     if (!token) {
         // 2. Tu lógica de "iniciar sesión" es perfecta
         contGuardados.innerHTML = `<p style="color: #999;">Debes <a href="#" id="login-link-guardados">iniciar sesión</a> para ver tus libros guardados.</p>`;
-        
+
         // (Añadimos un listener a ese link por si acaso)
         const loginLink = document.getElementById('login-link-guardados');
         if (loginLink) {
@@ -370,7 +405,7 @@ export function inicializarDelegacionEliminar(contenedor) {
             const libroId = botonEliminar.dataset.id;
             const tarjetaLibro = botonEliminar.closest('.producto');
             console.log(`[Delegación OK] Click en Eliminar para ID: ${libroId}`);
-            
+
             // Llamamos a la función helper (¡que también debemos corregir!)
             handleEliminarLibro(libroId, tarjetaLibro);
         }
@@ -392,7 +427,7 @@ async function handleEliminarLibro(libroId, tarjetaElemento) {
 
     // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
     // 1. Reemplazamos localStorage.getItem('authToken')
-    const token = await getFirebaseToken(); 
+    const token = await getFirebaseToken();
 
     if (!token) {
         await mostrarAlerta("Tu sesión ha expirado. Por favor, inicia sesión de nuevo.");

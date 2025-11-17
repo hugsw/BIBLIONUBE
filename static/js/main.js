@@ -2,6 +2,12 @@
 // Este archivo maneja TODO: carga de componentes, UI, libros y AUTENTICACIÓN.
 
 // --- PASO 1: IMPORTA TUS MÓDULOS (EXCEPTO EL 'auth.js' ANTIGUO) ---
+import { inicializarBotonGuardar } from './services/books.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ...
+    inicializarBotonGuardar();
+});
 import { cargarComponentes } from './Utils/loader.js';
 import {
     cargarYRenderizarLibros,
