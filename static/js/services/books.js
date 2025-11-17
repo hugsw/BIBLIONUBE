@@ -402,35 +402,55 @@ export function inicializarDelegacionEliminar(contenedor) {
         const botonEliminar = e.target.closest('.btn-eliminar');
 
         if (botonEliminar) {
+            // --- ¡CORRECCIÓN 1! ---
+            // Si el botón ya está deshabilitado, ignora este clic.
+            if (botonEliminar.disabled) return;
+
             const libroId = botonEliminar.dataset.id;
             const tarjetaLibro = botonEliminar.closest('.producto');
             console.log(`[Delegación OK] Click en Eliminar para ID: ${libroId}`);
 
-            // Llamamos a la función helper (¡que también debemos corregir!)
-            handleEliminarLibro(libroId, tarjetaLibro);
+            // --- ¡CORRECCIÓN 2! ---
+            // Pasa 'botonEliminar' como tercer argumento.
+            handleEliminarLibro(libroId, tarjetaLibro, botonEliminar);
         }
     });
 }
 
 
+// Dentro de /static/js/services/books.js
+
 /**
- * =======================================================
- * LÓGICA "ELIMINAR" LIBRO (¡CORREGIDO!)
- * =======================================================
- */
-async function handleEliminarLibro(libroId, tarjetaElemento) {
+* =======================================================
+* LÓGICA "ELIMINAR" LIBRO (¡CORREGIDO!)
+* =======================================================
+*/
+// 1. ACEPTA 'botonElemento' COMO TERCER ARGUMENTO
+async function handleEliminarLibro(libroId, tarjetaElemento, botonElemento) {
 
     const confirmado = await mostrarConfirmacion('¿Estás seguro de que quieres eliminar este libro de tus guardados?');
     if (!confirmado) {
-        return;
+        return; // El usuario canceló, no hacemos nada.
     }
 
-    // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
-    // 1. Reemplazamos localStorage.getItem('authToken')
+    // --- 2. ¡CORRECCIÓN ANTI-DOBLE-CLIC! ---
+    // Deshabilita el botón INMEDIATAMENTE después de confirmar,
+    // y ANTES de llamar a la API.
+    if (botonElemento) {
+        botonElemento.disabled = true;
+        botonElemento.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; // Opcional: ícono de carga
+    }
+
+    // Obtenemos el token de Firebase
     const token = await getFirebaseToken();
 
     if (!token) {
         await mostrarAlerta("Tu sesión ha expirado. Por favor, inicia sesión de nuevo.");
+        // 3. VUELVE A HABILITAR EL BOTÓN SI FALLA EL TOKEN
+        if (botonElemento) {
+            botonElemento.disabled = false;
+            botonElemento.innerHTML = '<i class="fa-solid fa-trash-can"></i> Eliminar';
+        }
         return;
     }
 
@@ -440,23 +460,26 @@ async function handleEliminarLibro(libroId, tarjetaElemento) {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // <--- Usa el token de Firebase
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(datos)
         });
 
         const data = await response.json();
         if (!response.ok) {
+            // Esto es lo que lanza el error 404 de "El libro no estaba en tu lista"
             throw new Error(data.error || "No se pudo eliminar el libro.");
         }
 
-        // Tu lógica para eliminar la tarjeta del DOM es perfecta
+        // ÉXITO: Tu lógica para eliminar la tarjeta del DOM es perfecta
         if (tarjetaElemento) {
-            tarjetaElemento.style.transition = 'opacity 0.3s ease-out';
+            tarjetaElemento.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease';
             tarjetaElemento.style.opacity = '0';
+            tarjetaElemento.style.transform = 'scale(0.9)'; // Opcional: linda animación
 
             setTimeout(() => {
                 tarjetaElemento.remove();
+                // Revisa si el contenedor quedó vacío
                 const contenedor = document.getElementById('grid-guardados');
                 if (contenedor && contenedor.children.length === 0) {
                     contenedor.innerHTML = `<p style="color: #999; text-align: center;">No tienes ningún libro guardado todavía.</p>`;
@@ -467,5 +490,11 @@ async function handleEliminarLibro(libroId, tarjetaElemento) {
     } catch (error) {
         console.error("Error al eliminar:", error);
         await mostrarAlerta("Error: " + error.message);
+
+        // 4. VUELVE A HABILITAR EL BOTÓN SI LA API FALLA
+        if (botonElemento) {
+            botonElemento.disabled = false;
+            botonElemento.innerHTML = '<i class="fa-solid fa-trash-can"></i> Eliminar';
+        }
     }
 }
