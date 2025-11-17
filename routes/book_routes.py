@@ -139,14 +139,12 @@ if request.method == 'OPTIONS':
             # Ahora :uid es el INT (internal_user_id)
             conn.execute(sql_insert, {"uid": internal_user_id, "lid": libro_id})
             conn.commit()
-        
-        return jsonify({"mensaje": "Libro guardado con éxito"}), 201 
-
-    except IntegrityError:
-        return jsonify({"error": "Error al guardar el libro, ID de libro no válido."}), 400
-    except Exception as e:
-        print(f"Error al guardar libro: {e}")
-        return jsonify({"error": "Error interno del servidor."}), 500
+            return jsonify({"mensaje": "Libro guardado con éxito"}), 201 
+            except IntegrityError:
+                return jsonify({"error": "Error al guardar el libro, ID de libro no válido."}), 400
+                except Exception as e:
+                    print(f"Error al guardar libro: {e}")
+                    return jsonify({"error": "Error interno del servidor."}), 500
 
 
 # --- 7. RUTA PARA OBTENER LOS LIBROS GUARDADOS ---
