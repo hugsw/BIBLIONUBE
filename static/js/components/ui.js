@@ -54,22 +54,45 @@ export function inicializarModalLogin() {
     }
 }
 
-// En /static/js/components/ui.js
+
 
 export function inicializarBarraBusqueda() {
-    // Usamos los IDs que tienes en tu HTML
     const formBusqueda = document.getElementById('form-busqueda');
     const inputBusqueda = document.getElementById('search-input');
+    // Buscamos el botón dentro del formulario
+    const btnBusqueda = formBusqueda.querySelector('button[type="submit"]');
 
-    if (!formBusqueda || !inputBusqueda) return;
+    if (!formBusqueda || !inputBusqueda || !btnBusqueda) return;
 
+    // 1. Lógica del clic en el botón (Lupa)
+    btnBusqueda.addEventListener('click', (e) => {
+        // Si el input NO tiene la clase activo (está cerrado) o está vacío...
+        if (!formBusqueda.classList.contains('activo') || inputBusqueda.value.trim() === "") {
+            e.preventDefault(); // ¡DETENEMOS EL ENVÍO!
+            
+            // Expandimos el buscador
+            formBusqueda.classList.add('activo');
+            inputBusqueda.focus(); // Ponemos el cursor para escribir
+        }
+        // Si YA tiene la clase activo Y tiene texto, dejamos que el evento 'submit' ocurra normalmente.
+    });
+
+    // 2. Lógica para cerrar si haces clic fuera (Opcional pero recomendado)
+    document.addEventListener('click', (e) => {
+        if (!formBusqueda.contains(e.target)) {
+            // Si el clic fue fuera del formulario y el input está vacío, ciérralo
+            if (inputBusqueda.value.trim() === "") {
+                formBusqueda.classList.remove('activo');
+            }
+        }
+    });
+
+    // 3. El evento submit real (que redirige)
     formBusqueda.addEventListener('submit', (e) => {
-        e.preventDefault(); // 1. Evita que la página se recargue sola
+        e.preventDefault(); 
+        const query = inputBusqueda.value.trim();
         
-        const query = inputBusqueda.value.trim(); // 2. Obtiene el texto (ej. "Pinocho")
-
         if (query) {
-            // 3. Redirige a: /buscar?query=Pinocho
             window.location.href = `/buscar?query=${encodeURIComponent(query)}`;
         }
     });

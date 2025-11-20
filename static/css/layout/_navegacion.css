@@ -35,17 +35,17 @@
 
 /* --- El Botón de Búsqueda (Navegación) --- */
 .navegacion__busqueda {
-    background-color: var(--color-acento);
+    background: var(--color-acento); /* Tu color naranja */
+    border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-decoration: none;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+    color: white;
+    transition: background 0.3s;
 }
 
 .navegacion__busqueda i {
@@ -61,30 +61,31 @@
 
 /* --- El Contenedor --- */
 .contenedor_busqueda {
+    position: relative;
     display: flex;
     align-items: center;
-    position: relative;
-    /* ¡ESTA ES LA CORRECCIÓN QUE FALTABA! */
-    margin-left: 15px; 
+    background: white; /* O el color de fondo de tu barra */
+    border-radius: 25px;
+    padding: 5px;
+    transition: all 0.3s ease;
 }
 
 /* --- El Campo de Búsqueda (Input) --- */
 .search-input {
-    width: 0;
-    opacity: 0;
     border: none;
-    border-radius: 20px;
-    padding: 10px 15px;
-    font-size: 16px;
-    margin-right: -40px;
-    transition: all 0.4s ease;
+    outline: none;
+    background: transparent;
+    width: 0;           /* Ancho cero para ocultarlo */
+    opacity: 0;         /* Invisible */
+    padding: 0;
+    transition: all 0.4s ease; /* Animación suave */
 }
 
 /* --- EL ESTADO ACTIVO --- */
-.contenedor_busqueda.active .search-input {
-    width: 200px;
+.contenedor_busqueda.activo .search-input {
+    width: 200px;       /* Ancho deseado al expandir */
     opacity: 1;
-    margin-right: 10px;
+    padding: 0 10px;
 }
 
 .navegacion__enlace--activo,
