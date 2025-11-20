@@ -241,4 +241,38 @@ def quitar_libro(firebase_uid):
     # PASO 2 (Continuación): 'except' alineado con 'try'
     except Exception as e:
         print(f"Error al quitar libro: {e}")
-        return jsonify({"error": "Error interno del servidor."}), 500
+        return jsonify({"error": "Error interno del servidor."}), 
+
+
+# En book_bp.py
+@book_bp.route('/api/buscar')
+def api_buscar_libros():
+    search_query = request.args.get('query', '')
+    
+    if not search_query:
+        return jsonify([])
+
+    try:
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
+            # Buscamos coincidencias en Título O Autor
+            sql = sqlalchemy.text("""
+                SELECT id_libro, titulo_libro, url_portada 
+                FROM libros 
+                WHERE titulo_libro LIKE :q OR autor_libro LIKE :q
+            """)
+            # Los % permiten encontrar coincidencias parciales
+            resultados = conn.execute(sql, {"q": f"%{search_query}%"}).fetchall()
+            
+            libros = [
+                {
+                    "id": row.id_libro,
+                    "titulo": row.titulo_libro,
+                    "imagen": row.url_portada
+                } for row in resultados
+            ]
+            return jsonify(libros)
+            
+    except Exception as e:
+        print(f"Error búsqueda: {e}")
+        return jsonify({"error": "Error en servidor"}), 500

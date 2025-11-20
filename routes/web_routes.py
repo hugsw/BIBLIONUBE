@@ -46,5 +46,10 @@ def guardado_page():
 def mi_cuenta_page():
     return render_template('mi_cuenta.html')
 
+# En web_routes.py
+@web_bp.route('/buscar')
+def buscar_page():
+    return render_template('buscar.html')
+
 # NOTA: La ruta /registro (GET y POST) se movió a 'auth_routes.py'
 # para mantener toda la lógica de registro en un solo lugar.

@@ -500,3 +500,62 @@ async function handleEliminarLibro(libroId, tarjetaElemento, botonElemento) {
         }
     }
 }
+
+
+// En /static/js/services/books.js
+
+export async function cargarResultadosBusqueda() {
+    const grid = document.getElementById('grid-resultados');
+    const titulo = document.getElementById('titulo-busqueda');
+
+    // Si no existen estos elementos, no estamos en la página de búsqueda
+    if (!grid || !titulo) return;
+
+    // 1. Obtener el texto de la URL (ej. "Pinocho")
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('query');
+
+    if (!query) {
+        titulo.textContent = "Búsqueda vacía";
+        grid.innerHTML = "<p>Escribe algo en el buscador.</p>";
+        return;
+    }
+
+    titulo.textContent = `Resultados para: "${query}"`;
+
+    try {
+        // 2. Pedir los datos a Python
+        const response = await fetch(`/api/buscar?query=${encodeURIComponent(query)}`);
+        const libros = await response.json();
+
+        // 3. Mostrar los libros (usamos tu función renderizarLibros existente)
+        if (libros.length > 0) {
+            // Importante: Asegúrate de tener acceso a 'renderizarLibros' aquí
+            // Si 'renderizarLibros' no está exportada, úsala dentro del mismo archivo.
+            // Aquí asumo que renderizarLibros es accesible o copiada.
+             
+             // Como renderizarLibros es interna en books.js, podemos crear una lógica simple aquí:
+             grid.innerHTML = '';
+             libros.forEach(libro => {
+                const html = `
+                <div class="producto">
+                    <a href="/producto?id=${libro.id}">
+                        <img src="${libro.imagen || 'https://via.placeholder.com/200'}" alt="${libro.titulo}">
+                    </a>
+                    <div class="producto__informacion">
+                        <h3 class="producto__nombre">${libro.titulo}</h3>
+                        <a href="/producto?id=${libro.id}" class="btn-ver-mas">Ver Detalles</a>
+                    </div>
+                </div>`;
+                grid.insertAdjacentHTML('beforeend', html);
+             });
+
+        } else {
+            grid.innerHTML = `<p style="text-align:center;">No encontramos libros con ese nombre.</p>`;
+        }
+
+    } catch (error) {
+        console.error(error);
+        grid.innerHTML = `<p>Hubo un error al buscar.</p>`;
+    }
+}

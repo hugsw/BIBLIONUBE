@@ -9,7 +9,8 @@ import {
     cargarProductoUnico,
     inicializarBotonGuardar,
     cargarLibrosGuardados,
-    inicializarDelegacionEliminar
+    inicializarDelegacionEliminar,
+    cargarResultadosBusqueda
 } from './services/books.js';
 import {
     inicializarSliders,
@@ -96,6 +97,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         await cargarDatosMiCuentaFirebase();
         console.log("Página 'Mi Cuenta' (Firebase) cargada.");
     }
+
+    await cargarResultadosBusqueda();
 
 }); // --- FIN DEL 'DOMContentLoaded' ---
 
