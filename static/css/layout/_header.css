@@ -10,6 +10,7 @@
     padding: 0 2rem;
     height: 10rem;
     position: relative; /* Necesario para el buscador flotante */
+    z-index: 1000; /* Asegura que el header esté por encima del contenido */
 }
 
 /* 2. EL LOGO */
@@ -63,9 +64,9 @@
         padding: 0.5rem 1rem; 
         justify-content: space-between;
         
-        /* --- LA SOLUCIÓN DEFINITIVA --- */
-        flex-wrap: nowrap;     /* PROHIBIDO saltar de línea */
-        overflow: hidden;      /* Si algo no cabe, que se corte, pero que no rompa el layout */
+        /* --- LA CORRECCIÓN --- */
+        flex-wrap: nowrap;     /* Mantenemos la prohibición de saltar de línea */
+        overflow: visible;     /* ¡IMPORTANTE! Permitimos que el menú se salga del header */
     }
 
     /* 2. Ajustes del Logo */
@@ -89,6 +90,7 @@
         font-size: 20px;
         gap: 1rem;
         margin: 0; /* Quitamos márgenes extraños */
+        position: relative; /* Ayuda a posicionar el dropdown correctamente */
     }
 }
 
