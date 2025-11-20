@@ -1,3 +1,7 @@
+/* =======================================================
+   ESTILOS BASE (Escritorio)
+   ======================================================= */
+
 /* 1. EL CONTENEDOR PRINCIPAL */
 .header {
     display: flex;
@@ -5,7 +9,7 @@
     background-color: var(--color-fondo-header);
     padding: 0 2rem;
     height: 10rem;
-    position: relative;
+    position: relative; /* Necesario para el buscador flotante */
 }
 
 /* 2. EL LOGO */
@@ -13,6 +17,7 @@
     height: 10rem;
     width: auto;
     order: 1;
+    flex-shrink: 0; /* IMPORTANTE: Nunca permitimos que el logo se aplaste */
 }
 
 /* 3. EL TÍTULO */
@@ -29,13 +34,13 @@
     display: flex;
     align-items: center;
     order: 3;
-    column-gap: 12px;
     margin: 14px;
     font-family: var(--fuentePrincipal);
     color: var(--blanco);
     font-size: 30px;
     text-transform: none;
     gap: 1.5rem;
+    flex-shrink: 0; /* IMPORTANTE: Nunca permitimos que los botones se aplasten */
 }
 
 /* 5. EL CONTENEDOR DE BÚSQUEDA */
@@ -43,79 +48,56 @@
     display: flex;
     align-items: center;
     order: 4;
-    
+    /* No ponemos flex-shrink: 0 aquí para que este sea el elemento que ceda espacio si es necesario */
 }
 
-
-/* =========================================
-   CORRECCIÓN PARA MÓVILES (Responsive)
-   ========================================= */
-
-@media (max-width: 768px) {
-    /* 1. Reducir la altura y el padding del contenedor principal */
-    .header {
-        height: auto;          /* Quita la altura fija de 10rem */
-        min-height: 7rem;      /* Altura mínima más razonable */
-        padding: 0.5rem 1.5rem; 
-        flex-wrap: wrap;       /* Permite que los elementos se acomoden */
-        justify-content: space-between;
-    }
-
-    /* 2. Reducir el logo a la mitad */
-    .header__logo {
-        height: 5rem;          /* De 10rem bajamos a 5rem */
-        width: auto;
-    }
-
-    /* 3. Ajustar el título (BIBLIONUBE) */
-    .header__global {
-        font-size: 2rem;       /* De 3rem bajamos a 2rem */
-        text-align: left;      /* Alineación natural */
-        padding-left: 1rem;
-        flex-grow: 1;          /* Que ocupe el espacio disponible */
-    }
-
-    /* 4. Reducir los iconos de navegación (Login, Home, etc.) */
-    .navegacion-login {
-        font-size: 20px;       /* De 30px bajamos a 20px */
-        gap: 1rem;             /* Menos espacio entre iconos */
-        margin: 0;             /* Quitar margenes extra */
-    }
-}
-
-/* =========================================
-   CORRECCIÓN EXTRA PARA CELULARES PEQUEÑOS
-   (Pantallas menores a 480px)
-   ========================================= */
-@media (max-width: 480px) {
-    /* En celulares muy angostos, el título suele estorbar.
-       Opciones: Ocultarlo o hacerlo muy pequeño. */
-    
-    .header__global {
-        display: none; /* Ocultamos el texto para dar espacio a los botones */
-    }
-
-    .header {
-        justify-content: space-between; /* Logo a la izq, Botones a la der */
-    }
-}
-
-
-
-/* static/css/layout/_header.css */
 
 /* =======================================================
-   CORRECCIÓN FINAL: EVITAR QUE EL HEADER SE ROMPA
-   Esto obliga al logo y a los botones a mantener su tamaño
-   incluso si el buscador intenta empujarlos al cerrarse.
+   ESTILOS RESPONSIVE (Móviles y Tablets)
    ======================================================= */
 
-.header__logo,
-.navegacion-login {
-    flex-shrink: 0; /* "No te encojas nunca" */
+@media (max-width: 768px) {
+    /* 1. Ajustes del Contenedor Principal */
+    .header {
+        height: 7rem;          /* Altura fija más pequeña */
+        padding: 0.5rem 1rem; 
+        justify-content: space-between;
+        
+        /* --- LA SOLUCIÓN DEFINITIVA --- */
+        flex-wrap: nowrap;     /* PROHIBIDO saltar de línea */
+        overflow: hidden;      /* Si algo no cabe, que se corte, pero que no rompa el layout */
+    }
+
+    /* 2. Ajustes del Logo */
+    .header__logo {
+        height: 5rem;
+    }
+
+    /* 3. Ajustes del Título */
+    .header__global {
+        font-size: 2rem;
+        text-align: left;
+        padding-left: 1rem;
+        /* flex-grow: 1 ya está definido arriba */
+        white-space: nowrap;    /* Evita que el texto ocupe dos líneas */
+        overflow: hidden;       /* Corta el texto si es muy largo */
+        text-overflow: ellipsis; /* Añade "..." si se corta */
+    }
+
+    /* 4. Ajustes de Iconos */
+    .navegacion-login {
+        font-size: 20px;
+        gap: 1rem;
+        margin: 0; /* Quitamos márgenes extraños */
+    }
 }
 
-/* Opcional: Asegura que el contenedor del buscador tampoco se deforme */
-.contenedor_busqueda {
-    flex-shrink: 0;
+/* =======================================================
+   ESTILOS PARA MÓVILES PEQUEÑOS (< 480px)
+   ======================================================= */
+@media (max-width: 480px) {
+    /* Ocultamos el título para dar prioridad a los botones funcionales */
+    .header__global {
+        display: none;
+    }
 }
