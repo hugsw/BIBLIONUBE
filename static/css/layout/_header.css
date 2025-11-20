@@ -99,3 +99,23 @@
         justify-content: space-between; /* Logo a la izq, Botones a la der */
     }
 }
+
+
+
+/* static/css/layout/_header.css */
+
+/* =======================================================
+   CORRECCIÓN FINAL: EVITAR QUE EL HEADER SE ROMPA
+   Esto obliga al logo y a los botones a mantener su tamaño
+   incluso si el buscador intenta empujarlos al cerrarse.
+   ======================================================= */
+
+.header__logo,
+.navegacion-login {
+    flex-shrink: 0; /* "No te encojas nunca" */
+}
+
+/* Opcional: Asegura que el contenedor del buscador tampoco se deforme */
+.contenedor_busqueda {
+    flex-shrink: 0;
+}
