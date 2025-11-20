@@ -121,7 +121,7 @@
     /* Mostramos el icono en móvil */
     .navegacion-login .btn-identificate .btn-icono {
         display: block;
-        font-size: 1.2rem; /* Ajusta el tamaño del icono */
+        font-size: 2rem; /* Ajusta el tamaño del icono */
     }
 }
 
