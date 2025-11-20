@@ -10,7 +10,7 @@
     padding: 0 2rem;
     height: 10rem;
     position: relative; /* Necesario para el buscador flotante */
-    z-index: 1000; /* Asegura que el header esté por encima del contenido */
+    z-index: 1000; /* Mantiene el header por encima del contenido */
 }
 
 /* 2. EL LOGO */
@@ -44,12 +44,20 @@
     flex-shrink: 0; /* IMPORTANTE: Nunca permitimos que los botones se aplasten */
 }
 
+/* --- LÓGICA DEL BOTÓN IDENTIFÍCATE (Escritorio) --- */
+/* En pantalla grande: Ocultamos el icono y mostramos el texto */
+.navegacion-login .btn-identificate .btn-icono {
+    display: none; 
+}
+.navegacion-login .btn-identificate .btn-texto {
+    display: inline; 
+}
+
 /* 5. EL CONTENEDOR DE BÚSQUEDA */
 .contenedor_busqueda {
     display: flex;
     align-items: center;
     order: 4;
-    /* No ponemos flex-shrink: 0 aquí para que este sea el elemento que ceda espacio si es necesario */
 }
 
 
@@ -64,9 +72,9 @@
         padding: 0.5rem 1rem; 
         justify-content: space-between;
         
-        /* --- LA CORRECCIÓN --- */
-        flex-wrap: nowrap;     /* Mantenemos la prohibición de saltar de línea */
-        overflow: visible;     /* ¡IMPORTANTE! Permitimos que el menú se salga del header */
+        /* --- CORRECCIONES DE ESTABILIDAD --- */
+        flex-wrap: nowrap;     /* PROHIBIDO saltar de línea (evita que se rompa al buscar) */
+        overflow: visible;     /* IMPORTANTE: Permitimos que el menú de cuenta se salga del header */
     }
 
     /* 2. Ajustes del Logo */
@@ -79,18 +87,41 @@
         font-size: 2rem;
         text-align: left;
         padding-left: 1rem;
-        /* flex-grow: 1 ya está definido arriba */
-        white-space: nowrap;    /* Evita que el texto ocupe dos líneas */
-        overflow: hidden;       /* Corta el texto si es muy largo */
-        text-overflow: ellipsis; /* Añade "..." si se corta */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     /* 4. Ajustes de Iconos */
     .navegacion-login {
         font-size: 20px;
         gap: 1rem;
-        margin: 0; /* Quitamos márgenes extraños */
-        position: relative; /* Ayuda a posicionar el dropdown correctamente */
+        margin: 0;
+        position: relative;
+    }
+
+    /* --- TRANSFORMACIÓN A BOTÓN REDONDO (Móvil) --- */
+    /* Esto convierte el botón rectangular en un círculo con icono */
+    .navegacion-login .btn-identificate {
+        width: 40px;  /* Ancho fijo */
+        height: 40px; /* Alto fijo */
+        padding: 0;   /* Quitamos el padding rectangular */
+        border-radius: 50%; /* Lo hacemos circular */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 0; /* Evita que el navegador fuerce un ancho mínimo */
+    }
+
+    /* Ocultamos el texto en móvil */
+    .navegacion-login .btn-identificate .btn-texto {
+        display: none;
+    }
+
+    /* Mostramos el icono en móvil */
+    .navegacion-login .btn-identificate .btn-icono {
+        display: block;
+        font-size: 1.2rem; /* Ajusta el tamaño del icono */
     }
 }
 
@@ -98,8 +129,8 @@
    ESTILOS PARA MÓVILES PEQUEÑOS (< 480px)
    ======================================================= */
 @media (max-width: 480px) {
-    /* Ocultamos el título para dar prioridad a los botones funcionales */
+    /* Ocultamos el título para dar espacio en pantallas muy angostas */
     .header__global {
-        display: none;
+        display: none; 
     }
 }

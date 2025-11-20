@@ -1,6 +1,4 @@
 <header class="header">
-    <!--
--->
     <a href="/">
         <img class="header__logo" src="/static/img/BOOK.png" alt="Logotipo">
     </a>
@@ -11,7 +9,16 @@
         <a class="navegacion__home" href="/guardado" id="boton-guardados" aria-label="ver libros guardados">
             <i class="fa-solid fa-bookmark"></i>
         </a>
-        <button class="btn-identificate" id="abrirModal">IDENTIFICATE</button>
+        
+        <!-- 
+           CORRECCIÓN APLICADA AQUÍ: 
+           Dividimos el botón en Texto e Icono para controlarlos con CSS.
+        -->
+        <button class="btn-identificate" id="abrirModal" aria-label="Iniciar sesión">
+            <span class="btn-texto">IDENTIFICATE</span>
+            <i class="fa-solid fa-user btn-icono"></i>
+        </button>
+
         <div class="user-menu-wrapper" id="user-menu-wrapper">
             <button class="user-menu-trigger" id="user-menu-trigger">
                 <i class="fa-solid fa-bars user-menu-hamburger"></i>
@@ -38,12 +45,13 @@
         </form>
     </div> <!-- Fin de .navegacion-login -->
 </header>
+
 <div id="modalLogin" class="modal">
     <div class="modal-content">
         <div class="modal-panel left-panel">
             <div class="illustration-area">
                 <div class="image-placeholder">
-
+                    <!-- Placeholder vacío conservado -->
                 </div>
             </div>
             <h1>Iniciar sesión</h1>
@@ -81,5 +89,4 @@
             </p>
         </div>
     </div>
-
 </div>
