@@ -54,20 +54,25 @@ export function inicializarModalLogin() {
     }
 }
 
-/**
- * Inicializa la barra de búsqueda.
- * (Extraído de tu 'inicializarScriptsDelHeader')
- */
-export function inicializarBarraBusqueda() {
-    const searchButton = document.querySelector(".navegacion__busqueda");
-    const searchContainer = document.querySelector(".contenedor_busqueda");
+// En /static/js/components/ui.js
 
-    if (searchButton && searchContainer) {
-        searchButton.addEventListener("click", (event) => {
-            event.preventDefault();
-            searchContainer.classList.toggle("active");
-        });
-    }
+export function inicializarBarraBusqueda() {
+    // Usamos los IDs que tienes en tu HTML
+    const formBusqueda = document.getElementById('form-busqueda');
+    const inputBusqueda = document.getElementById('search-input');
+
+    if (!formBusqueda || !inputBusqueda) return;
+
+    formBusqueda.addEventListener('submit', (e) => {
+        e.preventDefault(); // 1. Evita que la página se recargue sola
+        
+        const query = inputBusqueda.value.trim(); // 2. Obtiene el texto (ej. "Pinocho")
+
+        if (query) {
+            // 3. Redirige a: /buscar?query=Pinocho
+            window.location.href = `/buscar?query=${encodeURIComponent(query)}`;
+        }
+    });
 }
 
 /**
@@ -147,27 +152,6 @@ export function inicializarTogglePasswordRegistro() {
     }
 }
 
-
-// En /static/js/components/ui.js
-
-export function inicializarBarraBusqueda() {
-    // Usamos los IDs que tienes en tu HTML
-    const formBusqueda = document.getElementById('form-busqueda');
-    const inputBusqueda = document.getElementById('search-input');
-
-    if (!formBusqueda || !inputBusqueda) return;
-
-    formBusqueda.addEventListener('submit', (e) => {
-        e.preventDefault(); // 1. Evita que la página se recargue sola
-        
-        const query = inputBusqueda.value.trim(); // 2. Obtiene el texto (ej. "Pinocho")
-
-        if (query) {
-            // 3. Redirige a: /buscar?query=Pinocho
-            window.location.href = `/buscar?query=${encodeURIComponent(query)}`;
-        }
-    });
-}
 
 /**
  * Inicializa el menú desplegable del usuario (círculo con iniciales).
