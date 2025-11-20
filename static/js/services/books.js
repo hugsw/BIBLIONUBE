@@ -544,7 +544,6 @@ export async function cargarResultadosBusqueda() {
                     </a>
                     <div class="producto__informacion">
                         <h3 class="producto__nombre">${libro.titulo}</h3>
-                        <a href="/producto?id=${libro.id}" class="btn-ver-mas">Ver Detalles</a>
                     </div>
                 </div>`;
                 grid.insertAdjacentHTML('beforeend', html);
