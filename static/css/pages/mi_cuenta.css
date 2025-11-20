@@ -1,5 +1,5 @@
 /* ==============================================
-   ESTILOS PARA PÁGINA "MI CUENTA" (CORREGIDO)
+   ESTILOS BASE (Escritorio)
    ============================================== */
 
 /* Contenedor principal para el layout de 2 columnas */
@@ -38,9 +38,9 @@
     position: relative;
     display: flex; 
     align-items: center;
-    justify-content: flex-start; /* <-- MODIFICADO: Alinea a la izquierda */
+    justify-content: flex-start; 
     padding: 1.5rem 0; 
-    padding-left: 22px;          /* <-- AÑADIDO: Empuja el ícono 22px desde la izq. */
+    padding-left: 22px;          
     cursor: pointer;
     box-sizing: border-box; 
 }
@@ -48,26 +48,25 @@
 /* El ícono (color naranja por defecto) */
 .icon-mi-cuenta {
     font-size: 1.8rem; 
-    color: #FFA500; /* ### CORREGIDO: NARANJA (como en tu imagen) ### */
+    color: #FFA500; 
     flex-shrink: 0;
 }
 
-/* Estilo para el ítem activo (como en tu imagen) */
+/* Estilo para el ítem activo */
 .menu-item-activo {
-    background-color: transparent; /* ### CORREGIDO: Sin fondo ### */
-    border-left: 5px solid #FFA500; /* ### CORREGIDO: Barra NARANJA a la izquierda ### */
+    background-color: transparent; 
+    border-left: 5px solid #FFA500; /* Barra naranja a la izquierda */
 }
 
 .menu-item-activo .icon-mi-cuenta {
-    color: #FFA500; /* Mantiene el color NARANJA */
+    color: #FFA500; 
 }
 
 /* --- Estilos del Contenido (Derecha) --- */
-/* (Estos se quedan igual) */
-
 .contenido-mi-cuenta {
     flex-grow: 1; 
     padding: 2rem 3rem;
+    overflow: hidden; /* Evita desbordamientos */
 }
 
 .contenido-mi-cuenta h1 {
@@ -90,7 +89,7 @@
     width: 70px; 
     height: 70px;
     border-radius: 50%;
-    background-color: var(--color-acento); /* Círculo azul de iniciales */
+    background-color: var(--color-acento); 
     color: white;
     display: flex;
     align-items: center;
@@ -115,15 +114,17 @@
     font-size: 1.5rem; 
     color: #777;
     margin: 0.25rem 0 0 0;
+    word-break: break-all; /* Evita que emails largos rompan el diseño */
 }
 
 .detalles-completos-usuario {
     padding-top: 1rem;
 }
 
+/* Grid de detalles (Escritorio: 2 Columnas) */
 .detalles-usuario {
     display: grid;
-    grid-template-columns: 180px 1fr; 
+    grid-template-columns: 180px 1fr; /* Columna fija + resto */
     gap: 1.2rem 1rem; 
     font-size: 1.5rem;
     font-family: var(--fuentePrincipal);
@@ -137,4 +138,82 @@
 .detalles-usuario dd {
     margin: 0;
     color: #333;
+}
+
+
+/* ==============================================
+   CORRECCIÓN RESPONSIVE (Móvil)
+   ============================================== */
+@media (max-width: 768px) {
+    
+    /* 1. Cambiamos a diseño vertical (Columna) */
+    .contenedor-principal-mi-cuenta {
+        flex-direction: column;
+        margin: 1rem; /* Un poco de margen externo */
+        min-height: auto; /* Altura automática */
+    }
+
+    /* 2. El menú pasa a estar arriba y horizontal */
+    .menu-lateral-mi-cuenta {
+        width: 100%; /* Ocupa todo el ancho */
+        flex-direction: row; /* Íconos en fila */
+        padding: 0;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        border-radius: 8px 8px 0 0;
+        justify-content: center; /* Centrar íconos */
+    }
+    
+    .menu-lateral-mi-cuenta nav ul {
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Ajuste de los ítems del menú para móvil */
+    .menu-lateral-mi-cuenta nav ul li {
+        padding: 1.5rem 2rem;
+        padding-left: 0; /* Quitamos el padding extra de escritorio */
+        justify-content: center;
+        border-left: none; /* Quitamos barra lateral */
+    }
+
+    /* Indicador activo pasa a estar ABAJO */
+    .menu-item-activo {
+        border-left: none;
+        border-bottom: 4px solid #FFA500;
+    }
+
+    /* 3. Ajustes del contenido */
+    .contenido-mi-cuenta {
+        padding: 2rem 1.5rem; /* Menos padding lateral */
+    }
+
+    /* 4. Ajuste de la foto y nombre */
+    .profile-summary {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .profile-info {
+        margin-left: 0;
+    }
+
+    /* 5. ¡LA CLAVE! Convertir la tabla de datos a 1 sola columna */
+    .detalles-usuario {
+        grid-template-columns: 1fr; /* Una sola columna */
+        gap: 0.5rem;
+    }
+
+    .detalles-usuario dt {
+        margin-top: 1rem; /* Separación entre grupos */
+        color: #888;     /* Un poco más claro para diferenciar */
+        font-size: 1.4rem;
+    }
+
+    .detalles-usuario dd {
+        font-size: 1.6rem;
+        border-bottom: 1px solid #f0f0f0; /* Línea separadora sutil */
+        padding-bottom: 0.5rem;
+    }
 }
