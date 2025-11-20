@@ -241,3 +241,31 @@ body.sesion-iniciada #user-menu-wrapper {
 body.sesion-iniciada #abrirModal {
     display: none;
 }
+
+
+
+/* =======================================================
+   CORRECCIÓN BUSCADOR MÓVIL (Flotante)
+   ======================================================= */
+
+@media (max-width: 768px) {
+    /* Cuando el buscador se activa (.activo), lo sacamos del flujo normal
+       y lo hacemos flotar sobre el header ocupando casi todo el ancho. */
+    .contenedor_busqueda.activo {
+        position: absolute;
+        top: 50%;              /* Centrado vertical */
+        transform: translateY(-50%);
+        
+        left: 10px;            /* Margen izquierdo */
+        right: 10px;           /* Margen derecho */
+        width: auto;           /* El ancho se define por left/right */
+        
+        z-index: 999;          /* Asegura que flote POR ENCIMA del logo y botones */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2); /* Sombra fuerte para destacar */
+    }
+
+    /* Hacemos que el input interno aproveche todo ese nuevo espacio */
+    .contenedor_busqueda.activo .search-input {
+        width: 100%;
+    }
+}

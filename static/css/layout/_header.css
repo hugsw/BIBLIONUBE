@@ -5,6 +5,7 @@
     background-color: var(--color-fondo-header);
     padding: 0 2rem;
     height: 10rem;
+    position: relative;
 }
 
 /* 2. EL LOGO */
