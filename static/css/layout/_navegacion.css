@@ -245,27 +245,29 @@ body.sesion-iniciada #abrirModal {
 
 
 /* =======================================================
-   CORRECCIÓN BUSCADOR MÓVIL (Flotante)
+   CORRECCIÓN BUSCADOR MÓVIL (Animación Suave)
    ======================================================= */
 
 @media (max-width: 768px) {
-    /* Cuando el buscador se activa (.activo), lo sacamos del flujo normal
-       y lo hacemos flotar sobre el header ocupando casi todo el ancho. */
-    .contenedor_busqueda.activo {
+    /* Nueva clase ".busqueda-flotante":
+       Solo se encarga de sacar el buscador del flujo normal.
+       Se mantendrá activa mientras dura la animación de cierre.
+    */
+    .contenedor_busqueda.busqueda-flotante {
         position: absolute;
-        top: 50%;              /* Centrado vertical */
+        top: 50%;
         transform: translateY(-50%);
-        
-        left: 10px;            /* Margen izquierdo */
-        right: 10px;           /* Margen derecho */
-        width: auto;           /* El ancho se define por left/right */
-        
-        z-index: 999;          /* Asegura que flote POR ENCIMA del logo y botones */
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2); /* Sombra fuerte para destacar */
+        left: 10px;
+        right: 10px;
+        width: auto;
+        z-index: 999;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
-    /* Hacemos que el input interno aproveche todo ese nuevo espacio */
-    .contenedor_busqueda.activo .search-input {
+    /* Cuando flota, forzamos al input a ocupar todo el espacio 
+       disponible dentro de la píldora flotante.
+    */
+    .contenedor_busqueda.busqueda-flotante .search-input {
         width: 100%;
     }
 }

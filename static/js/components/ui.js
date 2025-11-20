@@ -55,34 +55,65 @@ export function inicializarModalLogin() {
 }
 
 
-
+/**
+ * Inicializa la barra de búsqueda con la lógica de "flotar" para evitar saltos en móvil.
+ */
 export function inicializarBarraBusqueda() {
     const formBusqueda = document.getElementById('form-busqueda');
     const inputBusqueda = document.getElementById('search-input');
-    // Buscamos el botón dentro del formulario
-    const btnBusqueda = formBusqueda.querySelector('button[type="submit"]');
+    // Buscamos el botón dentro del formulario de forma segura
+    const btnBusqueda = formBusqueda ? formBusqueda.querySelector('button[type="submit"]') : null;
 
     if (!formBusqueda || !inputBusqueda || !btnBusqueda) return;
+
+    // FUNCIÓN PARA ABRIR EL BUSCADOR
+    const abrirBuscador = () => {
+        // 1. Primero lo hacemos flotar (posición absoluta) para que no empuje nada
+        formBusqueda.classList.add('busqueda-flotante');
+        
+        // 2. Un instante después, expandimos el ancho (animación CSS)
+        // Usamos requestAnimationFrame para asegurar que el navegador procese la clase anterior primero
+        requestAnimationFrame(() => {
+            formBusqueda.classList.add('activo');
+            inputBusqueda.focus(); // Ponemos el cursor para escribir
+        });
+    };
+
+    // FUNCIÓN PARA CERRAR EL BUSCADOR CON RETRASO (La clave del arreglo)
+    const cerrarBuscador = () => {
+        // 1. Quitamos la clase 'activo' para que empiece a encogerse (animación de ancho)
+        formBusqueda.classList.remove('activo');
+
+        // 2. ESPERAMOS 500ms (tiempo aprox de la animación CSS) antes de dejar de flotar.
+        // Esto evita que el buscador "vuelva" a la fila mientras todavía es ancho.
+        setTimeout(() => {
+            // Solo si sigue cerrado (por si el usuario le dio click rápido de nuevo)
+            if (!formBusqueda.classList.contains('activo')) {
+                formBusqueda.classList.remove('busqueda-flotante');
+            }
+        }, 500); // 500ms coincide con la duración típica de transición CSS
+    };
 
     // 1. Lógica del clic en el botón (Lupa)
     btnBusqueda.addEventListener('click', (e) => {
         // Si el input NO tiene la clase activo (está cerrado) o está vacío...
         if (!formBusqueda.classList.contains('activo') || inputBusqueda.value.trim() === "") {
             e.preventDefault(); // ¡DETENEMOS EL ENVÍO!
-            
-            // Expandimos el buscador
-            formBusqueda.classList.add('activo');
-            inputBusqueda.focus(); // Ponemos el cursor para escribir
+            abrirBuscador();
         }
         // Si YA tiene la clase activo Y tiene texto, dejamos que el evento 'submit' ocurra normalmente.
     });
 
-    // 2. Lógica para cerrar si haces clic fuera (Opcional pero recomendado)
+    // 2. Lógica para cerrar si haces clic fuera
     document.addEventListener('click', (e) => {
+        // Si el clic NO fue dentro del formulario
         if (!formBusqueda.contains(e.target)) {
-            // Si el clic fue fuera del formulario y el input está vacío, ciérralo
+            // Y si el input está vacío (si tiene texto, no cerramos para no perder la búsqueda)
             if (inputBusqueda.value.trim() === "") {
-                formBusqueda.classList.remove('activo');
+                // Si está abierto, lo cerramos
+                if (formBusqueda.classList.contains('activo')) {
+                    cerrarBuscador();
+                }
             }
         }
     });
@@ -98,33 +129,6 @@ export function inicializarBarraBusqueda() {
     });
 }
 
-/**
- * Inicializa el botón "Guardados". Si el usuario no está logueado,
- * abre el modal de login.
- * (Extraído de tu 'inicializarScriptsDelHeader')
- 
-export function inicializarBotonGuardados() {
-    const botonGuardados = document.getElementById('boton-guardados');
-    const modal = document.getElementById('modalLogin'); // Dependencia
-
-    if (botonGuardados && modal) {
-        botonGuardados.addEventListener('click', (event) => {
-            event.preventDefault();
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                window.location.href = '/guardado';
-            } else {
-                // --- ¡CORRECCIÓN! ---
-                // 1. Guarda la página a la que el usuario quería ir.
-                sessionStorage.setItem('redirectAfterLogin', '/guardado');
-
-                // 2. Ahora sí, abre el modal.
-                modal.classList.add('visible');
-                document.body.classList.add('modal-open');
-            }
-        });
-    }
-}*/
 
 /**
  * Inicializa el "ojo" para ver contraseña EN EL MODAL DE LOGIN.
