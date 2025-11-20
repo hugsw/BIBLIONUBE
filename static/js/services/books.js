@@ -85,7 +85,7 @@ export async function cargarYRenderizarLibros() {
     const contCategoria = document.querySelector('.grid-categoria');
 
     const esIndex = contInfantilSlider && contJuvenilSlider && contAdultoSlider;
-    const esCategoria = contCategoria && contCategoria.id !== 'grid-guardados';
+    const esCategoria = contCategoria && contCategoria.id !== 'grid-guardados' && contCategoria.id !== 'grid-resultados';
 
     if (!esIndex && !esCategoria) {
         return;

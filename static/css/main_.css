@@ -23,6 +23,7 @@
 @import url("components/_guardados.css");
 @import url("layout/_alerta.css");
 @import url("pages/mi_cuenta.css");
+@import url("pages/busqueda.css");
 
 
 body {
