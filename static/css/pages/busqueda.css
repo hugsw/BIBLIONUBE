@@ -7,14 +7,16 @@
     justify-content: space-between; /* Título a la izquierda, botón a la derecha */
     align-items: center; /* Alineación vertical centrada */
     gap: 10px; /* Espacio mínimo entre título y botón */
+    margin-top: 4rem;
+    margin-left: 2rem;
 }
 
 /* 2. Estilo del Título */
 .categoria-titulo {
     margin: 0;
-    color: #2c3e50; /* Azul oscuro */
+    color: var(--colortitulos);
     text-transform: uppercase;
-    font-size: 1.5rem;
+    font-size: 2rem;
     /* No le ponemos ancho fijo para que ocupe lo necesario */
 }
 
@@ -40,10 +42,12 @@
     width: 100%; 
     margin-top: 1.5rem;    /* Espacio arriba de los libros */
     padding-top: 1.5rem;   /* Espacio entre la línea y los libros */
-    border-top: 1px solid #eee; /* Esta es la línea divisoria visual */
-    
+   
+    padding-left: 0 !important; /* Fuerza cero relleno a la izq */
+    margin-left: 0 !important;  /* Fuerza cero margen a la izq */
     /* Mantener tu configuración de Grid existente */
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;
+    border-top: 1px solid #eee;
 }
