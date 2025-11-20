@@ -1,8 +1,6 @@
 // js/main.js
 // Este archivo maneja TODO: carga de componentes, UI, libros y AUTENTICACIÓN.
 
-// --- PASO 1: IMPORTA TUS MÓDULOS (EXCEPTO EL 'auth.js' ANTIGUO) ---
-
 import { cargarComponentes } from './Utils/loader.js';
 import {
     cargarYRenderizarLibros,
@@ -16,32 +14,29 @@ import {
     inicializarSliders,
     inicializarModalLogin,
     inicializarBarraBusqueda,
-    //inicializarBotonGuardados,
     inicializarTogglePasswordLogin,
     inicializarTogglePasswordRegistro,
     inicializarDropdownUsuario
 } from './components/ui.js';
 
 
-// --- PASO 2: PEGA TU FIREBASE CONFIG AQUÍ ---
-// (¡El mismo que copiaste de la consola de Firebase!)
+// --- PASO 1: CONFIGURACIÓN DE FIREBASE ---
 const firebaseConfig = {
-    apiKey: "AIzaSyA19ORaIYFCH_vfPfamUjyR9iMxLGT1FVI", // ¡Pega el tuyo!
-    authDomain: "biblionube-328e4.firebaseapp.com", // ¡Pega el tuyo!
-    projectId: "biblionube-328e4", // ¡Pega el tuyo!
-    storageBucket: "biblionube-328e4.firebasestorage.app", // ¡Pega el tuyo!
-    messagingSenderId: "911996701364", // ¡Pega el tuyo!
-    appId: "1:911996701364:web:97ff11275b17a91b85a5e1", // ¡Pega el tuyo!
-    measurementId: "G-VWPDZYGQ88" // ¡Pega el tuyo!
+    apiKey: "AIzaSyA19ORaIYFCH_vfPfamUjyR9iMxLGT1FVI", 
+    authDomain: "biblionube-328e4.firebaseapp.com", 
+    projectId: "biblionube-328e4", 
+    storageBucket: "biblionube-328e4.firebasestorage.app", 
+    messagingSenderId: "911996701364", 
+    appId: "1:911996701364:web:97ff11275b17a91b85a5e1", 
+    measurementId: "G-VWPDZYGQ88" 
 };
 
-// --- PASO 3: INICIALIZA FIREBASE ---
-// 'firebase' existe gracias a los scripts que pusimos en el HTML
+// --- PASO 2: INICIALIZA FIREBASE ---
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
 
-// --- PASO 4: EL CEREBRO DE LA APP (DOMCONTENTLOADED) ---
+// --- PASO 3: EL CEREBRO DE LA APP (DOMCONTENTLOADED) ---
 document.addEventListener("DOMContentLoaded", async () => {
 
     // 1. Carga componentes reutilizables (header/footer)
@@ -53,47 +48,42 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // 2. Inicializar toda la lógica de UI (del header y otros)
-    // (Esta es la lógica de tu 'inicializarLogicaHeader' y 'ui.js')
+    // 2. Inicializar toda la lógica de UI
     inicializarModalLogin();
     inicializarBarraBusqueda();
-    inicializarBotonGuardar(); // <-- ¡CORRECTO!
-    //inicializarBotonGuardados();
-    inicializarTogglePasswordLogin(); // El "ojo" del modal
+    inicializarBotonGuardar(); 
+    inicializarTogglePasswordLogin(); 
     inicializarDropdownUsuario();
     console.log("Lógica del Header y UI inicializada.");
 
     // 4. Lógica solo para el formulario de registro (si existe)
     if (document.getElementById('register-form')) {
-        // (Esto reemplaza tu 'inicializarFormularioRegistro')
         inicializarRegistroFirebase();
-        inicializarTogglePasswordRegistro(); // El "ojo" de la pág. de registro
+        inicializarTogglePasswordRegistro(); 
         console.log("Formulario de Registro (Firebase) inicializado.");
     }
 
-    // 5. Lógica de Sliders (de tu 'ui.js')
+    // 5. Lógica de Sliders
     if (document.querySelector('.slider-contenedor')) {
         inicializarSliders();
         console.log("Sliders inicializados.");
     }
 
-    // 6. Lógica para cargar libros (de tu 'books.js')
+    // 6. Lógica para cargar libros
     cargarYRenderizarLibros();
     console.log("Carga de libros (general) iniciada.");
 
-    // 7. Carga los datos de 'producto.html' (si estamos en esa página)
+    // 7. Carga los datos de 'producto.html'
     await cargarProductoUnico();
     console.log("Carga de (producto único) completada.");
 
     // 9. Carga los libros en 'guardado.html'
     await cargarLibrosGuardados();
-    // ¡AQUÍ! ACTIVA LOS BOTONES "ELIMINAR" (SI EXISTEN)
-    inicializarDelegacionEliminar(document.getElementById('grid-guardados')); // <-- ¡CORRECTO!
+    inicializarDelegacionEliminar(document.getElementById('grid-guardados')); 
     console.log("Página 'Guardados' cargada y renderizada.");
 
-    // 10. Carga los datos de 'mi_cuenta.html' (si estamos en esa página)
+    // 10. Carga los datos de 'mi_cuenta.html'
     if (document.body.classList.contains('pagina-mi-cuenta')) {
-        // (Esto reemplaza tu 'cargarDatosMiCuenta')z
         await cargarDatosMiCuentaFirebase();
         console.log("Página 'Mi Cuenta' (Firebase) cargada.");
     }
@@ -105,37 +95,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // ================================================================
 //  FUNCIONES DE AUTENTICACIÓN DE FIREBASE
-// (Estas reemplazan todo tu archivo 'auth.js' antiguo)
 // ================================================================
 
-/**
- * Esta es la función MÁS IMPORTANTE.
- * Se ejecuta al cargar la página y detecta si hay sesión.
- * Reemplaza a tu 'inicializarGestorSesion'.
- */
 function inicializarFirebaseGlobal() {
-    // 1. Verificamos que esta función se llame
     console.log("🟢 'inicializarFirebaseGlobal' SÍ se está llamando.");
 
     const loginForm = document.getElementById('login-form');
     const btnLogout = document.getElementById('logout-button');
 
-    // Cerebro de la sesión
     auth.onAuthStateChanged(async (user) => {
-        // 2. Verificamos que el listener se dispare
         console.log("🟡 'onAuthStateChanged' se disparó.");
 
         const body = document.body;
-        const menuUsuario = document.getElementById('user-menu-wrapper');
-
+        
         if (user) {
-            // 3. Vemos si encontró un usuario y su estado
             console.log("✅ Usuario ENCONTRADO:", user.email);
-            console.log("   ¿Está verificado?", user.emailVerified);
 
-            // --- EL USUARIO TIENE SESIÓN ---
             if (user.emailVerified) {
-                // 4. Vemos si entra al camino correcto
                 console.log("➡️ Entrando al camino 'VERIFICADO'.");
 
                 const nombre = user.displayName;
@@ -145,7 +121,7 @@ function inicializarFirebaseGlobal() {
                 const inicialesUsuario = document.getElementById('user-initials');
                 const emailUsuarioDropdown = document.getElementById('user-dropdown-email');
 
-                let iniciales = "??"; // Valor por defecto
+                let iniciales = "??"; 
                 if (nombre) {
                     const partesNombre = nombre.split(' ');
                     if (partesNombre.length === 1 && partesNombre[0].length > 0) {
@@ -157,29 +133,23 @@ function inicializarFirebaseGlobal() {
                     iniciales = email.substring(0, 2).toUpperCase();
                 }
 
-                // Actualizar UI
                 if (inicialesUsuario) inicialesUsuario.textContent = iniciales;
                 if (emailUsuarioDropdown) emailUsuarioDropdown.textContent = email;
 
                 body.classList.add('sesion-iniciada');
-                // 5. La prueba final
-                console.log("✅ CLASE 'sesion-iniciada' AÑADIDA AL BODY.");
 
             } else {
-                // 4b. Vemos si entra al camino de "no verificado"
                 console.warn("➡️ Entrando al camino 'NO VERIFICADO'. (Cerrando sesión)");
                 auth.signOut();
                 body.classList.remove('sesion-iniciada');
             }
         } else {
-            // 4c. Vemos si entra al camino de "sin usuario"
             console.log("❌ NO hay usuario (sesión cerrada o estado inicial).");
             body.classList.remove('sesion-iniciada');
         }
     });
 
     // --- MANEJADOR DEL FORMULARIO DE LOGIN ---
-    // (Reemplaza tu 'submitLoginForm')
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -222,7 +192,6 @@ function inicializarFirebaseGlobal() {
     }
 
     // --- MANEJADOR DE LOGOUT ---
-    // (Reemplaza tu 'handleLogout')
     if (btnLogout) {
         btnLogout.addEventListener('click', () => {
             auth.signOut().then(() => {
@@ -233,40 +202,15 @@ function inicializarFirebaseGlobal() {
 }
 
 
-/**
-* Lógica para la página de Registro
-* (Reemplaza tu 'inicializarFormularioRegistro')
-*/
 function inicializarRegistroFirebase() {
     const registerForm = document.getElementById('register-form');
     const passwordError = document.getElementById('passwordError');
-    const docTypeSelect = document.getElementById('documentType');
+    const docTypeSelect = document.getElementById('tipo_documento'); // Asegúrate que el ID coincida con tu HTML
     const docNumGroup = document.getElementById('document-number-group');
-
-    // Lógica para mostrar/ocultar el campo de número de documento
-    if (docTypeSelect) {
-        docTypeSelect.addEventListener('change', () => {
-            if (docTypeSelect.value) {
-                docNumGroup.style.display = 'block';
-            } else {
-                docNumGroup.style.display = 'none';
-            }
-        });
-    }
-
-    // Tu lógica de validación de DNI (¡buena idea!)
-    const docNumField = document.getElementById('documentNumber');
-    if (docNumField && docTypeSelect) {
-        docNumField.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            const tipoDoc = docTypeSelect.value.toUpperCase();
-            let maxLength = 12;
-            if (tipoDoc === 'DNI') maxLength = 8;
-            if (value.length > maxLength) value = value.slice(0, maxLength);
-            e.target.value = value;
-        });
-    }
-
+    
+    // Lógica de UI del formulario (mostrar/ocultar campos) ya está en registro.js, 
+    // pero si necesitas lógica adicional aquí, mantenla.
+    
     // Listener del formulario
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
@@ -274,13 +218,13 @@ function inicializarRegistroFirebase() {
             passwordError.textContent = '';
 
             // 1. Obtiene los datos del formulario
-            const nombre = registerForm.nombre_completo.value;
+            const nombre = registerForm.nombre.value;
             const email = registerForm.email.value;
             const password = registerForm.password.value;
             const confirmPassword = registerForm.confirmPassword.value;
-            const tipo_documento = registerForm.documentType.value;
-            const numero_documento = registerForm.documentNumber.value;
-            const fecha_nacimiento = registerForm.dob.value;
+            const tipo_documento = registerForm.tipo_documento.value;
+            const numero_documento = registerForm.numero_documento.value;
+            const fecha_nacimiento = registerForm.fecha_nacimiento.value;
 
             // 2. Valida la contraseña
             if (password !== confirmPassword) {
@@ -302,7 +246,7 @@ function inicializarRegistroFirebase() {
                 await user.sendEmailVerification();
 
                 // 5. LLAMA A TU BACKEND PARA GUARDAR DATOS EXTRA
-                const token = await user.getIdToken(); // Obtiene el token de Firebase
+                const token = await user.getIdToken(); 
 
                 const response = await fetch('/api/crear-perfil', {
                     method: 'POST',
@@ -325,9 +269,8 @@ function inicializarRegistroFirebase() {
                     throw new Error(errorData.error || 'Error al guardar el perfil en el backend.');
                 }
 
-                // 6. ¡ÉXITO!
                 alert('¡Registro exitoso! Revisa tu correo electrónico para verificar tu cuenta.');
-                window.location.href = '/'; // Redirige al inicio
+                window.location.href = '/'; 
 
             } catch (error) {
                 if (error.code === 'auth/email-already-in-use') {
@@ -343,7 +286,6 @@ function inicializarRegistroFirebase() {
 
 /**
 * Carga los detalles del usuario en la página "Mi Cuenta".
-* (Reemplaza tu 'cargarDatosMiCuenta')
 */
 async function cargarDatosMiCuentaFirebase() {
     console.log("Cargando datos de Mi Cuenta (Firebase)...");
@@ -391,14 +333,18 @@ async function cargarDatosMiCuentaFirebase() {
             iniciales = partesNombre[0].substring(0, 1) + partesNombre[1].substring(0, 1);
         }
 
-        // Formatear fechas
-        const formatoFecha = { day: 'numeric', month: 'long', year: 'numeric' };
+        // --- CORRECCIÓN APLICADA AQUÍ ---
+        // Añadimos timeZone: 'UTC' para que no reste horas por tu ubicación
+        const formatoFecha = { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' };
+        
         const fechaNacimiento = data.fecha_nacimiento
             ? new Date(data.fecha_nacimiento).toLocaleDateString('es-ES', formatoFecha)
             : 'No especificada';
+            
         const fechaRegistro = data.fecha_registro
             ? new Date(data.fecha_registro).toLocaleDateString('es-ES', formatoFecha)
             : 'No especificada';
+        // --------------------------------
 
         // Rellenar el HTML
         document.getElementById('detalle-iniciales').textContent = iniciales;
@@ -412,10 +358,12 @@ async function cargarDatosMiCuentaFirebase() {
 
     } catch (error) {
         console.error("Error cargando datos de cuenta:", error);
-        const container = document.querySelector('.profile-card');
+        const container = document.querySelector('.contenido-mi-cuenta'); // Selector corregido
         if (container) {
-            container.innerHTML = '<h1>Error</h1><p>No se pudieron cargar los detalles de tu cuenta. Por favor, intenta iniciar sesión de nuevo.</p>';
+            // Muestra un mensaje de error amigable dentro del contenedor
+            // pero intenta no destruir todo el layout
         }
     }
 }
+
 inicializarFirebaseGlobal();
