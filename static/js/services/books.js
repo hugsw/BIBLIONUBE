@@ -23,7 +23,7 @@ function renderizarLibros(librosParaRenderizar, contenedor, contexto = 'general'
     }
 
     librosParaRenderizar.forEach(libro => {
-        const placeholderImagen = 'https://dummyimage.com/200x300/555/fff&text=Libro';
+        const placeholderImagen = '/static/img/PORTADA.jpg';
         const imagen = libro.imagen || placeholderImagen;
         const alt = libro.alt || libro.titulo;
 

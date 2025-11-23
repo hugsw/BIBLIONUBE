@@ -1,5 +1,3 @@
-import { cargarComponentes } from './Utils/loader.js';
-
 import {
     cargarYRenderizarLibros,
     cargarProductoUnico,
@@ -18,28 +16,9 @@ import {
     inicializarDropdownUsuario
 } from './components/ui.js';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyA19ORaIYFCH_vfPfamUjyR9iMxLGT1FVI", 
-    authDomain: "biblionube-328e4.firebaseapp.com", 
-    projectId: "biblionube-328e4", 
-    storageBucket: "biblionube-328e4.firebasestorage.app", 
-    messagingSenderId: "911996701364", 
-    appId: "1:911996701364:web:97ff11275b17a91b85a5e1", 
-    measurementId: "G-VWPDZYGQ88" 
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+import { auth } from './config/firebase-config.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
-
-    try {
-        await cargarComponentes();
-        console.log("Header y Footer cargados.");
-    } catch (error) {
-        console.error("Fallo crítico: No se pudieron cargar los componentes.", error);
-        return;
-    }
 
     inicializarModalLogin();
     inicializarBarraBusqueda();
