@@ -1,4 +1,3 @@
-
 .custom-modal {
     background: #ffffff;
     padding: 2rem 2.5rem; 
@@ -44,16 +43,16 @@
 }
 
 .custom-modal-btn.btn-confirm {
-    background-color: var(--color-acento); /* Perfecto */
+    background-color: var(--color-acento);
     color: white;
 }
 
 .custom-modal-btn.btn-confirm:hover {
-    background-color: var(--color-acento-hover); /* Perfecto */
+    background-color: var(--color-acento-hover);
 }
 
 .custom-modal-btn.btn-cancel {
-    background-color: #6c757d; /* Gris */
+    background-color: #6c757d;
     color: white;
 }
 

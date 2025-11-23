@@ -1,6 +1,3 @@
-/*-----------------------------------------------------*/
-/*-------------------- _buttons.css--------------------*/
-/*-----------------------------------------------------*/
 .btn-identificate {
     background-color: var(--color-acento);
     color: white;
@@ -23,7 +20,6 @@
 
 .btn-entrar {
     background-color: var(--color-acento-claro);
-    /* !! REVISAR ACCESIBILIDAD !! */
     color: rgb(255, 255, 255);
     padding: 15px 20px;
     margin-left: 0;

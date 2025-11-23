@@ -1,7 +1,5 @@
-// js/main.js
-// Este archivo maneja TODO: carga de componentes, UI, libros y AUTENTICACIÓN.
-
 import { cargarComponentes } from './Utils/loader.js';
+
 import {
     cargarYRenderizarLibros,
     cargarProductoUnico,
@@ -10,6 +8,7 @@ import {
     inicializarDelegacionEliminar,
     cargarResultadosBusqueda
 } from './services/books.js';
+
 import {
     inicializarSliders,
     inicializarModalLogin,
@@ -19,8 +18,6 @@ import {
     inicializarDropdownUsuario
 } from './components/ui.js';
 
-
-// --- PASO 1: CONFIGURACIÓN DE FIREBASE ---
 const firebaseConfig = {
     apiKey: "AIzaSyA19ORaIYFCH_vfPfamUjyR9iMxLGT1FVI", 
     authDomain: "biblionube-328e4.firebaseapp.com", 
@@ -31,15 +28,11 @@ const firebaseConfig = {
     measurementId: "G-VWPDZYGQ88" 
 };
 
-// --- PASO 2: INICIALIZA FIREBASE ---
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-
-// --- PASO 3: EL CEREBRO DE LA APP (DOMCONTENTLOADED) ---
 document.addEventListener("DOMContentLoaded", async () => {
 
-    // 1. Carga componentes reutilizables (header/footer)
     try {
         await cargarComponentes();
         console.log("Header y Footer cargados.");
@@ -48,7 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // 2. Inicializar toda la lógica de UI
     inicializarModalLogin();
     inicializarBarraBusqueda();
     inicializarBotonGuardar(); 
@@ -56,33 +48,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     inicializarDropdownUsuario();
     console.log("Lógica del Header y UI inicializada.");
 
-    // 4. Lógica solo para el formulario de registro (si existe)
     if (document.getElementById('register-form')) {
         inicializarRegistroFirebase();
         inicializarTogglePasswordRegistro(); 
         console.log("Formulario de Registro (Firebase) inicializado.");
     }
 
-    // 5. Lógica de Sliders
     if (document.querySelector('.slider-contenedor')) {
         inicializarSliders();
         console.log("Sliders inicializados.");
     }
 
-    // 6. Lógica para cargar libros
     cargarYRenderizarLibros();
     console.log("Carga de libros (general) iniciada.");
 
-    // 7. Carga los datos de 'producto.html'
     await cargarProductoUnico();
     console.log("Carga de (producto único) completada.");
 
-    // 9. Carga los libros en 'guardado.html'
     await cargarLibrosGuardados();
     inicializarDelegacionEliminar(document.getElementById('grid-guardados')); 
     console.log("Página 'Guardados' cargada y renderizada.");
 
-    // 10. Carga los datos de 'mi_cuenta.html'
     if (document.body.classList.contains('pagina-mi-cuenta')) {
         await cargarDatosMiCuentaFirebase();
         console.log("Página 'Mi Cuenta' (Firebase) cargada.");
@@ -90,12 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await cargarResultadosBusqueda();
 
-}); // --- FIN DEL 'DOMContentLoaded' ---
-
-
-// ================================================================
-//  FUNCIONES DE AUTENTICACIÓN DE FIREBASE
-// ================================================================
+});
 
 function inicializarFirebaseGlobal() {
     console.log("🟢 'inicializarFirebaseGlobal' SÍ se está llamando.");
@@ -117,7 +98,6 @@ function inicializarFirebaseGlobal() {
                 const nombre = user.displayName;
                 const email = user.email;
 
-                // Calcular Iniciales
                 const inicialesUsuario = document.getElementById('user-initials');
                 const emailUsuarioDropdown = document.getElementById('user-dropdown-email');
 
@@ -149,7 +129,6 @@ function inicializarFirebaseGlobal() {
         }
     });
 
-    // --- MANEJADOR DEL FORMULARIO DE LOGIN ---
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -191,7 +170,6 @@ function inicializarFirebaseGlobal() {
         });
     }
 
-    // --- MANEJADOR DE LOGOUT ---
     if (btnLogout) {
         btnLogout.addEventListener('click', () => {
             auth.signOut().then(() => {
@@ -205,19 +183,14 @@ function inicializarFirebaseGlobal() {
 function inicializarRegistroFirebase() {
     const registerForm = document.getElementById('register-form');
     const passwordError = document.getElementById('passwordError');
-    const docTypeSelect = document.getElementById('tipo_documento'); // Asegúrate que el ID coincida con tu HTML
+    const docTypeSelect = document.getElementById('tipo_documento');
     const docNumGroup = document.getElementById('document-number-group');
-    
-    // Lógica de UI del formulario (mostrar/ocultar campos) ya está en registro.js, 
-    // pero si necesitas lógica adicional aquí, mantenla.
-    
-    // Listener del formulario
+
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             passwordError.textContent = '';
 
-            // 1. Obtiene los datos del formulario
             const nombre = registerForm.nombre.value;
             const email = registerForm.email.value;
             const password = registerForm.password.value;
@@ -226,7 +199,6 @@ function inicializarRegistroFirebase() {
             const numero_documento = registerForm.numero_documento.value;
             const fecha_nacimiento = registerForm.fecha_nacimiento.value;
 
-            // 2. Valida la contraseña
             if (password !== confirmPassword) {
                 passwordError.textContent = 'Las contraseñas no coinciden.';
                 return;
@@ -237,15 +209,12 @@ function inicializarRegistroFirebase() {
             }
 
             try {
-                // 3. CREA EL USUARIO EN FIREBASE
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
 
-                // 4. AÑADE EL NOMBRE Y ENVÍA VERIFICACIÓN
                 await user.updateProfile({ displayName: nombre });
                 await user.sendEmailVerification();
 
-                // 5. LLAMA A TU BACKEND PARA GUARDAR DATOS EXTRA
                 const token = await user.getIdToken(); 
 
                 const response = await fetch('/api/crear-perfil', {
@@ -283,10 +252,6 @@ function inicializarRegistroFirebase() {
     }
 }
 
-
-/**
-* Carga los detalles del usuario en la página "Mi Cuenta".
-*/
 async function cargarDatosMiCuentaFirebase() {
     console.log("Cargando datos de Mi Cuenta (Firebase)...");
 
@@ -323,7 +288,6 @@ async function cargarDatosMiCuentaFirebase() {
 
         const data = await response.json();
 
-        // Lógica de Iniciales
         const nombre = data.nombre_usuario || "";
         const partesNombre = nombre.split(' ');
         let iniciales = partesNombre[0].substring(0, 2).toUpperCase();
@@ -333,8 +297,6 @@ async function cargarDatosMiCuentaFirebase() {
             iniciales = partesNombre[0].substring(0, 1) + partesNombre[1].substring(0, 1);
         }
 
-        // --- CORRECCIÓN APLICADA AQUÍ ---
-        // Añadimos timeZone: 'UTC' para que no reste horas por tu ubicación
         const formatoFecha = { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' };
         
         const fechaNacimiento = data.fecha_nacimiento
@@ -344,9 +306,7 @@ async function cargarDatosMiCuentaFirebase() {
         const fechaRegistro = data.fecha_registro
             ? new Date(data.fecha_registro).toLocaleDateString('es-ES', formatoFecha)
             : 'No especificada';
-        // --------------------------------
 
-        // Rellenar el HTML
         document.getElementById('detalle-iniciales').textContent = iniciales;
         document.getElementById('detalle-nombre').textContent = data.nombre_usuario;
         document.getElementById('detalle-correo').textContent = data.correo_usuario;
@@ -358,10 +318,8 @@ async function cargarDatosMiCuentaFirebase() {
 
     } catch (error) {
         console.error("Error cargando datos de cuenta:", error);
-        const container = document.querySelector('.contenido-mi-cuenta'); // Selector corregido
+        const container = document.querySelector('.contenido-mi-cuenta');
         if (container) {
-            // Muestra un mensaje de error amigable dentro del contenedor
-            // pero intenta no destruir todo el layout
         }
     }
 }

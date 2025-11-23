@@ -1,29 +1,23 @@
-/* --- ESTILOS PARA RESULTADOS DE BÚSQUEDA (Sin tocar HTML) --- */
-
-/* 1. Convertimos el contenedor en una caja flexible */
 .contenedor-categoria {
     display: flex;
-    flex-wrap: wrap; /* Permite que los elementos bajen de línea */
-    justify-content: space-between; /* Título a la izquierda, botón a la derecha */
-    align-items: center; /* Alineación vertical centrada */
-    gap: 10px; /* Espacio mínimo entre título y botón */
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
     margin-top: 4rem;
     margin-left: 2rem;
 }
 
-/* 2. Estilo del Título */
 .categoria-titulo {
     margin: 0;
     color: var(--colortitulos);
     text-transform: uppercase;
     font-size: 2rem;
-    /* No le ponemos ancho fijo para que ocupe lo necesario */
 }
 
-/* 3. Estilo del Botón Volver */
 .btn-volver {
     text-decoration: none;
-    color: #f39c12; /* Naranja */
+    color: #f39c12;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -32,20 +26,16 @@
 }
 
 .btn-volver:hover {
-    color: #e67e22; /* Naranja más oscuro */
+    color: #e67e22;
 }
 
-/* 4. TRUCO: La grilla de resultados */
-/* Le damos 100% de ancho para forzarla a bajar a la siguiente línea
-   y le ponemos un borde superior para simular la línea del header */
 .grid-categoria {
     width: 100%; 
-    margin-top: 1.5rem;    /* Espacio arriba de los libros */
-    padding-top: 1.5rem;   /* Espacio entre la línea y los libros */
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
    
-    padding-left: 0 !important; /* Fuerza cero relleno a la izq */
-    margin-left: 0 !important;  /* Fuerza cero margen a la izq */
-    /* Mantener tu configuración de Grid existente */
+    padding-left: 0 !important;
+    margin-left: 0 !important;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;

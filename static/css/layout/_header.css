@@ -1,27 +1,20 @@
-/* =======================================================
-   ESTILOS BASE (Escritorio)
-   ======================================================= */
-
-/* 1. EL CONTENEDOR PRINCIPAL */
 .header {
     display: flex;
     align-items: center;
     background-color: var(--color-fondo-header);
     padding: 0 2rem;
     height: 10rem;
-    position: relative; /* Necesario para el buscador flotante */
-    z-index: 1000; /* Mantiene el header por encima del contenido */
+    position: relative;
+    z-index: 1000;
 }
 
-/* 2. EL LOGO */
 .header__logo {
     height: 10rem;
     width: auto;
     order: 1;
-    flex-shrink: 0; /* IMPORTANTE: Nunca permitimos que el logo se aplaste */
+    flex-shrink: 0;
 }
 
-/* 3. EL TÍTULO */
 .header__global {
     font-size: 3rem;
     order: 2;
@@ -30,7 +23,6 @@
     color: var(--colortitulos);
 }
 
-/* 4. LOGIN Y BOTONES HEADER */
 .navegacion-login {
     display: flex;
     align-items: center;
@@ -41,48 +33,36 @@
     font-size: 30px;
     text-transform: none;
     gap: 1.5rem;
-    flex-shrink: 0; /* IMPORTANTE: Nunca permitimos que los botones se aplasten */
+    flex-shrink: 0;
 }
 
-/* --- LÓGICA DEL BOTÓN IDENTIFÍCATE (Escritorio) --- */
-/* En pantalla grande: Ocultamos el icono y mostramos el texto */
 .navegacion-login .btn-identificate .btn-icono {
     display: none; 
 }
+
 .navegacion-login .btn-identificate .btn-texto {
     display: inline; 
 }
 
-/* 5. EL CONTENEDOR DE BÚSQUEDA */
 .contenedor_busqueda {
     display: flex;
     align-items: center;
     order: 4;
 }
 
-
-/* =======================================================
-   ESTILOS RESPONSIVE (Móviles y Tablets)
-   ======================================================= */
-
 @media (max-width: 768px) {
-    /* 1. Ajustes del Contenedor Principal */
     .header {
-        height: 7rem;          /* Altura fija más pequeña */
+        height: 7rem;
         padding: 0.5rem 1rem; 
         justify-content: space-between;
-        
-        /* --- CORRECCIONES DE ESTABILIDAD --- */
-        flex-wrap: nowrap;     /* PROHIBIDO saltar de línea (evita que se rompa al buscar) */
-        overflow: visible;     /* IMPORTANTE: Permitimos que el menú de cuenta se salga del header */
+        flex-wrap: nowrap;
+        overflow: visible;
     }
 
-    /* 2. Ajustes del Logo */
     .header__logo {
         height: 5rem;
     }
 
-    /* 3. Ajustes del Título */
     .header__global {
         font-size: 2rem;
         text-align: left;
@@ -92,7 +72,6 @@
         text-overflow: ellipsis;
     }
 
-    /* 4. Ajustes de Iconos */
     .navegacion-login {
         font-size: 20px;
         gap: 1rem;
@@ -100,36 +79,28 @@
         position: relative;
     }
 
-    /* --- TRANSFORMACIÓN A BOTÓN REDONDO (Móvil) --- */
-    /* Esto convierte el botón rectangular en un círculo con icono */
     .navegacion-login .btn-identificate {
-        width: 40px;  /* Ancho fijo */
-        height: 40px; /* Alto fijo */
-        padding: 0;   /* Quitamos el padding rectangular */
-        border-radius: 50%; /* Lo hacemos circular */
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-width: 0; /* Evita que el navegador fuerce un ancho mínimo */
+        min-width: 0;
     }
 
-    /* Ocultamos el texto en móvil */
     .navegacion-login .btn-identificate .btn-texto {
         display: none;
     }
 
-    /* Mostramos el icono en móvil */
     .navegacion-login .btn-identificate .btn-icono {
         display: block;
-        font-size: 2rem; /* Ajusta el tamaño del icono */
+        font-size: 2rem;
     }
 }
 
-/* =======================================================
-   ESTILOS PARA MÓVILES PEQUEÑOS (< 480px)
-   ======================================================= */
 @media (max-width: 480px) {
-    /* Ocultamos el título para dar espacio en pantallas muy angostas */
     .header__global {
         display: none; 
     }

@@ -1,10 +1,7 @@
-/*----------------------------------------------------*/
-/*-------------------- _global.css--------------------*/
-/*----------------------------------------------------*/
 html {
     box-sizing: border-box;
     font-size: 62.5%;
-    height: 100%; /* <-- REGLA 1 (Añadida) */
+    height: 100%;
 }
 
 *,
@@ -13,17 +10,13 @@ html {
     box-sizing: inherit;
 }
 
-/** Globales **/
 body {
     background-color: var(--primario);
     font-size: 1.6rem;
     line-height: 1.5;
-
-    /* --- REGLA 2 (Añadidas) --- */
     min-height: 100%; 
     display: flex;
     flex-direction: column;
-    /* --- Fin de la Regla 2 --- */
 }
 
 p {
@@ -35,8 +28,6 @@ p {
 a {
     text-decoration: none;
 }
-
-
 
 .contenedor {
     max-width: 120rem;
@@ -55,8 +46,6 @@ main {
     padding: 0 5rem;
 }
 
-/* --- REGLA 3 (Añadida) --- */
-/* Regla para el "Sticky Footer" */
 .contenido-principal {
-    flex-grow: 1; /* Le dice al <main> que crezca y ocupe el espacio */
+    flex-grow: 1;
 }

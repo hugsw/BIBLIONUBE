@@ -1,17 +1,8 @@
-/**
- * ¡NUEVA FUNCIÓN DE AYUDA!
- * Esta función revisa si el modal está en el DOM.
- * Si no lo está, inyecta el HTML de forma síncrona.
- */
 function _ensureModalInDOM() {
-    // Si el modal ya existe, no hace nada.
     if (document.getElementById('custom-alert-overlay')) {
         return;
     }
 
-    // --- 2. Inyectar el HTML del modal ---
-    // ¡ESTA ES LA CORRECCIÓN! El HTML estaba incompleto.
-    // El 'style' en línea se ha eliminado correctamente.
     const modalHtml = `
         <div class="custom-modal-overlay" id="custom-alert-overlay">
             <div class="custom-modal">
@@ -27,25 +18,14 @@ function _ensureModalInDOM() {
     if (document.body) {
         document.body.insertAdjacentHTML('beforeend', modalHtml);
     } else {
-        // En un escenario real, esto solo ocurriría si el script se llama en el <head>
         console.error("Error: Intentando inyectar modal antes de que exista el body. Usando alert() nativo.");
     }
 }
 
-// --- ¡CORRECCIÓN CLAVE REALIZADA! ---
-// Se ha ELIMINADO la dependencia de document.addEventListener('DOMContentLoaded', _ensureModalInDOM).
-// Ahora _ensureModalInDOM() se llama directamente en la primera línea de las funciones exportadas.
-
-
-/**
- * Muestra una alerta simple (solo botón "Aceptar").
- * @param {string} mensaje El texto a mostrar.
- */
 export async function mostrarAlerta(mensaje) {
-    // Llamada síncrona para asegurar que el HTML del modal exista antes de intentar usarlo.
+
     _ensureModalInDOM();
 
-    // Pequeña espera para asegurar que el DOM se actualice
     await new Promise(resolve => setTimeout(resolve, 0));
 
     const overlay = document.getElementById('custom-alert-overlay');
@@ -55,7 +35,6 @@ export async function mostrarAlerta(mensaje) {
 
     if (!overlay || !messageEl || !confirmBtn || !cancelBtn) {
         console.error("El HTML del modal de alerta no se ha cargado correctamente (fallback nativo).");
-        // Si falla, hacemos una alerta nativa de fallback
         alert(mensaje);
         return;
     }
@@ -64,11 +43,9 @@ export async function mostrarAlerta(mensaje) {
     cancelBtn.style.display = 'none';
     confirmBtn.style.display = 'inline-block';
 
-    // Agrega la clase 'visible' para mostrar el modal
     setTimeout(() => overlay.classList.add('visible'), 10);
 
     return new Promise((resolve) => {
-        // Usa { once: true } para remover el listener automáticamente
         confirmBtn.addEventListener('click', () => {
             overlay.classList.remove('visible');
             resolve(true);
@@ -76,13 +53,7 @@ export async function mostrarAlerta(mensaje) {
     });
 }
 
-/**
- * Muestra una confirmación (Aceptar/Cancelar) y devuelve una promesa.
- * @param {string} pregunta El texto a mostrar.
- * @returns {Promise<boolean>} Resuelve 'true' si se acepta, 'false' si se cancela.
- */
 export async function mostrarConfirmacion(pregunta) {
-    // Llamada síncrona para asegurar que el HTML del modal exista antes de intentar usarlo.
     _ensureModalInDOM();
 
     await new Promise(resolve => setTimeout(resolve, 0));
@@ -94,7 +65,7 @@ export async function mostrarConfirmacion(pregunta) {
 
     if (!overlay || !messageEl || !confirmBtn || !cancelBtn) {
         console.error("El HTML del modal de alerta no se ha cargado correctamente (fallback nativo).");
-        return Promise.resolve(confirm(pregunta)); // Fallback a nativo
+        return Promise.resolve(confirm(pregunta));
     }
 
     messageEl.textContent = pregunta;

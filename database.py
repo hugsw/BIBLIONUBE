@@ -13,11 +13,8 @@ def connect_with_connector(app) -> sqlalchemy.engine.base.Engine:
     DB_USER = os.environ.get("DB_USER")
     DB_PASS = os.environ.get("DB_PASS")
     DB_DRIVER = "pymysql"
-    
-    # Leemos la SECRET_KEY desde la app que nos pasaron
     SECRET_KEY = app.config.get('SECRET_KEY')
 
-    # Validar que todas las variables de entorno de la BD existan
     if not all([INSTANCE_CONNECTION_NAME, DB_NAME, DB_USER, DB_PASS, SECRET_KEY]):
         print("Error: Faltan variables de entorno para la base de datos o SECRET_KEY.")
         return None 
