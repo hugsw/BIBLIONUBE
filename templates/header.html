@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="es">
+
 <header class="header">
     <a href="/">
         <img class="header__logo" src="/static/img/BOOK.png" alt="Logotipo">
@@ -9,11 +12,6 @@
         <a class="navegacion__home" href="/guardado" id="boton-guardados" aria-label="ver libros guardados">
             <i class="fa-solid fa-bookmark"></i>
         </a>
-        
-        <!-- 
-           CORRECCIÓN APLICADA AQUÍ: 
-           Dividimos el botón en Texto e Icono para controlarlos con CSS.
-        -->
         <button class="btn-identificate" id="abrirModal" aria-label="Iniciar sesión">
             <span class="btn-texto">LOGIN</span>
             <i class="fa-solid fa-user btn-icono"></i>
@@ -43,7 +41,7 @@
                 <i class="fas fa-search"></i>
             </button>
         </form>
-    </div> <!-- Fin de .navegacion-login -->
+    </div>
 </header>
 
 <div id="modalLogin" class="modal">
@@ -51,7 +49,6 @@
         <div class="modal-panel left-panel">
             <div class="illustration-area">
                 <div class="image-placeholder">
-                    <!-- Placeholder vacío conservado -->
                 </div>
             </div>
             <h1>Iniciar sesión</h1>
@@ -84,7 +81,6 @@
             </div>
             <p class="forgot-password"><a href="#">¿Olvidaste tu contraseña?</a></p>
             <p class="register-link">¿No tienes una cuenta?
-                <!-- Este enlace a /registro ya está correcto -->
                 <a href="/registro"><strong>Regístrate</strong></a>
             </p>
         </div>

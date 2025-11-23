@@ -3,7 +3,6 @@ Flask-Cors
 PyJWT
 cloud-sql-python-connector
 SQLAlchemy
-requests
 python-dotenv
 PyMySQL
 gunicorn

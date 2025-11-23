@@ -11,21 +11,13 @@
 </head>
 
 <body>
-    <!-- Header principal (sin cambios) -->
     {% include 'header.html' %}
 
-    <!-- 
-      ¡CORRECCIÓN AQUÍ! 
-      Este header ahora se cierra correctamente
-      antes de que empiece el <main>.
-    -->
     <header class="header-producto">
         <a href="/" class="btn-volver">
             <i class="fa-solid fa-chevron-left"></i> Volver
         </a>
-    </header> <!-- <-- SE CIERRA EL HEADER -->
-
-    <!-- MAIN AHORA EMPIEZA AQUÍ, FUERA DEL HEADER -->
+    </header>
     <main class="contenido-principal">
 
         <div class="contenedor-producto">
@@ -42,12 +34,6 @@
 
                 <p id="libro-descripcion">Cargando descripción...</p>
                 <div class="producto-acciones">
-
-                    <!-- 
-                        Botón Guardar (Este ya estaba correcto)
-                        El ID es "btn-guardar" para que coincida con 'books.js'.
-                        Los data-attributes están vacíos, el JS los llenará.
-                    -->
                     <button id="btn-guardar" class="btn-accion btn-guardar" 
                         data-id=""
                         data-titulo="" 
@@ -60,9 +46,9 @@
                     </a>
                 </div>
             </div>
-        </div> <!-- Fin de .contenedor-producto -->
+        </div>
 
-    </main> <!-- Fin de .contenido-principal -->
+    </main>
 
     {% include 'footer.html' %}
 
