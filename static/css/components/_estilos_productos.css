@@ -156,12 +156,6 @@
     line-clamp: 2;
 }
 
-.grid-productos .producto__autor,
-.grid-productos .producto__precio,
-.grid-productos .btn-ver-mas {
-    display: none;
-}
-
 .slider-btn {
     position: absolute;
     top: 50%;

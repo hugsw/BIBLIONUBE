@@ -203,7 +203,7 @@ def quitar_libro(firebase_uid):
 
     except Exception as e:
         print(f"Error al quitar libro: {e}")
-        return jsonify({"error": "Error interno del servidor."}), 
+        return jsonify({"error": "Error interno del servidor."}), 500
 
 @book_bp.route('/api/buscar')
 def api_buscar_libros():
