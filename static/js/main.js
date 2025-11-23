@@ -44,7 +44,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await cargarProductoUnico();
     console.log("Carga de (producto único) completada.");
 
-    await cargarLibrosGuardados();
     inicializarDelegacionEliminar(document.getElementById('grid-guardados')); 
     console.log("Página 'Guardados' cargada y renderizada.");
 
@@ -65,9 +64,10 @@ function inicializarFirebaseGlobal() {
 
     auth.onAuthStateChanged(async (user) => {
         console.log("🟡 'onAuthStateChanged' se disparó.");
-
         const body = document.body;
         
+        const esPaginaGuardados = document.getElementById('grid-guardados');
+
         if (user) {
             console.log("✅ Usuario ENCONTRADO:", user.email);
 
@@ -80,7 +80,7 @@ function inicializarFirebaseGlobal() {
                 const inicialesUsuario = document.getElementById('user-initials');
                 const emailUsuarioDropdown = document.getElementById('user-dropdown-email');
 
-                let iniciales = "??"; 
+                let iniciales = "??";
                 if (nombre) {
                     const partesNombre = nombre.split(' ');
                     if (partesNombre.length === 1 && partesNombre[0].length > 0) {
@@ -97,6 +97,11 @@ function inicializarFirebaseGlobal() {
 
                 body.classList.add('sesion-iniciada');
 
+                if (esPaginaGuardados) {
+                    console.log("📚 Cargando libros guardados...");
+                    await cargarLibrosGuardados();
+                }
+
             } else {
                 console.warn("➡️ Entrando al camino 'NO VERIFICADO'. (Cerrando sesión)");
                 auth.signOut();
@@ -105,6 +110,10 @@ function inicializarFirebaseGlobal() {
         } else {
             console.log("❌ NO hay usuario (sesión cerrada o estado inicial).");
             body.classList.remove('sesion-iniciada');
+
+            if (esPaginaGuardados) {
+                await cargarLibrosGuardados();
+            }
         }
     });
 
@@ -148,7 +157,6 @@ function inicializarFirebaseGlobal() {
             }
         });
     }
-
     if (btnLogout) {
         btnLogout.addEventListener('click', () => {
             auth.signOut().then(() => {
@@ -157,7 +165,6 @@ function inicializarFirebaseGlobal() {
         });
     }
 }
-
 
 function inicializarRegistroFirebase() {
     const registerForm = document.getElementById('register-form');
