@@ -12,6 +12,12 @@
 
 .nosotros__imagen {
     grid-row: 1 / 2;
+    width: 100%;      
+    max-width: 300px;    
+    height: auto;        
+    object-fit: cover;   
+    display: block;   
+    margin: 0 auto; 
 }
 
 @media (min-width: 768px) {
