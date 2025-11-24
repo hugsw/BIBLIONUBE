@@ -22,7 +22,6 @@ def juvenil():
 def adulto():
     return render_template('adulto.html')
 
-@web_bp.route('/nosotros.html')
 @web_bp.route('/nosotros')
 def nosotros():
     return render_template('nosotros.html')

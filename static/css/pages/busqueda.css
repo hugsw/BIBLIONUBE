@@ -34,8 +34,8 @@
     margin-top: 1.5rem;
     padding-top: 1.5rem;
    
-    padding-left: 0 !important;
-    margin-left: 0 !important;
+    padding-left: 0;
+    margin-left: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;
