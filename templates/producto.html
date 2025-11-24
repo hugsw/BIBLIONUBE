@@ -1,43 +1,33 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/normalize.css">
-    <link rel="stylesheet" href="/static/css/main_.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% block title %}Detalles del Libro - BIBLIONUBE{% endblock %}
 
-</head>
-
-<body>
-    {% include 'header.html' %}
-
+/* Sobrescribimos 'main' para insertar el header secundario antes del contenido */
+{% block main %}
     <header class="header-producto">
         <a href="/" class="btn-volver">
             <i class="fa-solid fa-chevron-left"></i> Volver
         </a>
     </header>
-    <main class="contenido-principal">
 
+    <main class="contenido-principal">
         <div class="contenedor-producto">
-            <img id="libro-imagen" src="/static/img/PORTADA.jpg" alt="Cargando portada..."
-                class="producto-imagen">
+            <img id="libro-imagen" src="/static/img/PORTADA.jpg" alt="Cargando portada..." class="producto-imagen">
+            
             <div class="producto-detalles">
                 <h1 id="libro-titulo">Cargando...</h1>
 
                 <div class="producto-meta">
                     <span id="libro-autor">Cargando autor...</span>
-                    <span>|</span> <!-- Un separador visual -->
+                    <span>|</span>
                     <span id="libro-anio">Cargando año...</span>
                 </div>
 
                 <p id="libro-descripcion">Cargando descripción...</p>
+                
                 <div class="producto-acciones">
                     <button id="btn-guardar" class="btn-accion btn-guardar" 
-                        data-id=""
-                        data-titulo="" 
-                        data-imagen="">
+                        data-id="" data-titulo="" data-imagen="">
                         <i class="fa-solid fa-bookmark"></i> Guardar
                     </button>
 
@@ -47,15 +37,5 @@
                 </div>
             </div>
         </div>
-
     </main>
-
-    {% include 'footer.html' %}
-
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script type="module" src="/static/js/main.js"></script>
-
-</body>
-
-</html>
+{% endblock %}

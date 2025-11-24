@@ -1,34 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIBLIONUBE - JUVENIL</title>
-    <link rel="stylesheet" href="/static/css/normalize.css">
-    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display-swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/main_.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
+{% block title %}BIBLIONUBE - JUVENIL{% endblock %}
 
-<body>
-    {% include 'header.html' %}
-    <main>
-        <section>
-            <div class="seccion-libros-header">
-                <h2 class="seccion-libros-titulo">JUVENIL</h2>
-                <a href="/" class="btn-volver">
-                    <i class="fa-solid fa-chevron-left"></i> Volver
-                </a>
+{% block content %}
+    <section>
+        <div class="seccion-libros-header">
+            <h2 class="seccion-libros-titulo">JUVENIL</h2>
+            <a href="/" class="btn-volver">
+                <i class="fa-solid fa-chevron-left"></i> Volver
+            </a>
+        </div>
+        <div class="grid-productos grid-categoria" data-categoria="Sección Juvenil">
             </div>
-            <div class="grid-productos grid-categoria" data-categoria="Sección Juvenil">
-            </div>
-        </section>
-    </main>
-    {% include 'footer.html' %}
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script type="module" src="/static/js/main.js"></script>
-</body>
-
-</html>
+    </section>
+{% endblock %}

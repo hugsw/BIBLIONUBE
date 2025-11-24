@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nosotros - BIBLIONUBE</title>
-    <link rel="stylesheet" href="/static/css/normalize.css">
-    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/main_.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-    
-    {% include 'header.html' %}
+{% extends 'base.html' %}
 
+{% block title %}Nosotros - BIBLIONUBE{% endblock %}
+
+/* Sobrescribimos el bloque main para permitir dos contenedores hermanos */
+{% block main %}
     <main class="contenedor">
         <h1>Sobre Nosotros</h1>
 
@@ -54,12 +45,4 @@
             </div>
         </div>
     </section> 
-
-    {% include 'footer.html' %}
-    
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script type="module" src="/static/js/main.js"></script>
-    
-</body>
-</html>
+{% endblock %}

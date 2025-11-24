@@ -1,88 +1,62 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIBLIONUBE</title>
-    <link rel="stylesheet" href="/static/css/normalize.css">
-    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display-swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/main_.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% block title %}BIBLIONUBE - Inicio{% endblock %}
 
-    <link rel="icon" href="/static/img/favicon.png">
+{% block content %}
+    <div class="contenido-principal">
 
-</head>
-
-<body>
-
-    {% include 'header.html' %}
-
-    <main>
-        <div class="contenido-principal">
-
-            <section class="seccion-libros">
-                <div class="seccion-libros__header">
-                    <h2 class="seccion-libros__titulo">INFANTIL</h2>
-                    <a href="/infantil" class="btn-ver-todo">VER MÁS</a>
+        <section class="seccion-libros">
+            <div class="seccion-libros__header">
+                <h2 class="seccion-libros__titulo">INFANTIL</h2>
+                <a href="/infantil" class="btn-ver-todo">VER MÁS</a>
+            </div>
+            <div class="slider-contenedor">
+                <button class="slider-btn slider-btn--prev" aria-label="Ver libros anteriores">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="grid-productos slider-track" id="slider-infantil">
+                    <p>Cargando libros...</p>
                 </div>
-                <div class="slider-contenedor">
-                    <button class="slider-btn slider-btn--prev" aria-label="Ver libros anteriores">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <div class="grid-productos slider-track" id="slider-infantil">
-                        <p>Cargando libros...</p>
-                    </div>
-                    <button class="slider-btn slider-btn--next" aria-label="Ver libros siguientes">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+                <button class="slider-btn slider-btn--next" aria-label="Ver libros siguientes">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <section class="seccion-libros">
+            <div class="seccion-libros__header">
+                <h2 class="seccion-libros__titulo">JUVENIL</h2>
+                <a href="/juvenil" class="btn-ver-todo">VER MÁS</a>
+            </div>
+            <div class="slider-contenedor">
+                <button class="slider-btn slider-btn--prev" aria-label="Ver libros anteriores">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="grid-productos slider-track" id="slider-juvenil">
+                    <p>Cargando libros...</p>
                 </div>
-            </section>
+                <button class="slider-btn slider-btn--next" aria-label="Ver libros siguientes">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
 
-            <section class="seccion-libros">
-                <div class="seccion-libros__header">
-                    <h2 class="seccion-libros__titulo">JUVENIL</h2>
-                    <a href="/juvenil" class="btn-ver-todo">VER MÁS</a>
+        <section class="seccion-libros">
+            <div class="seccion-libros__header">
+                <h2 class="seccion-libros__titulo">ADULTO</h2> <a href="/adulto" class="btn-ver-todo">VER MÁS</a>
+            </div>
+            <div class="slider-contenedor">
+                <button class="slider-btn slider-btn--prev" aria-label="Ver libros anteriores">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="grid-productos slider-track" id="slider-adulto">
+                    <p>Cargando libros...</p>
                 </div>
-                <div class="slider-contenedor">
-                    <button class="slider-btn slider-btn--prev" aria-label="Ver libros anteriores">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <div class="grid-productos slider-track" id="slider-juvenil">
-                        <p>Cargando libros...</p>
-                    </div>
-                    <button class="slider-btn slider-btn--next" aria-label="Ver libros siguientes">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </section>
+                <button class="slider-btn slider-btn--next" aria-label="Ver libros siguientes">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
 
-            <section class="seccion-libros">
-                <div class="seccion-libros__header">
-                    <h2 class="seccion-libros__titulo">ADULTO</h2> <a href="/adulto" class="btn-ver-todo">VER
-                        MÁS</a>
-                </div>
-                <div class="slider-contenedor">
-                    <button class="slider-btn slider-btn--prev" aria-label="Ver libros anteriores">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <div class="grid-productos slider-track" id="slider-adulto">
-                        <p>Cargando libros...</p>
-                    </div>
-                    <button class="slider-btn slider-btn--next" aria-label="Ver libros siguientes">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </section>
-
-        </div>
-    </main>
-
-    {% include 'footer.html' %}
-
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script type="module" src="/static/js/main.js"></script>
-</body>
-
-</html>
+    </div>
+{% endblock %}
