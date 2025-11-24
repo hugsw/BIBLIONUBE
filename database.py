@@ -2,6 +2,7 @@
 import os
 from google.cloud.sql.connector import Connector
 import sqlalchemy
+import logging
 
 def connect_with_connector(app) -> sqlalchemy.engine.base.Engine:
     """
@@ -16,7 +17,7 @@ def connect_with_connector(app) -> sqlalchemy.engine.base.Engine:
     SECRET_KEY = app.config.get('SECRET_KEY')
 
     if not all([INSTANCE_CONNECTION_NAME, DB_NAME, DB_USER, DB_PASS, SECRET_KEY]):
-        print("Error: Faltan variables de entorno para la base de datos o SECRET_KEY.")
+        logging.info("Error: Faltan variables de entorno para la base de datos o SECRET_KEY.")
         return None 
 
     connector = Connector()
@@ -36,10 +37,10 @@ def connect_with_connector(app) -> sqlalchemy.engine.base.Engine:
 
 def warm_up_db(db_engine):
     """Ejecuta una consulta simple para calentar el pool de conexiones."""
-    print("Calentando el pool de conexiones...")
+    logging.info("Calentando el pool de conexiones...")
     try:
         with db_engine.connect() as conn:
             conn.execute(sqlalchemy.text("SELECT 1"))
-        print("¡Pool calentado y listo!")
+        logging.info("¡Pool calentado y listo!")
     except Exception as e:
-        print(f"¡¡ERROR AL CALENTAR EL POOL!!: {e}")
+        logging.info(f"¡¡ERROR AL CALENTAR EL POOL!!: {e}")

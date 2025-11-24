@@ -26,10 +26,10 @@ def token_required(f):
         except auth.ExpiredIdTokenError:
             return jsonify({'error': 'El token ha expirado.'}), 401
         except auth.InvalidIdTokenError as e:
-            print(f"Error de token inválido: {e}")
+            current_app.logger.warning(f"Error de token inválido: {e}")
             return jsonify({'error': 'Token inválido.'}), 401
         except Exception as e:
-            print(f"Error desconocido al verificar token: {e}")
+            current_app.logger.error(f"Error desconocido al verificar token: {e}")
             return jsonify({'error': 'Error interno al verificar token.'}), 500
         return f(current_user_id, *args, **kwargs)
     return decorated

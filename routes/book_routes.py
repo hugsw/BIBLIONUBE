@@ -41,7 +41,7 @@ def obtener_libros():
             return jsonify(libros_mapeados)
             
     except Exception as e:
-        print(f"Error en /libros: {e}")
+        current_app.logger.error(f"Error en /libros: {e}")
         return jsonify({"error": str(e)}), 500
 
 @book_bp.route("/libros/<int:libro_id>")
@@ -72,7 +72,7 @@ def obtener_libro_por_id(libro_id):
             else:
                 return jsonify({"error": "Libro no encontrado"}), 404
     except Exception as e:
-        print(f"Error en /libros/<id>: {e}")
+        current_app.logger.error(f"Error en /libros/<id>: {e}")
         return jsonify({"error": str(e)}), 500
 
 @book_bp.route('/guardar-libro', methods=['POST', 'OPTIONS'])
@@ -112,7 +112,7 @@ def guardar_libro(firebase_uid):
     except IntegrityError:
         return jsonify({"error": "Error al guardar el libro, ID de libro no válido."}), 400
     except Exception as e:
-        print(f"Error al guardar libro: {e}")
+        current_app.logger.error(f"Error al guardar libro: {e}")
         return jsonify({"error": "Error interno del servidor."}), 500
 
 @book_bp.route('/mis-libros-guardados', methods=['GET', 'OPTIONS'])
@@ -160,7 +160,7 @@ def get_mis_libros(firebase_uid):
             return jsonify(libros_mapeados)
 
     except Exception as e:
-        print(f"Error al obtener libros guardados: {e}")
+        current_app.logger.error(f"Error al obtener libros guardados: {e}")
         return jsonify({"error": "Error interno del servidor."}), 500
 
 @book_bp.route('/quitar-libro', methods=['DELETE', 'OPTIONS']) 
@@ -202,7 +202,7 @@ def quitar_libro(firebase_uid):
             return jsonify({"mensaje": "Libro eliminado de tu lista."}), 200
 
     except Exception as e:
-        print(f"Error al quitar libro: {e}")
+        current_app.logger.error(f"Error al quitar libro: {e}")
         return jsonify({"error": "Error interno del servidor."}), 500
 
 @book_bp.route('/api/buscar')
@@ -234,5 +234,5 @@ def api_buscar_libros():
             return jsonify(libros)
             
     except Exception as e:
-        print(f"Error búsqueda: {e}")
+        current_app.logger.error(f"Error búsqueda: {e}")
         return jsonify({"error": "Error en servidor"}), 500

@@ -25,58 +25,42 @@ document.addEventListener("DOMContentLoaded", async () => {
     inicializarBotonGuardar(); 
     inicializarTogglePasswordLogin(); 
     inicializarDropdownUsuario();
-    console.log("Lógica del Header y UI inicializada.");
 
     if (document.getElementById('register-form')) {
         inicializarRegistroFirebase();
         inicializarTogglePasswordRegistro(); 
-        console.log("Formulario de Registro (Firebase) inicializado.");
     }
 
     if (document.querySelector('.slider-contenedor')) {
         inicializarSliders();
-        console.log("Sliders inicializados.");
     }
 
     cargarYRenderizarLibros();
-    console.log("Carga de libros (general) iniciada.");
 
     await cargarProductoUnico();
-    console.log("Carga de (producto único) completada.");
 
     inicializarDelegacionEliminar(document.getElementById('grid-guardados')); 
-    console.log("Página 'Guardados' cargada y renderizada.");
-
-    if (document.body.classList.contains('pagina-mi-cuenta')) {
-        await cargarDatosMiCuentaFirebase();
-        console.log("Página 'Mi Cuenta' (Firebase) cargada.");
-    }
 
     await cargarResultadosBusqueda();
 
 });
 
 function inicializarFirebaseGlobal() {
-    console.log("🟢 'inicializarFirebaseGlobal' SÍ se está llamando.");
 
     const loginForm = document.getElementById('login-form');
     const btnLogout = document.getElementById('logout-button');
 
     auth.onAuthStateChanged(async (user) => {
-        console.log("🟡 'onAuthStateChanged' se disparó.");
         const body = document.body;
         
         const esPaginaGuardados = document.getElementById('grid-guardados');
 
         if (user) {
-            console.log("✅ Usuario ENCONTRADO:", user.email);
 
             if (user.emailVerified) {
-                console.log("➡️ Entrando al camino 'VERIFICADO'.");
 
                 const nombre = user.displayName;
                 const email = user.email;
-
                 const inicialesUsuario = document.getElementById('user-initials');
                 const emailUsuarioDropdown = document.getElementById('user-dropdown-email');
 
@@ -98,17 +82,18 @@ function inicializarFirebaseGlobal() {
                 body.classList.add('sesion-iniciada');
 
                 if (esPaginaGuardados) {
-                    console.log("📚 Cargando libros guardados...");
                     await cargarLibrosGuardados();
                 }
 
+                if (esPaginaMiCuenta) {
+                    await cargarDatosMiCuentaFirebase();
+                }
+
             } else {
-                console.warn("➡️ Entrando al camino 'NO VERIFICADO'. (Cerrando sesión)");
                 auth.signOut();
                 body.classList.remove('sesion-iniciada');
             }
         } else {
-            console.log("❌ NO hay usuario (sesión cerrada o estado inicial).");
             body.classList.remove('sesion-iniciada');
 
             if (esPaginaGuardados) {
@@ -239,7 +224,6 @@ function inicializarRegistroFirebase() {
 }
 
 async function cargarDatosMiCuentaFirebase() {
-    console.log("Cargando datos de Mi Cuenta (Firebase)...");
 
     const user = auth.currentUser;
 
@@ -247,7 +231,6 @@ async function cargarDatosMiCuentaFirebase() {
         setTimeout(() => {
             const userCheck = auth.currentUser;
             if (!userCheck) {
-                console.warn("No hay usuario, redirigiendo al inicio.");
                 window.location.href = '/';
             } else {
                 cargarDatosMiCuentaFirebase();

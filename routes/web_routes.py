@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Bluecurrent_app.logger.error, render_template
 
 web_bp = Blueprint('web_bp', __name__)
 

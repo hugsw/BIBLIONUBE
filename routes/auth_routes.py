@@ -49,10 +49,10 @@ def crear_perfil_usuario(current_user_id):
         return jsonify({"mensaje": "Perfil de usuario creado con éxito."}), 201
 
     except IntegrityError as e:
-        print(f"Error de Integridad al crear perfil: {e}")
+        current_app.logger.error(f"Error de Integridad al crear perfil: {e}")
         return jsonify({"error": "El perfil de usuario ya existe o hay un conflicto."}), 409
     except Exception as e:
-        print(f"Error al crear perfil: {e}")
+        current_app.logger.error(f"Error al crear perfil: {e}")
         return jsonify({"error": "Error interno del servidor."}), 500
 
 @auth_bp.route('/api/mi-cuenta', methods=['GET', 'OPTIONS'])
@@ -90,5 +90,5 @@ def get_mi_cuenta(current_user_id):
             return jsonify(detalles_usuario)
             
     except Exception as e:
-        print(f"Error al obtener detalles de la cuenta: {e}")
+        current_app.logger.error(f"Error al obtener detalles de la cuenta: {e}")
         return jsonify({"error": "Error interno del servidor."}), 500

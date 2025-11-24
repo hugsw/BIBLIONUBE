@@ -1,8 +1,8 @@
 :root {
-    --primario: #ffffff;
+    --blanco: #ffffff;
+    --primario: var(--blanco);
     --primarioOscuro: #D7D0D0;
-    --blanco: #FFF;
-    --negro: #000;
+    --negro: #000000;
     --secundario: #FFA500;
     --colortitulos: #3c6a99;
     --secundarioOscuro: #E69500;
@@ -13,5 +13,6 @@
     --color-fondo-header: #ede9e1;
     --color-fondo-oscuro: #2c3e50;
     --color-rojo-boton: #a93226;
+    
     --fuentePrincipal: Arial, Helvetica, sans-serif;
 }

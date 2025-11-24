@@ -66,7 +66,6 @@ export async function cargarYRenderizarLibros() {
     }
 
     const API_URL = '/libros';
-    console.log("Cargando libros desde la API...");
 
     try {
         const response = await fetch(API_URL);
@@ -76,7 +75,6 @@ export async function cargarYRenderizarLibros() {
         if (librosDesdeAPI.error) throw new Error(librosDesdeAPI.error);
 
         if (esIndex) {
-            console.log("Renderizando sliders para index.html");
             const librosInfantiles = librosDesdeAPI.filter(l => l.categoria === 'Sección Infantil');
             const librosJuveniles = librosDesdeAPI.filter(l => l.categoria === 'Sección Juvenil');
             const librosAdultos = librosDesdeAPI.filter(l => l.categoria === 'Sección Adulto');
@@ -87,7 +85,6 @@ export async function cargarYRenderizarLibros() {
 
         } else if (esCategoria) {
             const categoriaActual = contCategoria.dataset.categoria;
-            console.log(`Renderizando grid para: ${categoriaActual}`);
 
             if (categoriaActual) {
                 const librosFiltrados = librosDesdeAPI.filter(l => l.categoria === categoriaActual);
@@ -105,7 +102,6 @@ export async function cargarProductoUnico() {
     const tituloElement = document.getElementById('libro-titulo');
     if (!tituloElement) return;
 
-    console.log("Cargando datos de producto único...");
     const botonGuardar = document.getElementById('btn-guardar');
     let libroId;
 
@@ -167,7 +163,6 @@ export async function cargarProductoUnico() {
                     }
                 }
             } catch (err) {
-                console.warn("No se pudo verificar el estado de 'guardado' del libro.", err);
             }
         }
 
@@ -325,7 +320,6 @@ export function inicializarDelegacionEliminar(contenedor) {
 
             const libroId = botonEliminar.dataset.id;
             const tarjetaLibro = botonEliminar.closest('.producto');
-            console.log(`[Delegación OK] Click en Eliminar para ID: ${libroId}`);
             handleEliminarLibro(libroId, tarjetaLibro, botonEliminar);
         }
     });

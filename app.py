@@ -1,6 +1,7 @@
 import os
 import sqlalchemy
 import firebase_admin
+import logging
 from firebase_admin import credentials
 from flask import Flask, current_app 
 from flask_cors import CORS
@@ -8,22 +9,24 @@ from dotenv import load_dotenv
 from whitenoise import WhiteNoise
 from database import connect_with_connector, warm_up_db
 
-load_dotenv() 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-print("Inicializando Firebase Admin...")
+load_dotenv()
+
+logging.info("Inicializando Firebase Admin...")
 try:
     cred_path = os.environ.get('FIREBASE_CREDS_PATH', '/etc/secrets/firebase-service-account.json')
     if not firebase_admin._apps and os.path.exists(cred_path):
         cred = credentials.Certificate(cred_path)
         firebase_admin.initialize_app(cred)
-        print("¡Firebase Admin inicializado con éxito!")
+        logging.info("¡Firebase Admin inicializado con éxito!")
     elif not os.path.exists(cred_path):
-        print(f"ADVERTENCIA: No se encontró el archivo de credenciales de Firebase en '{cred_path}'.")
+        logging.info(f"ADVERTENCIA: No se encontró el archivo de credenciales de Firebase en '{cred_path}'.")
     else:
-        print("Firebase Admin ya estaba inicializado (en este worker).")
+        logging.info("Firebase Admin ya estaba inicializado (en este worker).")
 
 except Exception as e:
-    print(f"Un error inesperado ocurrió al inicializar Firebase: {e}")
+    logging.info(f"Un error inesperado ocurrió al inicializar Firebase: {e}")
 
 def create_app():
     """Crea y configura la instancia de la aplicación Flask."""
@@ -32,16 +35,16 @@ def create_app():
     CORS(app)
     
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-    print("App Flask creada y configurada.")
+    logging.info("App Flask creada y configurada.")
 
     with app.app_context():
-        print("Iniciando conexión a la base de datos...")
+        logging.info("Iniciando conexión a la base de datos...")
         db = connect_with_connector(app) 
         
         if db is None:
-            print("¡ERROR! No se pudo inicializar la conexión a la base de datos.")
+            logging.info("¡ERROR! No se pudo inicializar la conexión a la base de datos.")
         else:
-            print("¡Conexión exitosa! (Objeto Engine creado)")
+            logging.info("¡Conexión exitosa! (Objeto Engine creado)")
             warm_up_db(db)
         
         current_app.db = db
@@ -50,10 +53,10 @@ def create_app():
     from routes.auth_routes import auth_bp
     from routes.book_routes import book_bp
 
-    app.register_blueprint(web_bp)
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(book_bp)
-    print("Blueprints registrados.")
+    app.register_bluelogging.info(web_bp)
+    app.register_bluelogging.info(auth_bp)
+    app.register_bluelogging.info(book_bp)
+    logging.info("Bluelogging.infos registrados.")
 
     return app
 
@@ -65,7 +68,7 @@ static_root = os.path.join(project_root, 'static')
 
 app.wsgi_app = WhiteNoise(app.wsgi_app, root=static_root) 
 
-print(f"WhiteNoise configurado para servir archivos desde: {static_root}")
+logging.info(f"WhiteNoise configurado para servir archivos desde: {static_root}")
 
 if __name__ == "__main__":
     app.run(debug=False, port=int(os.environ.get('PORT', 8080)), host='0.0.0.0')
