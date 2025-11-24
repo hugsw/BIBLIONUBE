@@ -52,8 +52,8 @@ function inicializarFirebaseGlobal() {
 
     auth.onAuthStateChanged(async (user) => {
         const body = document.body;
-        
         const esPaginaGuardados = document.getElementById('grid-guardados');
+        const esPaginaMiCuenta = document.body.classList.contains('pagina-mi-cuenta');
 
         if (user) {
 
