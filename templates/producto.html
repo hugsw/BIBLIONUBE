@@ -2,7 +2,6 @@
 
 {% block title %}Detalles del Libro - BIBLIONUBE{% endblock %}
 
-/* Sobrescribimos 'main' para insertar el header secundario antes del contenido */
 {% block main %}
     <header class="header-producto">
         <a href="/" class="btn-volver">
@@ -15,27 +14,27 @@
             <img id="libro-imagen" src="/static/img/PORTADA.jpg" alt="Cargando portada..." class="producto-imagen">
             
             <div class="producto-detalles">
-                <h1 id="libro-titulo">Cargando...</h1>
-
+                 <h1 id="libro-titulo">Cargando...</h1>
                 <div class="producto-meta">
                     <span id="libro-autor">Cargando autor...</span>
                     <span>|</span>
                     <span id="libro-anio">Cargando año...</span>
                 </div>
-
                 <p id="libro-descripcion">Cargando descripción...</p>
-                
                 <div class="producto-acciones">
-                    <button id="btn-guardar" class="btn-accion btn-guardar" 
-                        data-id="" data-titulo="" data-imagen="">
-                        <i class="fa-solid fa-bookmark"></i> Guardar
-                    </button>
-
-                    <a id="boton-descargar-libro" href="#" class="btn-accion btn-descargar" target="_blank">
-                        <i class="fa-solid fa-download"></i> Descargar
-                    </a>
+                    <button id="btn-guardar" class="btn-accion btn-guardar" data-id="" data-titulo="" data-imagen=""><i class="fa-solid fa-bookmark"></i> Guardar</button>
+                    <a id="boton-descargar-libro" href="#" class="btn-accion btn-descargar" target="_blank"><i class="fa-solid fa-download"></i> Descargar</a>
                 </div>
             </div>
         </div>
+
+        <section class="seccion-libros" id="seccion-recomendados" style="display: none; margin-top: 4rem;">
+            <div class="seccion-libros-header">
+                <h2 class="seccion-libros-titulo">TAMBIÉN TE PUEDE GUSTAR</h2>
+            </div>
+            <div class="grid-productos grid-categoria" id="grid-recomendados">
+                </div>
+        </section>
+
     </main>
 {% endblock %}

@@ -144,6 +144,10 @@ export async function cargarProductoUnico() {
             botonDescargar.style.display = 'none';
         }
 
+        if (data.id_categoria) {
+            await cargarRecomendados(data.id_categoria, libroId);
+        }
+        
         const token = await getFirebaseToken();
 
         if (token) {
@@ -168,6 +172,43 @@ export async function cargarProductoUnico() {
 
     } catch (error) {
         console.error("Error al cargar el producto:", error);
+    }
+}
+
+async function cargarRecomendados(idCategoria, idLibroActual) {
+    const contenedor = document.getElementById('grid-recomendados');
+    const seccion = document.getElementById('seccion-recomendados');
+    
+    if (!contenedor || !seccion) return;
+
+    try {
+        const response = await fetch(`/libros/recomendados/${idCategoria}?exclude=${idLibroActual}`);
+        const libros = await response.json();
+
+        if (libros && libros.length > 0) {
+    
+            contenedor.innerHTML = '';
+            
+            libros.forEach(libro => {
+                const placeholderImagen = '/static/img/PORTADA.jpg';
+                const imagen = libro.imagen || placeholderImagen;
+                
+                const htmlDelLibro = `
+                <div class="producto">
+                    <a href="/producto?id=${libro.id}">
+                        <img src="${imagen}" alt="${libro.titulo}">
+                    </a>
+                    <div class="producto__informacion">
+                        <h3 class="producto__nombre">${libro.titulo}</h3>
+                    </div>
+                </div> `;
+                contenedor.insertAdjacentHTML('beforeend', htmlDelLibro);
+            });
+
+            seccion.style.display = 'block';
+        }
+    } catch (error) {
+        console.error("Error cargando recomendados:", error);
     }
 }
 

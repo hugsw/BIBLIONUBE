@@ -49,6 +49,37 @@ def obtener_libro_por_id(libro_id):
     try:
         db_engine = current_app.db
         with db_engine.connect() as conn:
+            # AGREGAMOS id_categoria AL SELECT
+            query = sqlalchemy.text(
+                "SELECT id_libro, titulo_libro, autor_libro, publicacion, descripcion, url_libro, "
+                "url_portada, id_categoria " 
+                "FROM libros WHERE id_libro = :id"
+            )
+            resultado = conn.execute(query, {"id": libro_id}).fetchone()
+
+            if resultado:
+                libro_encontrado = resultado._asdict()
+                
+                libro_mapeado = {
+                    "id": libro_encontrado["id_libro"],
+                    "titulo": libro_encontrado["titulo_libro"],
+                    "autor": libro_encontrado["autor_libro"],
+                    "publicacion": libro_encontrado["publicacion"],
+                    "descripcion": libro_encontrado["descripcion"],
+                    "url": libro_encontrado["url_libro"],
+                    "imagen": libro_encontrado["url_portada"],
+                    "url_portada": libro_encontrado["url_portada"],
+                    "id_categoria": libro_encontrado["id_categoria"] # Nuevo campo
+                }
+                return jsonify(libro_mapeado)
+            else:
+                return jsonify({"error": "Libro no encontrado"}), 404
+    except Exception as e:
+        current_app.logger.error(f"Error en /libros/<id>: {e}")
+        return jsonify({"error": str(e)}), 500
+    try:
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
             query = sqlalchemy.text(
                 "SELECT titulo_libro, autor_libro, publicacion, descripcion, url_libro, "
                 "url_portada " 
@@ -236,3 +267,37 @@ def api_buscar_libros():
     except Exception as e:
         current_app.logger.error(f"Error búsqueda: {e}")
         return jsonify({"error": "Error en servidor"}), 500
+
+@book_bp.route("/libros/recomendados/<int:cat_id>")
+def obtener_recomendados(cat_id):
+    try:
+        # Obtenemos el ID del libro actual para excluirlo (opcional, viene por query param)
+        exclude_id = request.args.get('exclude', type=int)
+        
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
+            # Seleccionamos 4 libros de la misma categoría, aleatorios
+            query_sql = """
+                SELECT id_libro, titulo_libro, autor_libro, url_portada 
+                FROM libros 
+                WHERE id_categoria = :cat_id AND id_libro != :exclude
+                ORDER BY RAND() 
+                LIMIT 4
+            """
+            query = sqlalchemy.text(query_sql)
+            resultados = conn.execute(query, {"cat_id": cat_id, "exclude": exclude_id or 0}).fetchall()
+            
+            libros_lista = [
+                {
+                    "id": row.id_libro,
+                    "titulo": row.titulo_libro,
+                    "imagen": row.url_portada,
+                    "alt": row.titulo_libro
+                } for row in resultados
+            ]
+            
+            return jsonify(libros_lista)
+            
+    except Exception as e:
+        current_app.logger.error(f"Error en recomendados: {e}")
+        return jsonify([])

@@ -48,7 +48,7 @@
 .contenido-principal {
     min-width: 0;
     width: 100%;
-    max-width: 180rem;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
