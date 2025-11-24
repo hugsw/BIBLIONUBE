@@ -5,10 +5,29 @@
 {% block content %}
     <section>
         <div class="seccion-libros-header">
-            <h2 class="seccion-libros-titulo">GUARDADOS</h2>
+            <h2 class="seccion-libros-titulo">TUS GUARDADOS</h2>
         </div>
         
         <div id="grid-guardados" class="grid-categoria">
             </div>
+
+        <div class="seccion-libros" id="seccion-recomendados-guardados" style="display: none; margin-top: 5rem; margin-bottom: 5rem;">
+            <div class="seccion-libros-header">
+                <h2 class="seccion-libros-titulo">TAMBIÉN TE PUEDE GUSTAR</h2>
+            </div>
+            
+            <div class="slider-contenedor">
+                <button class="slider-btn slider-btn--prev" aria-label="Anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="grid-productos slider-track" id="grid-recomendados">
+                     </div>
+                
+                <button class="slider-btn slider-btn--next" aria-label="Siguiente">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
     </section>
 {% endblock %}

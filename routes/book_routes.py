@@ -301,3 +301,51 @@ def obtener_recomendados(cat_id):
     except Exception as e:
         current_app.logger.error(f"Error en recomendados: {e}")
         return jsonify([])
+
+@book_bp.route('/libros/recomendados/mis-guardados')
+@token_required
+def obtener_recomendados_guardados(firebase_uid):
+    try:
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
+            
+            sql_find_user = sqlalchemy.text("SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid")
+            user_res = conn.execute(sql_find_user, {"f_uid": firebase_uid}).fetchone()
+            
+            if not user_res:
+                return jsonify([])
+
+            internal_uid = user_res._asdict()["id_usuario"]
+
+            query_sql = """
+                SELECT l.id_libro, l.titulo_libro, l.url_portada 
+                FROM libros l
+                WHERE l.id_categoria IN (
+                    SELECT DISTINCT l2.id_categoria 
+                    FROM libros l2
+                    JOIN libros_guardados g ON l2.id_libro = g.libro_id
+                    WHERE g.usuario_id = :uid
+                )
+                AND l.id_libro NOT IN (
+                    SELECT libro_id FROM libros_guardados WHERE usuario_id = :uid
+                )
+                ORDER BY RAND()
+                LIMIT 22
+            """
+            
+            resultados = conn.execute(sqlalchemy.text(query_sql), {"uid": internal_uid}).fetchall()
+            
+            libros_lista = [
+                {
+                    "id": row.id_libro,
+                    "titulo": row.titulo_libro,
+                    "imagen": row.url_portada,
+                    "alt": row.titulo_libro
+                } for row in resultados
+            ]
+            
+            return jsonify(libros_lista)
+            
+    except Exception as e:
+        current_app.logger.error(f"Error en recomendados guardados: {e}")
+        return jsonify({"error": str(e)}), 500

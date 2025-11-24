@@ -305,7 +305,6 @@ export async function cargarLibrosGuardados() {
     const token = await getFirebaseToken();
 
     if (!token) {
-
         contGuardados.innerHTML = `<p style="color: #999;">Debes <a href="#" id="login-link-guardados">iniciar sesión</a> para ver tus libros guardados.</p>`;
 
         const loginLink = document.getElementById('login-link-guardados');
@@ -323,6 +322,7 @@ export async function cargarLibrosGuardados() {
     }
 
     try {
+  
         const response = await fetch('/mis-libros-guardados', {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
@@ -343,6 +343,10 @@ export async function cargarLibrosGuardados() {
         renderizarLibros(libros, contGuardados, 'guardados');
 
         inicializarDelegacionEliminar(contGuardados);
+
+        if (typeof cargarRecomendacionesHibridas === 'function') {
+            await cargarRecomendacionesHibridas(); 
+        }
 
     } catch (error) {
         console.error("Error cargando libros guardados:", error);
@@ -466,5 +470,47 @@ export async function cargarResultadosBusqueda() {
     } catch (error) {
         console.error(error);
         grid.innerHTML = `<p>Hubo un error al buscar.</p>`;
+    }
+}
+
+async function cargarRecomendacionesHibridas() {
+    const contenedor = document.getElementById('grid-recomendados');
+    const seccion = document.getElementById('seccion-recomendados-guardados');
+    const token = await getFirebaseToken();
+
+    if (!contenedor || !seccion || !token) return;
+
+    try {
+        const response = await fetch('/libros/recomendados/mis-guardados', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) return;
+
+        const libros = await response.json();
+
+        if (libros && libros.length > 0) {
+            contenedor.innerHTML = '';
+
+            libros.forEach(libro => {
+                const placeholderImagen = '/static/img/PORTADA.jpg';
+                const imagen = libro.imagen || placeholderImagen;
+
+                const htmlDelLibro = `
+                <div class="producto">
+                    <a href="/producto?id=${libro.id}">
+                        <img src="${imagen}" alt="${libro.titulo}">
+                    </a>
+                    <div class="producto__informacion">
+                        <h3 class="producto__nombre">${libro.titulo}</h3>
+                    </div>
+                </div> `;
+                contenedor.insertAdjacentHTML('beforeend', htmlDelLibro);
+            });
+
+            seccion.style.display = 'block';
+        }
+    } catch (error) {
+        console.error("Error cargando recomendaciones híbridas:", error);
     }
 }
