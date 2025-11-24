@@ -1,4 +1,5 @@
 import { mostrarAlerta, mostrarConfirmacion } from '../Utils/customalert.js';
+import { inicializarSliders } from '../components/ui.js'; 
 
 async function getFirebaseToken() {
     const user = firebase.auth().currentUser;
@@ -147,7 +148,7 @@ export async function cargarProductoUnico() {
         if (data.id_categoria) {
             await cargarRecomendados(data.id_categoria, libroId);
         }
-        
+
         const token = await getFirebaseToken();
 
         if (token) {

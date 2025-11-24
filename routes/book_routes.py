@@ -282,7 +282,7 @@ def obtener_recomendados(cat_id):
                 FROM libros 
                 WHERE id_categoria = :cat_id AND id_libro != :exclude
                 ORDER BY RAND() 
-                LIMIT 4
+                LIMIT 30
             """
             query = sqlalchemy.text(query_sql)
             resultados = conn.execute(query, {"cat_id": cat_id, "exclude": exclude_id or 0}).fetchall()

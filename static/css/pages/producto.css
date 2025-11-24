@@ -173,3 +173,38 @@ main {
         justify-content: center;
     }
 }
+
+#grid-recomendados {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 14rem;
+    grid-template-columns: none;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 1.5rem;
+}
+
+#grid-recomendados::-webkit-scrollbar {
+    display: none;
+}
+
+#grid-recomendados .producto {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0.8rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#grid-recomendados .producto__nombre {
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
+}
+
+#grid-recomendados .producto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 10px 2px var(--color-acento);
+    z-index: 10;
+    cursor: pointer;
+}
