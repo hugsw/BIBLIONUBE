@@ -53,10 +53,10 @@ def create_app():
     from routes.auth_routes import auth_bp
     from routes.book_routes import book_bp
 
-    app.register_bluelogging.info(web_bp)
-    app.register_bluelogging.info(auth_bp)
-    app.register_bluelogging.info(book_bp)
-    logging.info("Bluelogging.infos registrados.")
+    app.register_blueprint(web_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(book_bp)
+    logging.info("Blueprints registrados.")
 
     return app
 
