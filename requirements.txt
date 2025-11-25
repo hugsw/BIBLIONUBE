@@ -11,6 +11,6 @@ whitenoise
 scikit-learn
 pandas
 numpy
-pip install Flask-Caching
+Flask-Caching
 Flask-Limiter
 Compress
