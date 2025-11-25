@@ -13,4 +13,4 @@ pandas
 numpy
 Flask-Caching
 Flask-Limiter
-Compress
+Flask-Compress
