@@ -123,8 +123,9 @@
 
 .producto img {
     width: 100%;
+    height: auto !important;
     display: block;
-    aspect-ratio: 2 / 3;
+    aspect-ratio: 3 / 4;
     object-fit: cover;
     box-shadow: none;
     border-radius: 4px;
