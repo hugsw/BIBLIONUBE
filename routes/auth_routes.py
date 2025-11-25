@@ -2,10 +2,12 @@ import sqlalchemy
 from flask import Blueprint, jsonify, request, current_app
 from sqlalchemy.exc import IntegrityError 
 from utils.security import token_required 
+from app import limiter 
 
 auth_bp = Blueprint('auth_bp', __name__)
 
 @auth_bp.route('/api/crear-perfil', methods=['POST', 'OPTIONS'])
+@limiter.limit("5 per minute") 
 @token_required
 def crear_perfil_usuario(current_user_id):
     

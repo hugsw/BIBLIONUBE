@@ -3,15 +3,23 @@ import sqlalchemy
 import firebase_admin
 import logging
 from firebase_admin import credentials
-from flask import Flask, current_app 
+from flask import Flask, current_app, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
 from whitenoise import WhiteNoise
+from flask_caching import Cache 
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address 
+from flask_compress import Compress 
 from database import connect_with_connector, warm_up_db
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 load_dotenv()
+
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 3600})
+
+limiter = Limiter(key_func=get_remote_address)
 
 logging.info("Inicializando Firebase Admin...")
 try:
@@ -35,7 +43,16 @@ def create_app():
     CORS(app)
     
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-    logging.info("App Flask creada y configurada.")
+    
+    cache.init_app(app)
+
+    Compress(app) 
+    
+    limiter.init_app(app)
+
+    limiter.default_limits = ["1000 per day", "200 per hour"]
+    
+    logging.info("App Flask creada y configurada con seguridad y compresión.")
 
     with app.app_context():
         logging.info("Iniciando conexión a la base de datos...")
@@ -56,6 +73,16 @@ def create_app():
     app.register_blueprint(web_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(book_bp)
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('404.html'), 404
+        
+    @app.errorhandler(429)
+    def ratelimit_handler(e):
+        current_app.logger.warning(f"Rate limit excedido por: {get_remote_address()}")
+        return render_template('404.html'), 429 
+
     logging.info("Blueprints registrados.")
 
     return app
@@ -63,7 +90,6 @@ def create_app():
 app = create_app()
 
 project_root = os.path.dirname(os.path.abspath(__file__)) 
-
 static_root = os.path.join(project_root, 'static')
 
 app.wsgi_app = WhiteNoise(app.wsgi_app, root=static_root) 

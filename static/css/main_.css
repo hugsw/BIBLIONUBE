@@ -1,12 +1,3 @@
-@import url("base/_variables.css");
-@import url("base/_global.css");
-@import url("layout/_header.css");
-@import url("layout/_navegacion.css");
-@import url("layout/_grid.css");
-@import url("layout/_footer.css");
-@import url("components/_buttons.css");
-@import url("components/_modal.css");
-@import url("components/_estilos_productos.css");
 @import url("pages/_registro.css");
 @import url("pages/producto.css");
 @import url("components/_guardados.css");

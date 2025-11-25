@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request, current_app, make_response
 from sqlalchemy.exc import IntegrityError 
 from utils.security import token_required
 from utils.recommendation_engine import obtener_ids_recomendados_ml
+from app import cache
 
 book_bp = Blueprint('book_bp', __name__)
 
@@ -243,12 +244,10 @@ def api_buscar_libros():
 @book_bp.route("/libros/recomendados/<int:cat_id>")
 def obtener_recomendados(cat_id):
     try:
-        # Obtenemos el ID del libro actual para excluirlo (opcional, viene por query param)
         exclude_id = request.args.get('exclude', type=int)
         
         db_engine = current_app.db
         with db_engine.connect() as conn:
-            # Seleccionamos 4 libros de la misma categoría, aleatorios
             query_sql = """
                 SELECT id_libro, titulo_libro, autor_libro, url_portada 
                 FROM libros 
@@ -323,6 +322,7 @@ def obtener_recomendados_guardados(firebase_uid):
         return jsonify({"error": str(e)}), 500
 
 @book_bp.route("/libros/recomendados-ml/<int:libro_id>")
+@cache.cached(timeout=3600, query_string=True)
 def obtener_recomendados_inteligentes(libro_id):
     try:
         db_engine = current_app.db
@@ -340,16 +340,18 @@ def obtener_recomendados_inteligentes(libro_id):
             if not ids_recomendados:
                 return jsonify([]) 
 
-            ids_str = ', '.join(map(str, ids_recomendados))
+            bind_params = {f"id{i}": id_val for i, id_val in enumerate(ids_recomendados)}
+
+            placeholders = ", ".join([f":id{i}" for i in range(len(ids_recomendados))])
             
             query_final = sqlalchemy.text(f"""
                 SELECT id_libro, titulo_libro, autor_libro, url_portada 
                 FROM libros 
-                WHERE id_libro IN ({ids_str})
-                ORDER BY FIELD(id_libro, {ids_str})
+                WHERE id_libro IN ({placeholders})
+                ORDER BY FIELD(id_libro, {placeholders})
             """)
             
-            resultados = conn.execute(query_final).fetchall()
+            resultados = conn.execute(query_final, bind_params).fetchall()
 
             libros_response = [
                 {

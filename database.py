@@ -6,8 +6,7 @@ import logging
 
 def connect_with_connector(app) -> sqlalchemy.engine.base.Engine:
     """
-    Crea y retorna un pool de conexiones a la base de datos.
-    Recibe 'app' para poder leer la SECRET_KEY desde app.config.
+    Crea y retorna un pool de conexiones a la base de datos optimizado.
     """
     INSTANCE_CONNECTION_NAME = os.environ.get("INSTANCE_CONNECTION_NAME")
     DB_NAME = os.environ.get("DB_NAME")
@@ -32,7 +31,20 @@ def connect_with_connector(app) -> sqlalchemy.engine.base.Engine:
         )
         return conn
         
-    pool = sqlalchemy.create_engine("mysql+pymysql://", creator=getconn, pool_timeout=30)
+    pool = sqlalchemy.create_engine(
+        "mysql+pymysql://",
+        creator=getconn,
+
+        pool_size=5,
+        
+        max_overflow=2,
+        
+        pool_timeout=30,
+        
+        pool_recycle=1800,
+        
+        pool_pre_ping=True
+    )
     return pool
 
 def warm_up_db(db_engine):

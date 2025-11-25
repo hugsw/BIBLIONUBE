@@ -35,14 +35,12 @@ function renderizarLibros(librosParaRenderizar, contenedor, contexto = 'general'
                     <i class="fa-solid fa-trash-can"></i> Eliminar
                 </button>
             `;
-        } else {
-            botonHtml = '';
         }
 
         const htmlDelLibro = `
         <div class="producto">
             <a href="/producto?id=${libro.id}">
-                <img src="${imagen}" alt="${alt}">
+                <img src="${imagen}" alt="${alt}" loading="lazy" width="200" height="300">
             </a>
             <div class="producto__informacion">
                 <h3 class="producto__nombre">${libro.titulo}</h3>
@@ -201,7 +199,7 @@ async function cargarRecomendados(idCategoria, idLibroActual) {
                 const htmlDelLibro = `
                 <div class="producto">
                     <a href="/producto?id=${libro.id}">
-                        <img src="${imagen}" alt="${libro.titulo}">
+                        <img src="${imagen}" alt="${libro.titulo}" loading="lazy" width="140" height="210">
                     </a>
                     <div class="producto__informacion">
                         <h3 class="producto__nombre">${libro.titulo}</h3>
@@ -505,7 +503,7 @@ async function cargarRecomendacionesHibridas() {
                 const htmlDelLibro = `
                 <div class="producto">
                     <a href="/producto?id=${libro.id}">
-                        <img src="${imagen}" alt="${libro.titulo}">
+                        <img src="${imagen}" alt="${libro.titulo}" loading="lazy" width="140" height="210">
                     </a>
                     <div class="producto__informacion">
                         <h3 class="producto__nombre">${libro.titulo}</h3>

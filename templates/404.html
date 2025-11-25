@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Página no encontrada - BIBLIONUBE{% endblock %}
+
+{% block content %}
+<div class="contenedor" style="text-align: center; padding: 6rem 2rem;">
+    <h1 style="font-size: 8rem; color: var(--color-acento); margin-bottom: 0;">404</h1>
+    <h2 style="font-size: 3rem; margin-top: 0;">¡Ups! Página no encontrada</h2>
+    <p style="font-size: 1.8rem; margin-bottom: 3rem; color: #666;">
+        Parece que el libro que buscas se perdió en nuestra nube.
+    </p>
+    <img src="/static/img/BOOK.png" alt="Libro perdido" style="width: 150px; opacity: 0.5; margin-bottom: 3rem;">
+    
+    <div>
+        <a href="/" class="btn-ver-todo" style="background-color: var(--color-acento); color: white;">
+            VOLVER AL INICIO
+        </a>
+    </div>
+</div>
+{% endblock %}
