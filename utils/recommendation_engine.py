@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 
-def obtener_ids_recomendados_ml(datos_libros, id_libro_actual, top_n=4):
+def obtener_ids_recomendados_ml(datos_libros, id_libro_actual, top_n=22):
     """
     Recibe una lista de diccionarios con todos los libros y devuelve los IDs de los más similares
     basándose en su descripción.
