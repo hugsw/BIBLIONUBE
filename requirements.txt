@@ -8,3 +8,6 @@ PyMySQL
 gunicorn
 firebase-admin
 whitenoise
+scikit-learn
+pandas
+numpy

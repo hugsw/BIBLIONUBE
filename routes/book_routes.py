@@ -2,6 +2,7 @@ import sqlalchemy
 from flask import Blueprint, jsonify, request, current_app, make_response
 from sqlalchemy.exc import IntegrityError 
 from utils.security import token_required
+from utils.recommendation_engine import obtener_ids_recomendados_ml
 
 book_bp = Blueprint('book_bp', __name__)
 
@@ -348,4 +349,57 @@ def obtener_recomendados_guardados(firebase_uid):
             
     except Exception as e:
         current_app.logger.error(f"Error en recomendados guardados: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@book_bp.route("/libros/recomendados-ml/<int:libro_id>")
+def obtener_recomendados_inteligentes(libro_id):
+    try:
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
+            # 1. Obtenemos TODOS los libros (ID y Descripción) 
+            # El modelo necesita 'leer' todos los libros para saber cuál se parece a cuál.
+            query_all = sqlalchemy.text("SELECT id_libro, titulo_libro, descripcion FROM libros")
+            todos_libros = conn.execute(query_all).fetchall()
+            
+            # Convertimos a lista de diccionarios para que Pandas lo entienda
+            lista_libros = [
+                {"id_libro": row.id_libro, "titulo": row.titulo_libro, "descripcion": row.descripcion} 
+                for row in todos_libros
+            ]
+
+            # 2. Llamamos a nuestro motor de Machine Learning
+            # Le pasamos todos los libros y el ID del que el usuario está viendo
+            ids_recomendados = obtener_ids_recomendados_ml(lista_libros, libro_id)
+
+            if not ids_recomendados:
+                return jsonify([]) 
+
+            # 3. Buscamos los detalles completos SOLO de los libros ganadores
+            # Formateamos los IDs para la consulta SQL (ej: "1, 5, 20")
+            ids_str = ', '.join(map(str, ids_recomendados))
+            
+            # Usamos FIELD en SQL para mantener el orden de relevancia que calculó el ML
+            query_final = sqlalchemy.text(f"""
+                SELECT id_libro, titulo_libro, autor_libro, url_portada 
+                FROM libros 
+                WHERE id_libro IN ({ids_str})
+                ORDER BY FIELD(id_libro, {ids_str})
+            """)
+            
+            resultados = conn.execute(query_final).fetchall()
+
+            # 4. Preparamos la respuesta JSON para el frontend
+            libros_response = [
+                {
+                    "id": row.id_libro,
+                    "titulo": row.titulo_libro,
+                    "imagen": row.url_portada,
+                    "alt": row.titulo_libro
+                } for row in resultados
+            ]
+            
+            return jsonify(libros_response)
+
+    except Exception as e:
+        current_app.logger.error(f"Error en ML: {e}")
         return jsonify({"error": str(e)}), 500

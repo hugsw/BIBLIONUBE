@@ -183,7 +183,10 @@ async function cargarRecomendados(idCategoria, idLibroActual) {
     if (!contenedor || !seccion) return;
 
     try {
-        const response = await fetch(`/libros/recomendados/${idCategoria}?exclude=${idLibroActual}`);
+        const response = await fetch(`/libros/recomendados-ml/${idLibroActual}`);
+        
+        if (!response.ok) throw new Error("Error al obtener recomendaciones");
+
         const libros = await response.json();
 
         if (libros && libros.length > 0) {
@@ -207,9 +210,11 @@ async function cargarRecomendados(idCategoria, idLibroActual) {
             });
 
             seccion.style.display = 'block';
+        } else {
+            seccion.style.display = 'none';
         }
     } catch (error) {
-        console.error("Error cargando recomendados:", error);
+        console.error("Error cargando recomendaciones ML:", error);
     }
 }
 
