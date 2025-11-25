@@ -289,6 +289,7 @@ async function cargarDatosMiCuentaFirebase() {
         console.error("Error cargando datos de cuenta:", error);
         const container = document.querySelector('.contenido-mi-cuenta');
         if (container) {
+            container.innerHTML = `<p class="error-mensaje">Hubo un problema al cargar tus datos. Por favor recarga la página.</p>`;
         }
     }
 }

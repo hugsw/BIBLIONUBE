@@ -50,7 +50,6 @@ def obtener_libro_por_id(libro_id):
     try:
         db_engine = current_app.db
         with db_engine.connect() as conn:
-            # AGREGAMOS id_categoria AL SELECT
             query = sqlalchemy.text(
                 "SELECT id_libro, titulo_libro, autor_libro, publicacion, descripcion, url_libro, "
                 "url_portada, id_categoria " 
@@ -70,35 +69,7 @@ def obtener_libro_por_id(libro_id):
                     "url": libro_encontrado["url_libro"],
                     "imagen": libro_encontrado["url_portada"],
                     "url_portada": libro_encontrado["url_portada"],
-                    "id_categoria": libro_encontrado["id_categoria"] # Nuevo campo
-                }
-                return jsonify(libro_mapeado)
-            else:
-                return jsonify({"error": "Libro no encontrado"}), 404
-    except Exception as e:
-        current_app.logger.error(f"Error en /libros/<id>: {e}")
-        return jsonify({"error": str(e)}), 500
-    try:
-        db_engine = current_app.db
-        with db_engine.connect() as conn:
-            query = sqlalchemy.text(
-                "SELECT titulo_libro, autor_libro, publicacion, descripcion, url_libro, "
-                "url_portada " 
-                "FROM libros WHERE id_libro = :id"
-            )
-            resultado = conn.execute(query, {"id": libro_id}).fetchone()
-
-            if resultado:
-                libro_encontrado = resultado._asdict()
-                
-                libro_mapeado = {
-                    "titulo": libro_encontrado["titulo_libro"],
-                    "autor": libro_encontrado["autor_libro"],
-                    "publicacion": libro_encontrado["publicacion"],
-                    "descripcion": libro_encontrado["descripcion"],
-                    "url": libro_encontrado["url_libro"],
-                    "imagen": libro_encontrado["url_portada"],
-                    "url_portada": libro_encontrado["url_portada"]
+                    "id_categoria": libro_encontrado["id_categoria"]
                 }
                 return jsonify(libro_mapeado)
             else:
@@ -356,29 +327,21 @@ def obtener_recomendados_inteligentes(libro_id):
     try:
         db_engine = current_app.db
         with db_engine.connect() as conn:
-            # 1. Obtenemos TODOS los libros (ID y Descripción) 
-            # El modelo necesita 'leer' todos los libros para saber cuál se parece a cuál.
             query_all = sqlalchemy.text("SELECT id_libro, titulo_libro, descripcion FROM libros")
             todos_libros = conn.execute(query_all).fetchall()
             
-            # Convertimos a lista de diccionarios para que Pandas lo entienda
             lista_libros = [
                 {"id_libro": row.id_libro, "titulo": row.titulo_libro, "descripcion": row.descripcion} 
                 for row in todos_libros
             ]
 
-            # 2. Llamamos a nuestro motor de Machine Learning
-            # Le pasamos todos los libros y el ID del que el usuario está viendo
             ids_recomendados = obtener_ids_recomendados_ml(lista_libros, libro_id)
 
             if not ids_recomendados:
                 return jsonify([]) 
 
-            # 3. Buscamos los detalles completos SOLO de los libros ganadores
-            # Formateamos los IDs para la consulta SQL (ej: "1, 5, 20")
             ids_str = ', '.join(map(str, ids_recomendados))
             
-            # Usamos FIELD en SQL para mantener el orden de relevancia que calculó el ML
             query_final = sqlalchemy.text(f"""
                 SELECT id_libro, titulo_libro, autor_libro, url_portada 
                 FROM libros 
@@ -388,7 +351,6 @@ def obtener_recomendados_inteligentes(libro_id):
             
             resultados = conn.execute(query_final).fetchall()
 
-            # 4. Preparamos la respuesta JSON para el frontend
             libros_response = [
                 {
                     "id": row.id_libro,

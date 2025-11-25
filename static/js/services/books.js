@@ -168,6 +168,7 @@ export async function cargarProductoUnico() {
                     }
                 }
             } catch (err) {
+                console.error("Error al verificar si el libro está guardado:", err);
             }
         }
 
