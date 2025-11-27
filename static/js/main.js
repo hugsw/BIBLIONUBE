@@ -172,13 +172,37 @@ function inicializarRegistroFirebase() {
     const passwordError = document.getElementById('passwordError');
     const docTypeSelect = document.getElementById('tipo_documento');
     const docNumGroup = document.getElementById('document-number-group');
+    
+    const docInput = document.getElementById('numero_documento');
 
-    if (docTypeSelect && docNumGroup) {
+    if (docTypeSelect && docNumGroup && docInput) {
+        
         docTypeSelect.addEventListener('change', function() {
-            if (this.value !== "") {
-                docNumGroup.style.display = 'block';
-            } else {
+            docInput.value = '';
+            
+            if (this.value === "") {
                 docNumGroup.style.display = 'none';
+            } else {
+                docNumGroup.style.display = 'block';
+                
+                if (this.value === 'dni') {
+                    
+                    docInput.setAttribute('maxlength', '8');
+                    docInput.setAttribute('placeholder', 'Ingrese 8 dígitos');
+                } else {
+                    
+                    docInput.setAttribute('maxlength', '12');
+                    docInput.setAttribute('placeholder', 'Ingrese hasta 12 caracteres');
+                }
+            }
+        });
+
+        docInput.addEventListener('input', function() {
+            const tipo = docTypeSelect.value;
+
+            if (tipo === 'dni') {
+                
+                this.value = this.value.replace(/[^0-9]/g, '');
             }
         });
     }
@@ -202,6 +226,11 @@ function inicializarRegistroFirebase() {
             }
             if (password.length < 6) {
                 passwordError.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+                return;
+            }
+
+            if (tipo_documento === 'dni' && numero_documento.length !== 8) {
+                passwordError.textContent = 'El DNI debe tener exactamente 8 dígitos.';
                 return;
             }
 
@@ -231,6 +260,7 @@ function inicializarRegistroFirebase() {
 
                 if (!response.ok) {
                     const errorData = await response.json();
+                  
                     await user.delete();
                     throw new Error(errorData.error || 'Error al guardar el perfil en el backend.');
                 }
