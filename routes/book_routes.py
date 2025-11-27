@@ -100,7 +100,7 @@ def guardar_libro(firebase_uid):
         if not libro_id:
             return jsonify({"error": "Falta 'libro_id'."}), 400
 
-        db_engine = current_app.
+        db_engine = current_app.db
         with db_engine.connect() as conn:
             
             internal_user_id = obtener_id_usuario_interno(conn, firebase_uid)
