@@ -26,6 +26,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     inicializarTogglePasswordLogin(); 
     inicializarDropdownUsuario();
 
+    const btnGuardadosHeader = document.getElementById('boton-guardados');
+    if (btnGuardadosHeader) {
+        btnGuardadosHeader.addEventListener('click', (e) => {
+
+            if (!auth.currentUser) {
+                e.preventDefault();
+                
+                const modal = document.getElementById('modalLogin');
+                if (modal) {
+                    modal.classList.add('visible');
+                    document.body.classList.add('modal-open');
+                }
+            }
+        });
+    }
+
     if (document.getElementById('register-form')) {
         inicializarRegistroFirebase();
         inicializarTogglePasswordRegistro(); 
@@ -156,6 +172,16 @@ function inicializarRegistroFirebase() {
     const passwordError = document.getElementById('passwordError');
     const docTypeSelect = document.getElementById('tipo_documento');
     const docNumGroup = document.getElementById('document-number-group');
+
+    if (docTypeSelect && docNumGroup) {
+        docTypeSelect.addEventListener('change', function() {
+            if (this.value !== "") {
+                docNumGroup.style.display = 'block';
+            } else {
+                docNumGroup.style.display = 'none';
+            }
+        });
+    }
 
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
