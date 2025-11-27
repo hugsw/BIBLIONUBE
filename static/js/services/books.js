@@ -1,8 +1,9 @@
 import { mostrarAlerta, mostrarConfirmacion } from '../Utils/customalert.js';
 import { inicializarSliders } from '../components/ui.js'; 
+import { auth } from '../config/firebase-config.js';
 
 async function getFirebaseToken() {
-    const user = firebase.auth().currentUser;
+    const user = auth.currentUser;
     if (user) {
         try {
             return await user.getIdToken(true);
@@ -241,7 +242,7 @@ export function inicializarBotonGuardar() {
             return;
         }
 
-        const user = firebase.auth().currentUser;
+        const user = auth.currentUser;
 
         if (!user) {
             sessionStorage.setItem('redirectAfterLogin', window.location.href);

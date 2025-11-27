@@ -50,3 +50,22 @@
 .register-button:hover {
     background-color: var(--color-acento-hover);
 }
+
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    background-color: transparent;
+    color: var(--color-acento);
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+.btn-volver:hover {
+    background-color: #fff3e0;
+    color: var(--color-acento-hover);
+    transform: translateX(-5px);
+}

@@ -22,8 +22,30 @@ def crear_perfil_usuario(current_user_id):
         numero_documento = datos.get('numero_documento')
         fecha_nacimiento = datos.get('fecha_nacimiento')
 
-        if not all([nombre_completo, email, tipo_documento, numero_documento, fecha_nacimiento]):
-            return jsonify({"error": "Faltan campos obligatorios para crear el perfil."}), 400
+        if len(nombre_completo.strip()) < 2 or len(nombre_completo) > 100:
+            return jsonify({"error": "El nombre debe tener entre 2 y 100 caracteres."}), 400
+
+        if not numero_documento.isalnum():
+            return jsonify({"error": "El número de documento solo puede contener letras y números."}), 400
+            
+        if len(numero_documento) < 5 or len(numero_documento) > 20:
+             return jsonify({"error": "Longitud de documento inválida (debe ser entre 5 y 20 caracteres)."}), 400
+
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            return jsonify({"error": "Formato de correo electrónico inválido."}), 400
+
+        try:
+
+            fecha_dt = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
+            
+            if fecha_dt > datetime.now():
+                return jsonify({"error": "La fecha de nacimiento no puede ser futura."}), 400
+                
+            if fecha_dt.year < 1900:
+                return jsonify({"error": "Año de nacimiento no válido."}), 400
+                
+        except ValueError:
+            return jsonify({"error": "Formato de fecha inválido. Use AAAA-MM-DD."}), 400
 
         sql_insert = sqlalchemy.text(
             """

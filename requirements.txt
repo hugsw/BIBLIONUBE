@@ -1,6 +1,5 @@
 Flask
 Flask-Cors
-PyJWT
 cloud-sql-python-connector
 SQLAlchemy
 python-dotenv

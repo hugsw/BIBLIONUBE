@@ -1,4 +1,3 @@
-import jwt
 from functools import wraps
 from flask import request, jsonify, current_app
 from firebase_admin import auth

@@ -5,6 +5,14 @@ from utils.security import token_required
 from utils.recommendation_engine import obtener_ids_recomendados_ml
 from app import cache
 
+def obtener_id_usuario_interno(conn, firebase_uid):
+    """Busca el ID numérico del usuario basado en su UID de Firebase."""
+    sql = sqlalchemy.text("SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid")
+    resultado = conn.execute(sql, {"f_uid": firebase_uid}).fetchone()
+    if resultado:
+        return resultado[0]
+    return None
+
 book_bp = Blueprint('book_bp', __name__)
 
 @book_bp.route("/libros")
@@ -28,16 +36,16 @@ def obtener_libros():
             
             libros_mapeados = [
                 {
-                    "id": libro["id_libro"],
-                    "titulo": libro["titulo_libro"],
-                    "autor": libro["autor_libro"],
-                    "publicacion": libro["publicacion"],
-                    "descripcion": libro["descripcion"],
-                    "url": libro["url_libro"],
-                    "categoria": libro["nombre_categoria"],
-                    "imagen": libro["url_portada"],
-                    "alt": libro["titulo_libro"]
-                } for libro in libros_lista
+                    "id": row.id_libro,
+                    "titulo": row.titulo_libro,
+                    "autor": row.autor_libro,
+                    "publicacion": row.publicacion,
+                    "descripcion": row.descripcion,
+                    "url": row.url_libro,
+                    "categoria": row.nombre_categoria,
+                    "imagen": row.url_portada,
+                    "alt": row.titulo_libro
+                } for row in resultados
             ]
             
             return jsonify(libros_mapeados)
@@ -88,19 +96,18 @@ def guardar_libro(firebase_uid):
     try:
         datos = request.get_json()
         libro_id = datos.get('libro_id')
+
         if not libro_id:
             return jsonify({"error": "Falta 'libro_id'."}), 400
-        db_engine = current_app.db
-        with db_engine.connect() as conn:
-            sql_find_user = sqlalchemy.text(
-                "SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid"
-            )
-            resultado_usuario = conn.execute(sql_find_user, {"f_uid": firebase_uid}).fetchone()
 
-            if not resultado_usuario:
-                return jsonify({"error": "Usuario no encontrado en la base de datos."}), 404
+        db_engine = current_app.
+        with db_engine.connect() as conn:
             
-            internal_user_id = resultado_usuario._asdict()["id_usuario"]
+            internal_user_id = obtener_id_usuario_interno(conn, firebase_uid)
+
+            if not internal_user_id:
+                return jsonify({"error": "Usuario no encontrado en la base de datos."}), 404
+
             sql_check = sqlalchemy.text(
                 "SELECT 1 FROM libros_guardados WHERE usuario_id = :uid AND libro_id = :lid"
             )
@@ -130,15 +137,9 @@ def get_mis_libros(firebase_uid):
         db_engine = current_app.db
         with db_engine.connect() as conn:
 
-            sql_find_user = sqlalchemy.text(
-                "SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid"
-            )
-            resultado_usuario = conn.execute(sql_find_user, {"f_uid": firebase_uid}).fetchone()
-            
-            if not resultado_usuario:
+            internal_user_id = obtener_id_usuario_interno(conn, firebase_uid)
+            if not internal_user_id:
                 return jsonify({"error": "Usuario no encontrado en la base de datos."}), 404
-            
-            internal_user_id = resultado_usuario._asdict()["id_usuario"]
 
             sql_query = sqlalchemy.text("""
             SELECT 
@@ -151,14 +152,13 @@ def get_mis_libros(firebase_uid):
             """)
             
             resultados = conn.execute(sql_query, {"uid": internal_user_id}).fetchall()
-            libros_lista = [row._asdict() for row in resultados]
             libros_mapeados = [
                 {
-                    "id": libro["id_libro"],
-                    "titulo": libro["titulo_libro"],
-                    "imagen": libro["url_portada"],
-                    "alt": libro["titulo_libro"]
-                } for libro in libros_lista
+                    "id": row.id_libro,
+                    "titulo": row.titulo_libro,
+                    "imagen": row.url_portada,
+                    "alt": row.titulo_libro
+                } for row in resultados
             ]
             
             return jsonify(libros_mapeados)
@@ -183,15 +183,9 @@ def quitar_libro(firebase_uid):
         db_engine = current_app.db
         with db_engine.connect() as conn:
             
-            sql_find_user = sqlalchemy.text(
-                "SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid"
-            )
-            resultado_usuario = conn.execute(sql_find_user, {"f_uid": firebase_uid}).fetchone()
-            
-            if not resultado_usuario:
+            internal_user_id = obtener_id_usuario_interno(conn, firebase_uid)
+            if not internal_user_id:
                 return jsonify({"error": "Usuario no encontrado en la base de datos."}), 404
-            
-            internal_user_id = resultado_usuario._asdict()["id_usuario"]
             
             sql_delete = sqlalchemy.text(
                 "DELETE FROM libros_guardados WHERE usuario_id = :uid AND libro_id = :lid"
@@ -280,13 +274,9 @@ def obtener_recomendados_guardados(firebase_uid):
         db_engine = current_app.db
         with db_engine.connect() as conn:
             
-            sql_find_user = sqlalchemy.text("SELECT id_usuario FROM usuarios WHERE firebase_uid = :f_uid")
-            user_res = conn.execute(sql_find_user, {"f_uid": firebase_uid}).fetchone()
-            
-            if not user_res:
-                return jsonify([])
-
-            internal_uid = user_res._asdict()["id_usuario"]
+            internal_user_id = obtener_id_usuario_interno(conn, firebase_uid)
+            if not internal_user_id:
+                return jsonify({"error": "Usuario no encontrado en la base de datos."}), 404
 
             query_sql = """
                 SELECT l.id_libro, l.titulo_libro, l.url_portada 
@@ -327,11 +317,16 @@ def obtener_recomendados_inteligentes(libro_id):
     try:
         db_engine = current_app.db
         with db_engine.connect() as conn:
-            query_all = sqlalchemy.text("SELECT id_libro, titulo_libro, descripcion FROM libros")
+            query_all = sqlalchemy.text("""
+                SELECT id_libro, descripcion 
+                FROM libros 
+                ORDER BY id_libro DESC 
+                LIMIT 500
+            """)
             todos_libros = conn.execute(query_all).fetchall()
             
             lista_libros = [
-                {"id_libro": row.id_libro, "titulo": row.titulo_libro, "descripcion": row.descripcion} 
+                {"id_libro": row.id_libro, "descripcion": row.descripcion} 
                 for row in todos_libros
             ]
 

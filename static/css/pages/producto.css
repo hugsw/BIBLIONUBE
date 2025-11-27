@@ -28,25 +28,6 @@ main {
     margin-bottom: 2rem;
 }
 
-.btn-volver {
-    color: var(--color-acento, #ff8c00);
-    font-size: 2rem;
-    text-decoration: none;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    transition: color .3s ease, background-color .3s ease;
-    background-color: transparent;
-    border-radius: 0.5rem;
-    padding: 1rem 1.5rem;
-}
-
-.btn-volver:hover {
-    color: var(--color-acento-hover, #e67e22);
-    background-color: #fff3e0;
-}
-
 .btn-volver i {
     font-size: 2rem;
     margin-right: 0.5rem;

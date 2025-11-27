@@ -34,7 +34,6 @@ def producto_page():
 def guardado_page():
     return render_template('guardado.html')
 
-@web_bp.route('/mi_cuenta') 
 @web_bp.route('/mi-cuenta')
 def mi_cuenta_page():
     return render_template('mi_cuenta.html')
