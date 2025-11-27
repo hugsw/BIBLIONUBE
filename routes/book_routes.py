@@ -294,7 +294,7 @@ def obtener_recomendados_guardados(firebase_uid):
                 LIMIT 22
             """
             
-            resultados = conn.execute(sqlalchemy.text(query_sql), {"uid": internal_uid}).fetchall()
+            resultados = conn.execute(sqlalchemy.text(query_sql), {"uid": internal_user_id}).fetchall()
             
             libros_lista = [
                 {
