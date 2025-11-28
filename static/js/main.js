@@ -271,7 +271,7 @@ function inicializarRegistroFirebase() {
                 if (!response.ok) {
                     const errorData = await response.json();
                   
-                    //await user.delete();
+                    await user.delete();
                     throw new Error(errorData.error || 'Error al guardar el perfil en el backend.');
                 }
 
