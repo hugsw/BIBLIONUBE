@@ -54,6 +54,20 @@ def create_app():
     
     logging.info("App Flask creada y configurada con seguridad y compresión.")
 
+    @app.context_processor
+    def inject_firebase_config():
+        return {
+            'firebase_config': {
+                'apiKey': os.environ.get('FIREBASE_API_KEY'),
+                'authDomain': os.environ.get('FIREBASE_AUTH_DOMAIN'),
+                'projectId': os.environ.get('FIREBASE_PROJECT_ID'),
+                'storageBucket': os.environ.get('FIREBASE_STORAGE_BUCKET'),
+                'messagingSenderId': os.environ.get('FIREBASE_SENDER_ID'),
+                'appId': os.environ.get('FIREBASE_APP_ID'),
+                'measurementId': os.environ.get('FIREBASE_MEASUREMENT_ID')
+            }
+        }
+
     with app.app_context():
         logging.info("Iniciando conexión a la base de datos...")
         db = connect_with_connector(app) 

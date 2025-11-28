@@ -2,7 +2,7 @@ import sqlalchemy
 from flask import Blueprint, jsonify, request, current_app, make_response
 from sqlalchemy.exc import IntegrityError 
 from utils.security import token_required
-from utils.recommendation_engine import obtener_ids_recomendados_ml
+from utils.recommendation_engine import recomendador
 from app import cache
 
 def obtener_id_usuario_interno(conn, firebase_uid):
@@ -315,28 +315,26 @@ def obtener_recomendados_guardados(firebase_uid):
 @cache.cached(timeout=3600, query_string=True)
 def obtener_recomendados_inteligentes(libro_id):
     try:
+        if recomendador.necesita_entrenamiento():
+            current_app.logger.info("Entrenando motor de recomendaciones por primera vez...")
+            db_engine = current_app.db
+            with db_engine.connect() as conn:
+                query_train = sqlalchemy.text("SELECT id_libro, descripcion FROM libros ORDER BY id_libro DESC")
+                todos_libros = conn.execute(query_train).fetchall()
+                datos_para_entrenar = [
+                    {"id_libro": row.id_libro, "descripcion": row.descripcion} 
+                    for row in todos_libros
+                ]
+                recomendador.entrenar(datos_para_entrenar)
+
+        ids_recomendados = recomendador.obtener_recomendaciones(libro_id)
+
+        if not ids_recomendados:
+            return jsonify([]) 
+
         db_engine = current_app.db
         with db_engine.connect() as conn:
-            query_all = sqlalchemy.text("""
-                SELECT id_libro, descripcion 
-                FROM libros 
-                ORDER BY id_libro DESC 
-                LIMIT 500
-            """)
-            todos_libros = conn.execute(query_all).fetchall()
-            
-            lista_libros = [
-                {"id_libro": row.id_libro, "descripcion": row.descripcion} 
-                for row in todos_libros
-            ]
-
-            ids_recomendados = obtener_ids_recomendados_ml(lista_libros, libro_id)
-
-            if not ids_recomendados:
-                return jsonify([]) 
-
             bind_params = {f"id{i}": id_val for i, id_val in enumerate(ids_recomendados)}
-
             placeholders = ", ".join([f":id{i}" for i in range(len(ids_recomendados))])
             
             query_final = sqlalchemy.text(f"""

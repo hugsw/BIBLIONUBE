@@ -13,3 +13,4 @@ numpy
 Flask-Caching
 Flask-Limiter
 Flask-Compress
+nltk

@@ -106,11 +106,18 @@ function inicializarFirebaseGlobal() {
                 }
 
             } else {
+              
                 auth.signOut();
                 body.classList.remove('sesion-iniciada');
             }
         } else {
+        
             body.classList.remove('sesion-iniciada');
+
+            if (esPaginaMiCuenta) {
+                window.location.href = '/';
+                return;
+            }
 
             if (esPaginaGuardados) {
                 await cargarLibrosGuardados();
@@ -283,17 +290,7 @@ async function cargarDatosMiCuentaFirebase() {
 
     const user = auth.currentUser;
 
-    if (!user) {
-        setTimeout(() => {
-            const userCheck = auth.currentUser;
-            if (!userCheck) {
-                window.location.href = '/';
-            } else {
-                cargarDatosMiCuentaFirebase();
-            }
-        }, 1000);
-        return;
-    }
+    if (!user) return;
 
     const token = await user.getIdToken();
 
