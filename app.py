@@ -19,46 +19,44 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 env_path = os.path.join(basedir, '.env')
 load_dotenv(env_path)
 
-print(f"--> Intentando cargar .env desde: {env_path}")
-print(f"--> TEST LECTURA API KEY: {os.environ.get('FIREBASE_API_KEY')}")
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+print(f"--> RUTA .ENV: {env_path}")
+print(f"--> API KEY CARGADA: {os.environ.get('FIREBASE_API_KEY')}")
 
 cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 3600})
-
 limiter = Limiter(key_func=get_remote_address)
 
 logging.info("Inicializando Firebase Admin...")
 try:
-    cred_path = os.environ.get('FIREBASE_CREDS_PATH', '/etc/secrets/firebase-service-account.json')
+    cred_path = os.environ.get('FIREBASE_CREDS_PATH', 'firebase-service-account.json')
+    
+    if not os.path.isabs(cred_path):
+        cred_path = os.path.join(basedir, cred_path)
+
     if not firebase_admin._apps and os.path.exists(cred_path):
         cred = credentials.Certificate(cred_path)
         firebase_admin.initialize_app(cred)
         logging.info("¡Firebase Admin inicializado con éxito!")
     elif not os.path.exists(cred_path):
-        logging.info(f"ADVERTENCIA: No se encontró el archivo de credenciales de Firebase en '{cred_path}'.")
+        logging.warning(f"ADVERTENCIA: No se encontró el archivo de credenciales de Firebase en '{cred_path}'.")
     else:
-        logging.info("Firebase Admin ya estaba inicializado (en este worker).")
+        logging.info("Firebase Admin ya estaba inicializado.")
 
 except Exception as e:
-    logging.info(f"Un error inesperado ocurrió al inicializar Firebase: {e}")
+    logging.error(f"Un error inesperado ocurrió al inicializar Firebase: {e}")
 
 def create_app():
-    """Crea y configura la instancia de la aplicación Flask."""
-    
     app = Flask(__name__)
     CORS(app)
     
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
     
     cache.init_app(app)
-
     Compress(app) 
-    
     limiter.init_app(app)
-
+    
     limiter.default_limits = ["1000 per day", "200 per hour"]
     
-    logging.info("App Flask creada y configurada con seguridad y compresión.")
+    logging.info("App Flask creada y configurada.")
 
     @app.context_processor
     def inject_firebase_config():
@@ -73,13 +71,12 @@ def create_app():
                 'measurementId': os.environ.get('FIREBASE_MEASUREMENT_ID')
             }
         }
-
     with app.app_context():
         logging.info("Iniciando conexión a la base de datos...")
         db = connect_with_connector(app) 
         
         if db is None:
-            logging.info("¡ERROR! No se pudo inicializar la conexión a la base de datos.")
+            logging.error("¡ERROR! No se pudo inicializar la conexión a la base de datos.")
         else:
             logging.info("¡Conexión exitosa! (Objeto Engine creado)")
             warm_up_db(db)
@@ -103,18 +100,13 @@ def create_app():
         current_app.logger.warning(f"Rate limit excedido por: {get_remote_address()}")
         return render_template('404.html'), 429 
 
-    logging.info("Blueprints registrados.")
-
     return app
 
 app = create_app()
 
 project_root = os.path.dirname(os.path.abspath(__file__)) 
 static_root = os.path.join(project_root, 'static')
-
 app.wsgi_app = WhiteNoise(app.wsgi_app, root=static_root) 
 
-logging.info(f"WhiteNoise configurado para servir archivos desde: {static_root}")
-
 if __name__ == "__main__":
-    app.run(debug=False, port=int(os.environ.get('PORT', 8080)), host='0.0.0.0')
+    app.run(debug=True, port=int(os.environ.get('PORT', 8080)), host='0.0.0.0')
