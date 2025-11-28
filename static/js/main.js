@@ -152,6 +152,9 @@ function inicializarFirebaseGlobal() {
                     document.body.classList.remove('modal-open');
                 }
             } catch (error) {
+
+                errorMsg.style.display = 'block';
+                
                 if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
                     errorMsg.textContent = 'Correo o contraseña incorrectos.';
                 } else if (error.code === 'auth/too-many-requests') {
