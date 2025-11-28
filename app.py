@@ -11,15 +11,13 @@ from flask_compress import Compress
 from database import connect_with_connector, warm_up_db
 from flask_limiter.util import get_remote_address
 from extensions import cache, limiter
+from utils.recommendation_engine import recomendador
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 env_path = os.path.join(basedir, '.env')
 load_dotenv(env_path)
-
-print(f"--> RUTA .ENV: {env_path}")
-print(f"--> API KEY CARGADA: {os.environ.get('FIREBASE_API_KEY')}")
 
 logging.info("Inicializando Firebase Admin...")
 try:
@@ -77,7 +75,24 @@ def create_app():
         else:
             logging.info("¡Conexión exitosa! (Objeto Engine creado)")
             warm_up_db(db)
-        
+            
+            logging.info("Entrenando motor de recomendaciones...")
+            try:
+                with db.connect() as conn:
+                    query_train = sqlalchemy.text("SELECT id_libro, descripcion FROM libros ORDER BY id_libro DESC")
+                    todos_libros = conn.execute(query_train).fetchall()
+                    
+                    datos_para_entrenar = [
+                        {"id_libro": row.id_libro, "descripcion": row.descripcion} 
+                        for row in todos_libros
+                    ]
+                    
+                    recomendador.entrenar(datos_para_entrenar)
+                    logging.info("¡Motor de recomendaciones entrenado y listo!")
+            except Exception as e:
+                
+                logging.error(f"Error al entrenar el motor de recomendaciones al inicio: {e}")
+
         current_app.db = db
 
     from routes.web_routes import web_bp

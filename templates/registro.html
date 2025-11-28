@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Regístrate - BIBLIONUBE{% endblock %}
+{% block title %}BIBLIONUBE - REGÍSTRATE{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/pages/_registro.css">
+{% endblock %}
 
 {% block body_class %}pagina-registro{% endblock %}
 
@@ -12,18 +16,18 @@
         <form id="register-form">
 
             <div class="form-group">
-                <label for="nombre" style="position:absolute; width:1px; height:1px; overflow:hidden; clip: rect(0,0,0,0);">Nombre Completo</label>
+                <label for="nombre" class="sr-only">Nombre Completo</label>
                 <i class="fa-solid fa-user"></i>
                 <input type="text" id="nombre" name="nombre" placeholder="Ingrese su Nombre Completo" required>
             </div>
             <div class="form-group">
-                <label for="email" style="position:absolute; width:1px; height:1px; overflow:hidden; clip: rect(0,0,0,0);">Correo Electrónico</label>
+                <label for="email" class="sr-only">Correo Electrónico</label>
                 <i class="fa-solid fa-envelope"></i>
                 <input type="email" id="email" name="email" placeholder="Ingrese Correo Electrónico" required>
             </div>
 
             <div class="form-group select-wrapper">
-                <label for="tipo_documento" style="position:absolute; width:1px; height:1px; overflow:hidden; clip: rect(0,0,0,0);">Tipo de Documento</label>
+                <label for="tipo_documento" class="sr-only">Tipo de Documento</label>
                 <i class="fa-solid fa-flag"></i>
                 <select id="tipo_documento" name="tipo_documento" required>
                     <option value="">Seleccione Tipo de Documento</option>
@@ -34,7 +38,7 @@
             </div>
 
             <div class="form-group" id="document-number-group" style="display: none;">
-                <label for="numero_documento" style="position:absolute; width:1px; height:1px; overflow:hidden; clip: rect(0,0,0,0);">Número de Documento</label>
+                <label for="numero_documento" class="sr-only">Número de Documento</label>
                 <i class="fa-solid fa-id-card"></i>
                 <input type="text" id="numero_documento" name="numero_documento"
                     placeholder="Ingrese Número de Documento" inputmode="numeric">
@@ -47,14 +51,14 @@
             </div>
 
             <div class="form-group">
-                <label for="password" style="position:absolute; width:1px; height:1px; overflow:hidden; clip: rect(0,0,0,0);">Contraseña</label>
+                <label for="password" class="sr-only">Contraseña</label>
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" id="password" name="password" placeholder="Ingrese Contraseña" required>
                 <i class="fa-solid fa-eye" id="toggleAllPasswords"></i>
             </div>
 
             <div class="form-group">
-                <label for="confirmPassword" style="position:absolute; width:1px; height:1px; overflow:hidden; clip: rect(0,0,0,0);">Confirmar Contraseña</label>
+                <label for="confirmPassword" class="sr-only">Confirmar Contraseña</label>
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Verifique su Contraseña"
                     required>
@@ -68,5 +72,4 @@
     </div>
 {% endblock %}
 
-/* Vaciamos el footer */
 {% block footer %}{% endblock %}

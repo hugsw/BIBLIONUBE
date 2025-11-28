@@ -3,7 +3,6 @@ from flask import Blueprint, jsonify, request, current_app, make_response
 from sqlalchemy.exc import IntegrityError 
 from utils.security import token_required
 from utils.recommendation_engine import recomendador
-
 from extensions import cache
 
 def obtener_id_usuario_interno(conn, firebase_uid):
@@ -32,8 +31,6 @@ def obtener_libros():
             """
             query = sqlalchemy.text(query_sql)
             resultados = conn.execute(query).fetchall()
-            
-            libros_lista = [row._asdict() for row in resultados]
             
             libros_mapeados = [
                 {
@@ -315,19 +312,11 @@ def obtener_recomendados_guardados(firebase_uid):
 @book_bp.route("/libros/recomendados-ml/<int:libro_id>")
 @cache.cached(timeout=3600, query_string=True)
 def obtener_recomendados_inteligentes(libro_id):
+    """
+    Obtiene recomendaciones basadas en contenido (ML) para un libro específico.
+    OPTIMIZADO: Ya no entrena el modelo aquí. Asume que el modelo ya está entrenado en app.py.
+    """
     try:
-        if recomendador.necesita_entrenamiento():
-            current_app.logger.info("Entrenando motor de recomendaciones por primera vez...")
-            db_engine = current_app.db
-            with db_engine.connect() as conn:
-                query_train = sqlalchemy.text("SELECT id_libro, descripcion FROM libros ORDER BY id_libro DESC")
-                todos_libros = conn.execute(query_train).fetchall()
-                datos_para_entrenar = [
-                    {"id_libro": row.id_libro, "descripcion": row.descripcion} 
-                    for row in todos_libros
-                ]
-                recomendador.entrenar(datos_para_entrenar)
-
         ids_recomendados = recomendador.obtener_recomendaciones(libro_id)
 
         if not ids_recomendados:
@@ -362,8 +351,6 @@ def obtener_recomendados_inteligentes(libro_id):
         current_app.logger.error(f"Error en ML: {e}")
         return jsonify({"error": str(e)}), 500
 
-# En routes/book_routes.py
-
 @book_bp.route('/api/estadisticas-populares')
 def obtener_estadisticas_populares():
     """
@@ -372,7 +359,6 @@ def obtener_estadisticas_populares():
     try:
         db_engine = current_app.db
         with db_engine.connect() as conn:
-            # Consulta SQL optimizada para contar y agrupar
             sql = sqlalchemy.text("""
                 SELECT 
                     l.titulo_libro, 
@@ -390,7 +376,6 @@ def obtener_estadisticas_populares():
             
             resultados = conn.execute(sql).fetchall()
             
-            # Formateamos para Google Charts: [["Titulo", Cantidad], ...]
             datos_grafico = []
             for row in resultados:
                 datos_grafico.append({
