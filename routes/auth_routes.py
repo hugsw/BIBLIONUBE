@@ -2,7 +2,8 @@ import sqlalchemy
 from flask import Blueprint, jsonify, request, current_app
 from sqlalchemy.exc import IntegrityError 
 from utils.security import token_required 
-from app import limiter 
+from extensions import limiter 
+
 import re
 from datetime import datetime
 

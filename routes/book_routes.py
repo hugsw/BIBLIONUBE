@@ -3,7 +3,11 @@ from flask import Blueprint, jsonify, request, current_app, make_response
 from sqlalchemy.exc import IntegrityError 
 from utils.security import token_required
 from utils.recommendation_engine import recomendador
-from app import cache
+
+# --- CORRECCIÓN ---
+# Antes: from app import cache
+# Ahora:
+from extensions import cache
 
 def obtener_id_usuario_interno(conn, firebase_uid):
     """Busca el ID numérico del usuario basado en su UID de Firebase."""

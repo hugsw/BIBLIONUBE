@@ -7,11 +7,9 @@ from flask import Flask, current_app, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
 from whitenoise import WhiteNoise
-from flask_caching import Cache 
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address 
 from flask_compress import Compress 
 from database import connect_with_connector, warm_up_db
+from extensions import cache, limiter
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -21,9 +19,6 @@ load_dotenv(env_path)
 
 print(f"--> RUTA .ENV: {env_path}")
 print(f"--> API KEY CARGADA: {os.environ.get('FIREBASE_API_KEY')}")
-
-cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 3600})
-limiter = Limiter(key_func=get_remote_address)
 
 logging.info("Inicializando Firebase Admin...")
 try:
@@ -71,6 +66,7 @@ def create_app():
                 'measurementId': os.environ.get('FIREBASE_MEASUREMENT_ID')
             }
         }
+        
     with app.app_context():
         logging.info("Iniciando conexión a la base de datos...")
         db = connect_with_connector(app) 
