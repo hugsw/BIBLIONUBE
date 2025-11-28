@@ -41,3 +41,9 @@ def mi_cuenta_page():
 @web_bp.route('/buscar')
 def buscar_page():
     return render_template('buscar.html')
+
+# En routes/web_routes.py
+
+@web_bp.route('/estadisticas')
+def estadisticas_page():
+    return render_template('estadisticas.html')

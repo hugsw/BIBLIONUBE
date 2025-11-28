@@ -4,9 +4,6 @@ from sqlalchemy.exc import IntegrityError
 from utils.security import token_required
 from utils.recommendation_engine import recomendador
 
-# --- CORRECCIÓN ---
-# Antes: from app import cache
-# Ahora:
 from extensions import cache
 
 def obtener_id_usuario_interno(conn, firebase_uid):
@@ -364,3 +361,45 @@ def obtener_recomendados_inteligentes(libro_id):
     except Exception as e:
         current_app.logger.error(f"Error en ML: {e}")
         return jsonify({"error": str(e)}), 500
+
+# En routes/book_routes.py
+
+@book_bp.route('/api/estadisticas-populares')
+def obtener_estadisticas_populares():
+    """
+    Devuelve el Top 10 de libros más guardados para el gráfico.
+    """
+    try:
+        db_engine = current_app.db
+        with db_engine.connect() as conn:
+            # Consulta SQL optimizada para contar y agrupar
+            sql = sqlalchemy.text("""
+                SELECT 
+                    l.titulo_libro, 
+                    COUNT(lg.libro_id) as total_guardados
+                FROM 
+                    libros_guardados lg
+                JOIN 
+                    libros l ON lg.libro_id = l.id_libro
+                GROUP BY 
+                    l.id_libro, l.titulo_libro
+                ORDER BY 
+                    total_guardados DESC
+                LIMIT 10
+            """)
+            
+            resultados = conn.execute(sql).fetchall()
+            
+            # Formateamos para Google Charts: [["Titulo", Cantidad], ...]
+            datos_grafico = []
+            for row in resultados:
+                datos_grafico.append({
+                    "titulo": row.titulo_libro, 
+                    "cantidad": int(row.total_guardados)
+                })
+            
+            return jsonify(datos_grafico)
+
+    except Exception as e:
+        current_app.logger.error(f"Error en estadísticas: {e}")
+        return jsonify({"error": "Error al obtener estadísticas"}), 500

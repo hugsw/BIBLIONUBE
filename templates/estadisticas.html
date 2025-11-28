@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Estadísticas - BIBLIONUBE{% endblock %}
+
+{% block content %}
+<section class="contenedor" style="padding: 4rem 2rem;">
+    <h1 style="text-align: center; margin-bottom: 2rem;">Libros Más Populares</h1>
+    <p style="text-align: center; margin-bottom: 4rem;">Top 10 libros guardados por nuestra comunidad.</p>
+
+    <div id="grafico_div" style="width: 100%; height: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden;">
+        <p style="text-align: center; padding-top: 200px;">Cargando datos...</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    // Cargar el paquete de gráficos
+    google.charts.load('current', {'packages':['corechart']});
+    
+    // Cuando cargue, llamar a la función que obtiene los datos
+    google.charts.setOnLoadCallback(dibujarGrafico);
+
+    async function dibujarGrafico() {
+        try {
+            // 1. Pedir los datos a tu backend Python
+            const response = await fetch('/api/estadisticas-populares');
+            const datosJson = await response.json();
+
+            if (datosJson.error) {
+                document.getElementById('grafico_div').innerHTML = '<p>Error al cargar datos.</p>';
+                return;
+            }
+
+            if (datosJson.length === 0) {
+                document.getElementById('grafico_div').innerHTML = '<p style="text-align:center; padding-top:100px;">No hay datos suficientes aún.</p>';
+                return;
+            }
+
+            // 2. Convertir JSON a formato DataTable de Google
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Libro');
+            data.addColumn('number', 'Usuarios que lo guardaron');
+
+            // Llenar filas
+            datosJson.forEach(item => {
+                data.addRow([item.titulo, item.cantidad]);
+            });
+
+            // 3. Opciones de estilo (Personalizado con tus colores de _variables.css)
+            var options = {
+                title: 'Popularidad de Libros',
+                pieHole: 0.4, // Estilo "Dona"
+                colors: ['#f5990c', '#3c6a99', '#a93226', '#E69500', '#2c3e50'], // Tus colores corporativos
+                fontName: 'Arial',
+                chartArea: {width: '90%', height: '80%'},
+                backgroundColor: 'transparent',
+                legend: { position: 'right', textStyle: { fontSize: 14 } },
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out',
+                }
+            };
+
+            // 4. Dibujar
+            var chart = new google.visualization.PieChart(document.getElementById('grafico_div'));
+            // Si prefieres barras, cambia PieChart por BarChart
+            
+            chart.draw(data, options);
+
+            // Hacerlo responsivo al cambiar tamaño de ventana
+            window.addEventListener('resize', () => {
+                chart.draw(data, options);
+            });
+
+        } catch (error) {
+            console.error('Error dibujando gráfico:', error);
+        }
+    }
+</script>
+{% endblock %}
