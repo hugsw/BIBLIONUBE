@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from whitenoise import WhiteNoise
 from flask_compress import Compress 
 from database import connect_with_connector, warm_up_db
+from flask_limiter.util import get_remote_address
 from extensions import cache, limiter
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
