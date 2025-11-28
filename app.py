@@ -15,7 +15,13 @@ from database import connect_with_connector, warm_up_db
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-load_dotenv()
+basedir = os.path.abspath(os.path.dirname(__file__))
+env_path = os.path.join(basedir, '.env')
+load_dotenv(env_path)
+
+print(f"--> Intentando cargar .env desde: {env_path}")
+print(f"--> TEST LECTURA API KEY: {os.environ.get('FIREBASE_API_KEY')}")
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 3600})
 
